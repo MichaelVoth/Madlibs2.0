@@ -1,0 +1,15 @@
+# Node modules
+node_modules
+
+# Environment variables
+server/.env
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Vite cache
+client/node_modules/.vite/
