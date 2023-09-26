@@ -7,7 +7,7 @@ import {
   deleteTemplateById,
   updateTemplateById,
 } from "../controllers/template.controller.js";
-const templateRouter = Router();
+const templateRouter = Router(); // create a new router
 
 templateRouter.get("/all", getAllTemplates);
 templateRouter.get("/:templateId/view", getTemplateById)

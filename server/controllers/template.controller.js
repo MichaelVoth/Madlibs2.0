@@ -3,10 +3,10 @@ import { pullPromptsFromText } from "../utils/server-functions.js";
 
 const createTemplate = async (req, res) => {
   try {
-    const newTemplate = new Template(req.body);
-    const validationError = newTemplate.validateSync();
+    const newTemplate = new Template(req.body); // req.body is the template object from the client
+    const validationError = newTemplate.validateSync(); // validateSync() is a mongoose method that validates the data in the newTemplate object against the TemplateSchema
 
-    if (validationError) {
+    if (validationError) { // if there is a validation error, return a 400 response with the errors
       const errors = {};
       for (const field in validationError.errors) {
         errors[field] = validationError.errors[field].message;
@@ -14,18 +14,18 @@ const createTemplate = async (req, res) => {
       return res.status(400).json({ errors });
     }
 
-    const prompts = pullPromptsFromText(req.body.body);
-    const postObj = { ...req.body, prompts };
-    const newMadlib = await Template.create(postObj);
-    return res.json(newMadlib);
+    const prompts = pullPromptsFromText(req.body.body); // pull the prompts from the template body
+    const postObj = { ...req.body, prompts }; // create a new object with the prompts array and the rest of the template object
+    const newMadlib = await Template.create(postObj); // create the template in the database
+    return res.json(newMadlib); // send the new template back to the client
   } catch (err) {
-    return res.status(500).json({ message: "Server error", error: err });
+    return res.status(500).json({ message: "Server error", error: err }); // if there is an error, return a 500 response with the error
   }
 };
 
 const getAllTemplates = async (req, res) => {
   try {
-    const allTemplates = await Template.find();
+    const allTemplates = await Template.find(); // find all templates in the database
     return res.json(allTemplates);
   } catch (err) {
     return res.status(500).json({ message: "Server error", error: err });
@@ -34,7 +34,7 @@ const getAllTemplates = async (req, res) => {
 
 const getTemplateById = async (req, res) => {
   try {
-    const template = await Template.findById(req.params.templateId);
+    const template = await Template.findById(req.params.templateId); // find the template by id
     if (!template) {
       return res.status(404).json({ message: "Template not found" });
     }
@@ -46,11 +46,11 @@ const getTemplateById = async (req, res) => {
 
 const updateTemplateById = async (req, res) => {
   try {
-    const objectToUpdate = req.body;
-    const updatedPrompts = pullPromptsFromText(objectToUpdate.body);
-    objectToUpdate.prompts = updatedPrompts;
+    const objectToUpdate = req.body; // req.body is the template object from the client
+    const updatedPrompts = pullPromptsFromText(objectToUpdate.body); // pull the prompts from the template body
+    objectToUpdate.prompts = updatedPrompts; // add the prompts array to the object to update
 
-    const template = await Template.findByIdAndUpdate(
+    const template = await Template.findByIdAndUpdate( // find the template by id and update it
       req.params.templateId,
       objectToUpdate,
       { new: true, runValidators: true }
