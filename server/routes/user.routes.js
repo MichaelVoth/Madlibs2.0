@@ -11,7 +11,7 @@ import {
 } from "../controllers/user.controller.js";
 const userRouter = Router(); // create a new router
 
-userRouter.get("/all", getAllUsers);
+userRouter.get("/all", authMiddleware, getAllUsers);
 userRouter.get("/:userId", authMiddleware, getUserById);
 userRouter.post("/register", registerUser);
 userRouter.put("/:userId", authMiddleware, updateUserById);

@@ -1,29 +1,26 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-    const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        axios.get('http://localhost:3001/api/users/all')
-            .then(response => {
-                setUsers(response.data);
-            })
-            .catch(error => {
-                console.error("Error fetching users:", error);
-            });
-    }, []);
+    const navigate = useNavigate();
+    const token = sessionStorage.getItem("token");
+
+    const logout = () => {
+        sessionStorage.removeItem("token");
+        sessionStorage.clear() ;
+        navigate("/login");
+    }
+
 
     return (
         <div>
-            <h2>Users List</h2>
-            <ul>
-                {users.map(user => (
-                    <li key={user._id}>
-                        {user.username} - {user.email} - {user.password}
-                    </li>
-                ))}
-            </ul>
+            <h2>Dashboard</h2>
+            <p>Token: {token}</p>
+            <button onClick={logout}>Logout</button>
+
+            <Link to="/userlist">User List</Link>
         </div>
     );
 }

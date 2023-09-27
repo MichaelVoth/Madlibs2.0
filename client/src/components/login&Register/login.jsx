@@ -13,12 +13,13 @@ const Login = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        axios.post("http://localhost:8000/api/users/login", {
+        axios.post("http://localhost:3001/api/users/login", {
             username,
             password
         }, { withCredentials: true }) // sends the cookie
             .then(res => {
                 console.log(res);
+                sessionStorage.setItem("token", res.data.token);
                 setUsername("");
                 setPassword("");
                 navigate("/dashboard");

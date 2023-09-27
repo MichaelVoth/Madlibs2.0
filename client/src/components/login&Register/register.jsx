@@ -36,6 +36,7 @@ const Register = () => {
         }, { withCredentials: true }) // sends the cookie
             .then(res => {
                 console.log(res);
+                sessionStorage.setItem("token", res.data.token);
                 setUsername("");
                 setEmail("");
                 setPassword("");

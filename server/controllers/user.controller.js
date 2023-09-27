@@ -19,6 +19,7 @@ const registerUser = async (req, res) => {
         newUser.password = hashedPassword; // set the newUser's password to the hashed password
         const user = await User.create(newUser); // create the user in the database
         const token = generateJWT({ id: user._id, username: user.username });
+        res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
         return res.json({ token }); // send the token back to the client
 
     } catch (err) {
@@ -35,15 +36,18 @@ const loginUser = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        const isPasswordValid = await checkPasswords(req.body.password, user.password); // check if the password is valid
+        const isPasswordValid = await checkPassword(req.body.password, user.password); // check if the password is valid
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid password" });
         }
 
-        const token = generateJWT(user); // generate a JWT for the user
+        const token = generateJWT({ id: user._id, username: user.username });
+
+        res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
         return res.json({ token }); // send the token back to the client
-    } catch (error) {
-        return res.status(500).json({ message: "Server error", error });
+    } catch (err) {
+        console.error("Detailed Error:", err); // Log the error in detail
+        return res.status(500).json({ message: "Server error", error: err.message || "Unknown error" });
     }
 };
 
