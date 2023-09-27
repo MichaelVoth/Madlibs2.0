@@ -1,5 +1,5 @@
 import User from "../models/user.model";
-import { hashPassword, checkPasswords, generateJWT, verifyJWT } from "../utils/server-functions";
+import { hashPassword, checkPasswords, generateJWT } from "../utils/server-functions";
 
 
 const registerUser = async (req, res) => {
