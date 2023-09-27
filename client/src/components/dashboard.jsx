@@ -1,19 +1,31 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Dashboard = () => {
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/api/users/all')
+            .then(response => {
+                setUsers(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching users:", error);
+            });
+    }, []);
 
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col-6">
-                    <h1>Dashboard</h1>
-                    
-                    <Link to="/logout">Logout</Link>
-                </div>
-            </div>
+        <div>
+            <h2>Users List</h2>
+            <ul>
+                {users.map(user => (
+                    <li key={user._id}>
+                        {user.username} - {user.email} - {user.password}
+                    </li>
+                ))}
+            </ul>
         </div>
-    )
+    );
 }
 
 export default Dashboard;
