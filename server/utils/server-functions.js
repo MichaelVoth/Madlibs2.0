@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 // Generate a JSON Web Token (JWT) for user authentication
+
 const generateJWT = (userData) => {
   return jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '1h' });
 };

@@ -29,7 +29,7 @@ const Register = () => {
         } else {
             setEmailError("");
         }
-        axios.post("http://localhost:8000/api/register", {
+        axios.post("http://localhost:3001/api/users/register", {
             username,
             email,
             password

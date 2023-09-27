@@ -1,18 +1,23 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dbConnect from "./mongo/dbConnect.js";
-import userRoutes from './routes/user.routes.js';
+import userRouter from './routes/user.routes.js';
 import templateRouter from './routes/template.routes.js'; // Assuming you have a file named template.routes.js
 import authMiddleware from './middleware/auth.js';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
+
 app.use(express.json()); // for parsing application/json
 
-app.use('/api/users', userRoutes);
+app.use('/api/users', userRouter); // Mount the userRouter on the /api/users route
 app.use("/api/templates", templateRouter);
 
 // Error Handling Middleware

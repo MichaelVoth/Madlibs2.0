@@ -1,5 +1,5 @@
-import User from "../models/user.model";
-import { hashPassword, checkPasswords, generateJWT } from "../utils/server-functions";
+import User from "../models/user.model.js";
+import { hashPassword, checkPassword, generateJWT } from "../utils/server-functions.js";
 
 
 const registerUser = async (req, res) => {
@@ -18,11 +18,14 @@ const registerUser = async (req, res) => {
         const hashedPassword = await hashPassword(req.body.password); // hash the password
         newUser.password = hashedPassword; // set the newUser's password to the hashed password
         const user = await User.create(newUser); // create the user in the database
-        const token = generateJWT(user); // generate a JWT for the user
+        const token = generateJWT({ id: user._id, username: user.username });
         return res.json({ token }); // send the token back to the client
+
     } catch (err) {
-        return res.status(500).json({ message: "Server error", error: err }); // if there is an error, return a 500 response with the error
+        console.error("Detailed Error:", err); // Log the error in detail
+        return res.status(500).json({ message: "Server error", error: err.message || "Unknown error" });
     }
+
 }
 
 const loginUser = async (req, res) => {

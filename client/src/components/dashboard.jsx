@@ -5,7 +5,7 @@ const Dashboard = () => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/users/all')
+        axios.get('http://localhost:3001/api/users/all')
             .then(response => {
                 setUsers(response.data);
             })
