@@ -19,7 +19,7 @@ class UserClass extends PlayerClass {
         this.accountStatus = 'active'; // default value
     }
 
-    // You can add methods specific to User here, e.g., sendFriendRequest, addNotification, etc.
+    //add methods specific to User here, e.g., sendFriendRequest, addNotification, etc.
 }
 
 class AdminClass extends UserClass {

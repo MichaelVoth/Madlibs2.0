@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const Login = () => {
 
-    const { user, setUser } = useContext(UserContext);
+    const { user, setUser, setIsActive } = useContext(UserContext);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -19,8 +19,9 @@ const Login = () => {
             password
         }, { withCredentials: true }) // sends the cookie
             .then(res => {
-                console.log(res);
+                console.log(res.data.user);
                 setUser(res.data.user);
+                setIsActive(true);
                 sessionStorage.setItem("token", res.data.token);
                 setUsername("");
                 setPassword("");

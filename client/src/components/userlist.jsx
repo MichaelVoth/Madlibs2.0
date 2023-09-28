@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../contexts/UserContext.jsx';
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
     const navigate = useNavigate();
+    const { user, isActive, setIsActive } = useContext(UserContext);
 
     const token = sessionStorage.getItem("token");
 
     const logout = () => {
         sessionStorage.removeItem("token");
         sessionStorage.clear();
+        setIsActive(false);
         axios.post('http://localhost:3001/api/users/logout', {
         })
             .then(response => {
