@@ -30,13 +30,29 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Template"
     }],
-    favoritedMadlibs: [{
+    savedMadlibs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Template"
+    }],
+    gamesPlayed: [{
+        type: Number,
+        default: 0
     }],
     friends: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
+    }],
+    friendRequests: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    sentFriendRequests: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    notifications: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Notification"
     }],
     isAdmin: {
         type: Boolean,

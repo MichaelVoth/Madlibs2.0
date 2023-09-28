@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import { UserClass } from "../../client/src/classes/user.class.js";
 import { hashPassword, checkPassword, generateJWT } from "../utils/login-functions.js";
 
 
@@ -20,7 +21,8 @@ const registerUser = async (req, res) => {
         const user = await User.create(newUser); // create the user in the database
         const token = generateJWT({ id: user._id, username: user.username });
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
-        return res.json({ token }); // send the token back to the client
+        const userInstance = new UserClass(user._id, '', user.username, user.avatar, token);
+        return res.json({ user: userInstance, token });
 
     } catch (err) {
         console.error("Detailed Error:", err); // Log the error in detail
@@ -43,8 +45,24 @@ const loginUser = async (req, res) => {
 
         const token = generateJWT({ id: user._id, username: user.username });
 
+        // Instantiate the UserClass object with the retrieved attributes
+        const userInstance = new UserClass(
+            user._id,
+            '', // socketId will be empty initially
+            user.username,
+            user.avatar,
+            token
+        );
+
+        // Populate other attributes of the UserClass object as needed
+        userInstance.notifications = user.notifications || [];
+        userInstance.friends = user.friends || [];
+        userInstance.activeFriends = user.activeFriends || [];
+        userInstance.accountStatus = user.accountStatus || 'active';
+
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
-        return res.json({ token }); // send the token back to the client
+        return res.json({ user: userInstance, token }); // send the UserClass object and token back to the client
+
     } catch (err) {
         console.error("Detailed Error:", err); // Log the error in detail
         return res.status(500).json({ message: "Server error", error: err.message || "Unknown error" });
