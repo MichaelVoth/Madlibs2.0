@@ -1,5 +1,5 @@
 import Template from "../models/template.model.js";
-import { pullPromptsFromText } from "../utils/server-functions.js";
+import { pullPromptsFromText } from "../utils/game-functions.js";
 
 const createTemplate = async (req, res) => {
   try {

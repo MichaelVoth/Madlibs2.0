@@ -31,6 +31,7 @@ const Login = () => {
                 } else {
                     setErrorMessage("An unexpected error occurred. Please try again.");
                 }
+                setPassword("");
             });
     }
 

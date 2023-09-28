@@ -10,11 +10,20 @@ const UserList = () => {
 
     const logout = () => {
         sessionStorage.removeItem("token");
-        sessionStorage.clear() ;
+        sessionStorage.clear();
+        axios.post('http://localhost:3001/api/users/logout', {
+        })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.error("Error logging out:", error);
+            });
         navigate("/login");
     }
 
     useEffect(() => {
+        // console.log(`Fetching users..., token: ${token}`);
         axios.get('http://localhost:3001/api/users/all', {
             headers: {
                 'Authorization': `Bearer ${token}`

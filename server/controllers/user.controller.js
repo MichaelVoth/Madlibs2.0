@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import { hashPassword, checkPassword, generateJWT } from "../utils/server-functions.js";
+import { hashPassword, checkPassword, generateJWT } from "../utils/login-functions.js";
 
 
 const registerUser = async (req, res) => {
@@ -51,10 +51,11 @@ const loginUser = async (req, res) => {
     }
 };
 
+const logoutUser = (req, res) => {
+    res.cookie('token', '', { expires: new Date(0) }); // Set the token cookie to expire immediately
+    return res.json({ message: "Logged out successfully" });
+};
 
-const logoutUser = async (req, res) => {
-
-}
 
 const getAllUsers = async (req, res) => {
     try {

@@ -9,9 +9,34 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
     const [confirmPW, setConfirmPW] = useState("");
 
     const navigate = useNavigate();
+
+    const validatePassword = (password) => {
+        const regexUppercase = /[A-Z]/;
+        const regexLowercase = /[a-z]/;
+        const regexNumber = /[0-9]/;
+        const regexSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+
+        if (password.length < 8) {
+            return "Password must be at least 8 characters long.";
+        }
+        if (!regexUppercase.test(password)) {
+            return "Password must contain at least one uppercase letter.";
+        }
+        if (!regexLowercase.test(password)) {
+            return "Password must contain at least one lowercase letter.";
+        }
+        if (!regexNumber.test(password)) {
+            return "Password must contain at least one number.";
+        }
+        if (!regexSpecial.test(password)) {
+            return "Password must contain at least one special character.";
+        }
+        return ""; // Return empty string if all criteria are met
+    }
 
     const confirmPassword = (password, confirmPW) => {
         return password === confirmPW;
@@ -19,8 +44,9 @@ const Register = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        if (!confirmPassword(password, confirmPW)) {
-            alert("Passwords do not match!");
+        const passwordValidationError = validatePassword(password);
+        if (passwordValidationError) {
+            setPasswordError(passwordValidationError);
             return;
         }
         if (!isEmail(email)) {
@@ -28,6 +54,12 @@ const Register = () => {
             return;
         } else {
             setEmailError("");
+        }
+        if (!confirmPassword(password, confirmPW)) {
+            setPasswordError("Passwords do not match");
+            return;
+        } else {
+            setPasswordError("");
         }
         axios.post("http://localhost:3001/api/users/register", {
             username,
@@ -77,7 +109,7 @@ const Register = () => {
                         <div className="form-group">
                             <label htmlFor="email">Email: </label>
                             <input type="text" name="email" className="form-control" onChange={changeHandler} />
-                            {emailError && <p className="text-danger">{emailError}</p>} {/* conditional rendering */}
+                            {emailError && <p className="text-danger">{emailError}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="password">Password: </label>
@@ -86,6 +118,7 @@ const Register = () => {
                         <div className="form-group">
                             <label htmlFor="confirmPassword">Confirm Password: </label>
                             <input type="password" name="confirmPassword" className="form-control" onChange={changeHandler} />
+                            {passwordError && <p className="text-danger">{passwordError}</p>}
                         </div>
                         <input type="submit" value="Register" className="btn btn-primary" />
                     </form>
