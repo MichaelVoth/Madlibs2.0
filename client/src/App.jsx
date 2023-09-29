@@ -17,8 +17,8 @@ function App() {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        <Route element={<ProtectedRoutes />}>
-                            <Route path="/userlist" element={<UserList />} />
+                        <Route path="/userlist" element={<ProtectedRoutes />}>
+                            <Route index element={<UserList />} />
                         </Route>
                         <Route path="*" element={<Login />} /> {/* Default route */}
                     </Routes>
@@ -26,7 +26,6 @@ function App() {
             </Router>
         </div>
     );
-}
-
+};
 
 export default App;

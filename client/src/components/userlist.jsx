@@ -14,8 +14,7 @@ const UserList = () => {
         sessionStorage.removeItem("token");
         sessionStorage.clear();
         setIsActive(false);
-        axios.post('http://localhost:3001/api/users/logout', {
-        })
+        axios.post('http://localhost:3001/api/users/logout', {}, { withCredentials: true})
             .then(response => {
                 console.log(response);
             })

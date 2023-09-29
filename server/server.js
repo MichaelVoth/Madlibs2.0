@@ -18,10 +18,11 @@ app.use(cors({
 
 app.use(express.json()); // for parsing application/json
 
+
+app.use(cookieParser());
 app.use('/api/users', userRouter); // Mount the userRouter on the /api/users route
 app.use("/api/templates", templateRouter);
 
-app.use(cookieParser());
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

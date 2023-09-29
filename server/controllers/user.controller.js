@@ -70,7 +70,7 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = (req, res) => {
-    res.cookie('token', '', { expires: new Date(0) }); // Set the token cookie to expire immediately
+    res.cookie('token', '', { expires: new Date(0) });
     return res.json({ message: "Logged out successfully" });
 };
 

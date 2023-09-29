@@ -1,16 +1,21 @@
 import jwt from 'jsonwebtoken';
 
 const authMiddleware = (req, res, next) => {
-    const authHeader = req.header('Authorization'); // get the Authorization header from the request
-    // console.log("Auth Header:", authHeader);
-    if (!authHeader) return res.status(401).send('Access Denied: No Authorization Header Provided!'); // if there is no Authorization header, return an error
+    // Check for token in Authorization header
+    const authHeader = req.header('Authorization');
+    let token;
+    if (authHeader) {
+        token = authHeader.split(' ')[1];
+    } else {
+        // If not in Authorization header, check in cookies
+        token = req.cookies.token;
+    }
 
-    const token = authHeader.split(' ')[1]; 
-    // console.log("Token:", token);
+    if (!token) return res.status(401).send('Access Denied: No Token Provided!'); 
+
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET); // verify the token
         req.user = decoded; // add the user information to the request
-        // console.log("Decoded:", decoded);
         next(); // call the next middleware
     } catch (error) {
         res.status(400).send('Invalid Token');
