@@ -1,9 +1,15 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import isEmail from 'validator/lib/isEmail';
+import AvatarModal from "../../forms/avatarModal";
+import { UserContext } from "../../contexts/UserContext";
+
+
 
 const Register = () => {
+
+    const { user, setUser, setIsActive } = useContext(UserContext);
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -11,8 +17,8 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [confirmPW, setConfirmPW] = useState("");
+    const [showAvatarModal, setShowAvatarModal] = useState(false);
 
-    const navigate = useNavigate();
 
     const validatePassword = (password) => {
         const regexUppercase = /[A-Z]/;
@@ -68,16 +74,21 @@ const Register = () => {
         }, { withCredentials: true }) // sends the cookie
             .then(res => {
                 console.log(res);
-                sessionStorage.setItem("token", res.data.token);
+                const userData = res.data.user;
+                setUser(userData);
+                setIsActive(true);
+                setShowAvatarModal(true); // Show avatar modal
                 setUsername("");
                 setEmail("");
                 setPassword("");
                 setConfirmPW("");
-                navigate("/dashboard");
             })
             .catch(err => console.log(err));
     }
 
+    useEffect(() => {
+        console.log("User",user);
+    }, [user]);
 
     const changeHandler = (e) => {
         switch (e.target.name) {
@@ -125,6 +136,8 @@ const Register = () => {
                     <p>Already have an account? <Link to="/login">Login</Link></p>
                 </div>
             </div>
+            {showAvatarModal && <AvatarModal show={showAvatarModal} />}
+
         </div>
     )
 }

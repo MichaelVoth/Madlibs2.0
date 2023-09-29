@@ -20,6 +20,9 @@ class UserClass extends PlayerClass {
     }
 
     //add methods specific to User here, e.g., sendFriendRequest, addNotification, etc.
+    setAvatar(avatar) {
+        this.avatar = avatar;
+    }
 }
 
 class AdminClass extends UserClass {

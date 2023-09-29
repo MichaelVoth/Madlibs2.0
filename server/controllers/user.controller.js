@@ -28,7 +28,6 @@ const registerUser = async (req, res) => {
         console.error("Detailed Error:", err); // Log the error in detail
         return res.status(500).json({ message: "Server error", error: err.message || "Unknown error" });
     }
-
 }
 
 const loginUser = async (req, res) => {
@@ -106,7 +105,7 @@ const updateUserById = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        return res.json(user);
+        return res.json(user); // send the updated user back to the client
     } catch (error) {
         return res.status(500).json({ message: "Server error", error });
     }

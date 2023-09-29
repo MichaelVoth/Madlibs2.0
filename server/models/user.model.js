@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
         required: [true, "Username is required"],
         unique: true,
         trim: true,
-        minlength: [3, "Username must be at least 3 characters long"],
+        minlength: [2, "Username must be at least 2 characters long"],
         maxlength: [30, "Username can't exceed 30 characters"]
     },
     password: {
@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: "defaultAvatarURL" // You can set a default avatar URL here
+        default: "yellow"
     },
     createdMadlibs: [{
         type: mongoose.Schema.Types.ObjectId,

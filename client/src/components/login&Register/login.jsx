@@ -22,7 +22,6 @@ const Login = () => {
                 console.log(res.data.user);
                 setUser(res.data.user);
                 setIsActive(true);
-                sessionStorage.setItem("token", res.data.token);
                 setUsername("");
                 setPassword("");
                 navigate("/dashboard");

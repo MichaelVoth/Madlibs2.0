@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext.jsx';
 
 const UserList = () => {
@@ -8,10 +8,7 @@ const UserList = () => {
     const navigate = useNavigate();
     const { user, isActive, setIsActive } = useContext(UserContext);
 
-    const token = sessionStorage.getItem("token");
-
     const logout = () => {
-        sessionStorage.removeItem("token");
         sessionStorage.clear();
         setIsActive(false);
         axios.post('http://localhost:3001/api/users/logout', {}, { withCredentials: true})
@@ -26,11 +23,7 @@ const UserList = () => {
 
     useEffect(() => {
         // console.log(`Fetching users..., token: ${token}`);
-        axios.get('http://localhost:3001/api/users/all', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        axios.get('http://localhost:3001/api/users/all', { withCredentials: true })
         .then(response => {
             setUsers(response.data);
         })
@@ -43,6 +36,7 @@ const UserList = () => {
         <div>
             <h2>Users List</h2>
             <button onClick={logout}>Logout</button>
+            <Link to="/dashboard">Dashboard</Link>
             <ul>
                 {users.map(user => (
                     <li key={user._id}>
