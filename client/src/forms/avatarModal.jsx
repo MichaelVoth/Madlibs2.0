@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { UserContext } from "../contexts/UserContext";
+import { useUserContext } from "../contexts/UserContext";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -14,7 +14,7 @@ import yellowAvatar from "../assets/yellowAvatar.png";
 
 const AvatarModal = ({ show }) => {
 
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useUserContext();
 
   const navigate = useNavigate();
 

@@ -123,6 +123,15 @@ const deleteUserById = async (req, res) => {
     }
 }
 
+const deleteAllUsers = async (req, res) => {
+    try {
+        const users = await User.deleteMany(); // delete all users in the database
+        return res.json(users); 
+    } catch (error) {
+        return res.status(500).json({ message: "Server error", error });
+    }
+}
+
 export {
     registerUser,
     loginUser,
@@ -130,6 +139,7 @@ export {
     getAllUsers,
     getUserById,
     updateUserById,
-    deleteUserById
+    deleteUserById,
+    deleteAllUsers
 };
 

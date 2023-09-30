@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import isEmail from 'validator/lib/isEmail';
 import AvatarModal from "../../forms/avatarModal";
-import { UserContext } from "../../contexts/UserContext";
+import { useUserContext } from "../../contexts/UserContext";
 
 
 
 const Register = () => {
 
-    const { user, setUser, setIsActive } = useContext(UserContext);
+    const { user, setUser, setIsActive } = useUserContext();
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -85,10 +85,6 @@ const Register = () => {
             })
             .catch(err => console.log(err));
     }
-
-    useEffect(() => {
-        console.log("User",user);
-    }, [user]);
 
     const changeHandler = (e) => {
         switch (e.target.name) {

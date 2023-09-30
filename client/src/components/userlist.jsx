@@ -1,25 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext.jsx';
+import { Link } from 'react-router-dom'
+import { useUserContext } from '../contexts/UserContext.jsx';
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
-    const navigate = useNavigate();
-    const { user, isActive, setIsActive } = useContext(UserContext);
 
-    const logout = () => {
-        sessionStorage.clear();
-        setIsActive(false);
-        axios.post('http://localhost:3001/api/users/logout', {}, { withCredentials: true})
-            .then(response => {
-                console.log(response);
-            })
-            .catch(error => {
-                console.error("Error logging out:", error);
-            });
-        navigate("/login");
-    }
+    const { logout } = useUserContext();
 
     useEffect(() => {
         // console.log(`Fetching users..., token: ${token}`);

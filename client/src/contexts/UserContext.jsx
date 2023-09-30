@@ -1,14 +1,40 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-export const UserContext = createContext(); // create a context object
+const UserContext = createContext();
 
-export const UserProvider = ({ children }) => { // create a provider for the context object
-    const [user, setUser] = useState({ id: null, username: null, avatar: null }); // set the initial state of the context object
-    const [isActive, setIsActive] = useState(false); // set the initial state of the context object
+export const UserProvider = ({ children }) => {
+    const [user, setUser] = useState({ id: null, username: null, avatar: null });
+    const [isActive, setIsActive] = useState(false);
+
+    const navigate = useNavigate();
+
+    const logout = async () => {
+        try {
+            const response = await axios.post('http://localhost:3001/api/users/logout', {}, { withCredentials: true });
+            if (response.data.message === "Logged out successfully") {
+                setUser({ id: null, username: null, avatar: null });
+                setIsActive(false);
+                sessionStorage.clear();
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("Error logging out:", error);
+        }
+    };
 
     return (
-        <UserContext.Provider value={{ user, setUser, isActive, setIsActive }}>  
+        <UserContext.Provider value={{ user, setUser, isActive, setIsActive, logout }}>
             {children}
         </UserContext.Provider>
     );
+};
+
+export const useUserContext = () => {
+    const context = useContext(UserContext);
+    if (!context) {
+        throw new Error("useUserContext must be used within a UserProvider");
+    }
+    return context;
 };

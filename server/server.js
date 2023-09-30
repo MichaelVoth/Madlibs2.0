@@ -3,7 +3,7 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import mongoose from 'mongoose';
+import { Server } from "socket.io";
 import dbConnect from "./mongo/dbConnect.js";
 import userRouter from './routes/user.routes.js';
 import templateRouter from './routes/template.routes.js'; // Assuming you have a file named template.routes.js
@@ -37,9 +37,21 @@ async function serverStart() {
         const server = app.listen(PORT, () =>
             console.log(`Server is running on port ${PORT}`)
         );
+        // Set up socket.io server with CORS configuration
+        const io = new Server(server, {
+            cors: {
+                origin: ["http://localhost:5173"],
+                methods: ["GET", "POST"],
+                allowedHeaders: ["*"],
+                credentials: true,
+            },
+        });
     } catch (error) {
         console.log(error);
     }
 }
+
+
+
 
 serverStart(); // Invoke the function to start the server
