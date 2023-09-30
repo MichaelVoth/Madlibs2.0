@@ -47,10 +47,8 @@ const loginUser = async (req, res) => {
         // Instantiate the UserClass object with the retrieved attributes
         const userInstance = new UserClass(
             user._id,
-            '', // socketId will be empty initially
             user.username,
             user.avatar,
-            token
         );
 
         // Populate other attributes of the UserClass object as needed

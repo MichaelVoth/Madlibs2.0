@@ -1,14 +1,15 @@
 import React, { createContext, useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useSocketContext } from './SocketContext.jsx';
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState({ id: null, username: null, avatar: null });
     const [isActive, setIsActive] = useState(false);
-
     const navigate = useNavigate();
+    const { socket, disconnectSocket } = useSocketContext();
 
     const logout = async () => {
         try {
@@ -17,6 +18,7 @@ export const UserProvider = ({ children }) => {
                 setUser({ id: null, username: null, avatar: null });
                 setIsActive(false);
                 sessionStorage.clear();
+                disconnectSocket();
                 navigate("/");
             }
         } catch (error) {

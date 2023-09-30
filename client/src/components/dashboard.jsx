@@ -1,8 +1,8 @@
 
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useUserContext } from '../contexts/UserContext.jsx';
-import { SocketContext } from '../contexts/SocketContext.jsx';
+import { useSocketContext } from '../contexts/SocketContext.jsx';
 import blueAvatar from "../assets/blueAvatar.png";
 import greenAvatar from "../assets/greenAvatar.png";
 import orangeAvatar from "../assets/orangeAvatar.png";
@@ -14,7 +14,7 @@ import yellowAvatar from "../assets/yellowAvatar.png";
 const Dashboard = () => {
 
     const { user, isActive, logout } = useUserContext(); //custom hook from UserContext.jsx
-    const socket = useContext(SocketContext);
+    const { socket } = useSocketContext(); 
     
     const avatarList = [ // List of avatars to choose from
         { color: "blue", image: blueAvatar },
@@ -33,7 +33,8 @@ const Dashboard = () => {
             <p> Id: {user.id}</p>
             <p>You are active: {isActive ? "Yes" : "No"}</p>
             {userAvatar && <img src={userAvatar.image} alt={userAvatar.color} />}
-            <p> Socket: {socket.id}</p>
+            <p> Socket: {socket && socket.id}</p>
+
             <button onClick={logout}>Logout</button>
             <Link to="/userlist">User List</Link>
         </div>

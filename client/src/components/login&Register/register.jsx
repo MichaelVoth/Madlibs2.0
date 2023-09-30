@@ -1,15 +1,17 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import isEmail from 'validator/lib/isEmail';
 import AvatarModal from "../../forms/avatarModal";
 import { useUserContext } from "../../contexts/UserContext";
+import { useSocketContext } from "../../contexts/SocketContext";
 
 
 
 const Register = () => {
 
     const { user, setUser, setIsActive } = useUserContext();
+    const { socket, connectSocket } = useSocketContext();
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -74,6 +76,7 @@ const Register = () => {
         }, { withCredentials: true }) // sends the cookie
             .then(res => {
                 console.log(res);
+                connectSocket();
                 const userData = res.data.user;
                 setUser(userData);
                 setIsActive(true);

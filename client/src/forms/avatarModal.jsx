@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUserContext } from "../contexts/UserContext";
@@ -57,7 +57,7 @@ const AvatarModal = ({ show }) => {
                 <img
                   key={index}
                   className="m-2"
-                  style={{ width: "75px", height: "75px" }}
+                  style={{ width: "100px", height: "100px" }}
                   src={avatar.image}
                   onClick={() => handleAvatarClick(avatar.color)}
                 />

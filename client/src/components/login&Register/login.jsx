@@ -1,11 +1,15 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useUserContext } from '../../contexts/UserContext.jsx';
+import { useSocketContext } from '../../contexts/SocketContext.jsx';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+
+
 
 const Login = () => {
 
     const { setUser, setIsActive } = useUserContext();
+    const { socket, connectSocket } = useSocketContext();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -19,6 +23,7 @@ const Login = () => {
             password
         }, { withCredentials: true }) // sends the cookie
             .then(res => {
+                connectSocket();
                 setUser(res.data.user);
                 setIsActive(true);
                 setUsername("");
