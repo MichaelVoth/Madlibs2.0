@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const Login = () => {
 
-    const { setUser, setIsActive } = useUserContext();
+    const { user, setUser, setIsActive } = useUserContext();
     const { socket, connectSocket } = useSocketContext();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -24,8 +24,10 @@ const Login = () => {
         }, { withCredentials: true }) // sends the cookie
             .then(res => {
                 connectSocket();
-                setUser(res.data.user);
+                const user = { ...res.data.user, socketId: socket.id };
+                setUser(user);
                 setIsActive(true);
+                sessionStorage.setItem("user", JSON.stringify(user));
                 setUsername("");
                 setPassword("");
                 navigate("/dashboard");

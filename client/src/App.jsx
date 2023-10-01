@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,14 +10,31 @@ import UserList from './components/userlist';
 import AvatarModal from './forms/avatarModal';
 import { UserProvider } from './contexts/UserContext';
 import { SocketProvider } from './contexts/SocketContext';
+import { useUserContext } from './contexts/UserContext';
+import { useSocketContext } from './contexts/SocketContext';
 
 
 function App() {
+
+    const { user, setUser, setIsActive } = useUserContext();
+    const { socket, connectSocket } = useSocketContext();
+
+    useEffect(() => {
+
+        const storedUser = JSON.parse(sessionStorage.getItem("user"));
+        if (storedUser) {
+            setUser(storedUser);
+            setIsActive(true);
+            connectSocket();
+        }
+    }, []);
+
+
     return (
-        <div className="App">
-            <Router>
-                <SocketProvider>
-                    <UserProvider>
+        <SocketProvider>
+            <UserProvider>
+                <div className="App">
+                    <Router>
                         <Routes>
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/login" element={<Login />} />
@@ -27,10 +45,10 @@ function App() {
                             </Route>
                             <Route path="*" element={<Login />} /> {/* Default route */}
                         </Routes>
-                    </UserProvider>
-                </SocketProvider>
-            </Router>
-        </div>
+                    </Router>
+                </div>
+            </UserProvider>
+        </SocketProvider>
     );
 };
 

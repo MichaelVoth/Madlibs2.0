@@ -1,6 +1,7 @@
 class PlayerClass {
     constructor(id, username, avatar) {
         this.id = id || '';
+        this.socketId = '';
         this.isActive = false;
         this.username = username || '';
         this.avatar = avatar || '';
