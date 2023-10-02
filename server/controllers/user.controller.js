@@ -49,14 +49,12 @@ const loginUser = async (req, res) => {
             user._id,
             user.username,
             user.avatar,
+            user.notifications || [],
+            user.friends || [],
+            user.activeFriends || [],
+            user.accountStatus || 'active'
         );
-
-        // Populate other attributes of the UserClass object as needed
-        userInstance.notifications = user.notifications || [];
-        userInstance.friends = user.friends || [];
-        userInstance.activeFriends = user.activeFriends || [];
-        userInstance.accountStatus = user.accountStatus || 'active';
-
+        
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
         return res.json({ user: userInstance, token }); // send the UserClass object and token back to the client
 
