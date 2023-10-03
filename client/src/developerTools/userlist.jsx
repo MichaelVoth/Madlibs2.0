@@ -1,12 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'
-import { useUserContext } from '../contexts/UserContext.jsx';
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
-
-    const { logout } = useUserContext();
 
     useEffect(() => {
         // console.log(`Fetching users..., token: ${token}`);
@@ -22,8 +18,6 @@ const UserList = () => {
     return (
         <div>
             <h2>Users List</h2>
-            <button onClick={logout}>Logout</button>
-            <Link to="/dashboard">Dashboard</Link>
             <ul>
                 {users.map(user => (
                     <li key={user._id}>

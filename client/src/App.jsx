@@ -6,7 +6,7 @@ import ProtectedRoutes from './components/login&Register/protectedRoutes';
 import Dashboard from './components/dashboard';
 import Login from './components/login&Register/login';
 import Register from './components/login&Register/register';
-import UserList from './components/userlist';
+import UserList from './developerTools/userlist';
 import AvatarModal from './forms/avatarModal';
 
 function App() {

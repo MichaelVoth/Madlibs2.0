@@ -9,18 +9,14 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         let newSocket;
-        if (user && user.socketId) {
-            console.log("Checking for socket ID in session storage", user.socketId);
-            newSocket = io.connect('http://localhost:3001', {
-                query: { socketId: user.socketId }
-            });
+        if (user && user.socketId) { // Check that user and user.socketId are not null
+            newSocket = io.connect('http://localhost:3001');
             setSocket(newSocket);
 
             if (newSocket) {  // Check if newSocket is defined before attaching event listeners
                 newSocket.on("connect", () => {
                     console.log(`Connected with ID: ${newSocket.id}`);
                     if (user) {
-                        user.socketId = newSocket.id;
                         sessionStorage.setItem("user", JSON.stringify(user));
                         // If there's a user in context, emit an event to the server to associate this socket ID with the user.
                         newSocket.emit("associate_socket_with_user", user.id);

@@ -4,7 +4,7 @@ import { useSocketContext } from '../../contexts/SocketContext.jsx';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
-import ConsoleLog from '../consoleLogData.jsx';
+import ConsoleLog from '../../developerTools/consoleLogData.jsx';
 
 
 

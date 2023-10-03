@@ -50,10 +50,10 @@ async function serverStart() {
         io.on("connection", (socket) => {
             console.log(`User connected with socket id: ${socket.id}`);
 
-            const clientSocketId = socket.handshake.query.socketId; // Get the socketId from the client
-            if (clientSocketId) {
-                console.log(`Client provided socketId: ${clientSocketId}`);
-            };
+            // const clientSocketId = socket.handshake.query.socketId; // Get the socketId from the client
+            // if (clientSocketId) {
+            //     console.log(`Client provided socketId: ${clientSocketId}`);
+            // };
             
             socket.on("disconnect", () => {
                 console.log(`User disconnected with socket id: ${socket.id}`);

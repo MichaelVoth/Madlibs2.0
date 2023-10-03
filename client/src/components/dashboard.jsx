@@ -11,7 +11,8 @@ import pinkAvatar from "../assets/pinkAvatar.png";
 import purpleAvatar from "../assets/purpleAvatar.png";
 import yellowAvatar from "../assets/yellowAvatar.png";
 
-import ConsoleLog from './consoleLogData.jsx';
+import ConsoleLog from '../developerTools/consoleLogData.jsx';
+import UserInfoDisplay from '../developerTools/userInfoDisplay.jsx';
 
 
 const Dashboard = () => {
@@ -41,6 +42,7 @@ const Dashboard = () => {
             <Logout />
             <Link to="/userlist">User List</Link>
             <ConsoleLog />
+            <UserInfoDisplay />
         </div>
     );
 }
