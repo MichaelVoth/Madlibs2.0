@@ -21,7 +21,7 @@ const registerUser = async (req, res) => {
         const user = await User.create(newUser); // create the user in the database
         const token = generateJWT({ id: user._id, username: user.username });
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
-        const userInstance = new UserClass(user._id, '', user.username, user.avatar, token);
+        const userInstance = new UserClass(user._id, user.username, user.avatar, token);
         return res.json({ user: userInstance, token });
 
     } catch (err) {
@@ -49,14 +49,15 @@ const loginUser = async (req, res) => {
             user._id,
             user.username,
             user.avatar,
+            user.isActive,
             user.notifications || [],
             user.friends || [],
             user.activeFriends || [],
             user.accountStatus || 'active'
         );
-        
+        // console.log("User Instance:", userInstance);
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
-        return res.json({ user: userInstance, token }); // send the UserClass object and token back to the client
+        return res.json({ user: userInstance, token }) // send the UserClass object and token back to the client
 
     } catch (err) {
         console.error("Detailed Error:", err); // Log the error in detail

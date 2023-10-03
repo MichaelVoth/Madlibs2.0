@@ -79,6 +79,7 @@ const Register = () => {
                 connectSocket();
                 const userData = res.data.user;
                 setUser(userData);
+                sessionStorage.setItem("user", JSON.stringify(userData));
                 setIsActive(true);
                 setShowAvatarModal(true); // Show avatar modal
                 setUsername("");

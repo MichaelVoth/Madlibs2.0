@@ -1,17 +1,16 @@
 class PlayerClass {
-    constructor(id, username, avatar) {
+    constructor(id, username, avatar, isActive) {
         this.id = id || '';
-        this.
-        this.isActive = false;
         this.username = username || '';
         this.avatar = avatar || '';
+        this.isActive = false;
         this.isAdmin = false;
     }
 }
 
 class UserClass extends PlayerClass {
-    constructor(id, username, avatar, notifications, friends, activeFriends, accountStatus) {
-        super(id, username, avatar, isAdmin);
+    constructor(id, username, avatar, isActive, notifications, friends, activeFriends, accountStatus) {
+        super(id, username, avatar, isActive);
         this.notifications = notifications || [];
         this.friends = friends || [];
         this.activeFriends = activeFriends || [];

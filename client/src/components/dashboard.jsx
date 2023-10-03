@@ -1,5 +1,6 @@
 
 import React from 'react';
+import Logout from './login&Register/logout.jsx';
 import { Link } from 'react-router-dom';
 import { useUserContext } from '../contexts/UserContext.jsx';
 import { useSocketContext } from '../contexts/SocketContext.jsx';
@@ -9,6 +10,8 @@ import orangeAvatar from "../assets/orangeAvatar.png";
 import pinkAvatar from "../assets/pinkAvatar.png";
 import purpleAvatar from "../assets/purpleAvatar.png";
 import yellowAvatar from "../assets/yellowAvatar.png";
+
+import ConsoleLog from './consoleLogData.jsx';
 
 
 const Dashboard = () => {
@@ -35,8 +38,9 @@ const Dashboard = () => {
             {userAvatar && <img src={userAvatar.image} alt={userAvatar.color} />}
             <p> Socket: {socket && socket.id}</p>
 
-            <button onClick={logout}>Logout</button>
+            <Logout />
             <Link to="/userlist">User List</Link>
+            <ConsoleLog />
         </div>
     );
 }
