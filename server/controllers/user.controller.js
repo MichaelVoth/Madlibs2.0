@@ -5,7 +5,7 @@ import { hashPassword, checkPassword, generateJWT } from "../utils/login-functio
 
 const registerUser = async (req, res) => {
     try {
-        const newUser = new User(req.body); // req.body is the user object from the client
+        const newUser = new User({...req.body, isActive: true}); // req.body is the user object from the client
         const validationError = newUser.validateSync(); // validateSync() is a mongoose method that validates the data in the newUser object against the UserSchema
 
         if (validationError) { // if there is a validation error, return a 400 response with the errors
@@ -18,7 +18,7 @@ const registerUser = async (req, res) => {
 
         const hashedPassword = await hashPassword(req.body.password); // hash the password
         newUser.password = hashedPassword; // set the newUser's password to the hashed password
-        const user = await User.create(newUser); // create the user in the database
+        const user = await User.create(newUser); // create the user in the database and set the isActive property to true
         const token = generateJWT({ id: user._id, username: user.username });
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
         const userInstance = new UserClass(user._id, user.username, user.avatar, token);
@@ -41,8 +41,8 @@ const loginUser = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid password" });
         }
-
         const token = generateJWT({ id: user._id, username: user.username });
+        await User.findOneAndUpdate({ username: req.body.username }, { isActive: true }); // set the user's isActive property to true
 
         // Instantiate the UserClass object with the retrieved attributes
         const userInstance = new UserClass(
@@ -55,7 +55,7 @@ const loginUser = async (req, res) => {
             user.activeFriends || [],
             user.accountStatus || 'active'
         );
-        // console.log("User Instance:", userInstance);
+        console.log("User Instance:", userInstance);
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
         return res.json({ user: userInstance, token }) // send the UserClass object and token back to the client
 
@@ -65,7 +65,8 @@ const loginUser = async (req, res) => {
     }
 };
 
-const logoutUser = (req, res) => {
+const logoutUser = async (req, res) => {
+    await User.findOneAndUpdate({ username: req.body.username }, { isActive: false }); // set the user's isActive property to false
     res.cookie('token', '', { expires: new Date(0) });
     return res.json({ message: "Logged out successfully" });
 };

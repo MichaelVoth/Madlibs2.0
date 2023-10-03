@@ -26,11 +26,11 @@ const Login = () => {
         }, { withCredentials: true }) // sends the cookie
             .then(res => {
                 connectSocket();
-                console.log("socket.id:", socket.id);
-                console.log("res.data.user:", res.data.user);
-                const user = { ...res.data.user, socketId: socket.id };
-                setUser(user);
+                // console.log("socket.id:", socket.id);
+                // console.log("res.data.user:", res.data.user);
+                const user = { ...res.data.user};
                 setIsActive(true);
+                setUser(user);
                 sessionStorage.setItem("user", JSON.stringify(user));
                 setUsername("");
                 setPassword("");

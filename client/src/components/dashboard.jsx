@@ -16,7 +16,7 @@ import ConsoleLog from './consoleLogData.jsx';
 
 const Dashboard = () => {
 
-    const { user, isActive, logout } = useUserContext(); //custom hook from UserContext.jsx
+    const { user, isActive } = useUserContext(); //custom hook from UserContext.jsx
     const { socket } = useSocketContext(); 
     
     const avatarList = [ // List of avatars to choose from

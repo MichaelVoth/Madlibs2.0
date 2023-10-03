@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,21 +8,9 @@ import Login from './components/login&Register/login';
 import Register from './components/login&Register/register';
 import UserList from './components/userlist';
 import AvatarModal from './forms/avatarModal';
-import { useUserContext } from './contexts/UserContext';
-import { useSocketContext } from './contexts/SocketContext';
 
 function App() {
-    const { user, setUser, setIsActive } = useUserContext();
-    const { socket, connectSocket } = useSocketContext();
 
-    useEffect(() => {
-        const storedUser = JSON.parse(sessionStorage.getItem("user"));
-        if (storedUser) {
-            setUser(storedUser);
-            setIsActive(true);
-            connectSocket();
-        }
-    }, []);
 
     return (
         <div className="App">

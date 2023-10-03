@@ -26,6 +26,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: "yellow"
     },
+    isActive: {
+        type: Boolean,
+        default: false
+    },
     createdMadlibs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Template"

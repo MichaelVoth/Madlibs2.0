@@ -13,7 +13,7 @@ const Logout = () => {
         try {
             const response = await axios.post('http://localhost:3001/api/users/logout', {}, { withCredentials: true });
             if (response.data.message === "Logged out successfully") {
-                setUser({ id: null, username: null, avatar: null });
+                setUser({ id: null, username: null, avatar: null, socketId: null });
                 setIsActive(false);
                 sessionStorage.clear("user");
                 localStorage.clear("user");

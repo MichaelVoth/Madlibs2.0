@@ -3,7 +3,7 @@ class PlayerClass {
         this.id = id || '';
         this.username = username || '';
         this.avatar = avatar || '';
-        this.isActive = false;
+        this.isActive = isActive;
         this.isAdmin = false;
     }
 }
