@@ -6,11 +6,12 @@ import cookieParser from 'cookie-parser';
 import { Server } from "socket.io";
 import dbConnect from "./mongo/dbConnect.js";
 import userRouter from './routes/user.routes.js';
-import templateRouter from './routes/template.routes.js'; // Assuming you have a file named template.routes.js
+import templateRouter from './routes/template.routes.js';
 import * as roomEvents from "./events/room.events.js"
 import * as userEvents from "./events/user.events.js"
 import * as gameEvents from "./events/game.events.js"
 import * as chatEvents from "./events/chat.events.js"
+import RoomManager from '../client/src/classes/roomManager.class.js';
 
 const app = express();
 
@@ -19,15 +20,11 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(express.json()); // for parsing application/json
-
-
+app.use(express.json());
 app.use(cookieParser());
-app.use('/api/users', userRouter); // Mount the userRouter on the /api/users route
+app.use('/api/users', userRouter);
 app.use("/api/templates", templateRouter);
 
-
-// Error Handling Middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
@@ -36,11 +33,9 @@ app.use((err, req, res, next) => {
 async function serverStart() {
     try {
         await dbConnect();
-        const PORT = process.env.PORT || 8000; // It's good to have a fallback to environment variable
-        const server = app.listen(PORT, () =>
-            console.log(`Server is running on port ${PORT}`)
-        );
-        // Set up socket.io server with CORS configuration
+        const PORT = process.env.PORT || 8000;
+        const server = app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
         const io = new Server(server, {
             cors: {
                 origin: ["http://localhost:5173"],
@@ -50,14 +45,24 @@ async function serverStart() {
             },
         });
 
+        const roomManager = new RoomManager(); // Instantiate the RoomManager
+
         io.on("connection", (socket) => {
             console.log(`User connected with socket id: ${socket.id}`);
 
-            // const clientSocketId = socket.handshake.query.socketId; // Get the socketId from the client
-            // if (clientSocketId) {
-            //     console.log(`Client provided socketId: ${clientSocketId}`);
-            // };
-            
+            // Set up the socket listeners for room events
+            roomEvents.createRoomRequest(socket, roomManager);
+            roomEvents.joinRoomRequest(socket, roomManager);
+            roomEvents.randomRoomRequest(socket, roomManager);
+            roomEvents.leaveRoomRequest(socket, roomManager);
+            roomEvents.userDisconnect(socket, roomManager);
+
+            // You can also set up the socket listeners for user, game, and chat events here
+            // Example:
+            // userEvents.someUserEvent(socket, roomManager);
+            // gameEvents.someGameEvent(socket, roomManager);
+            // chatEvents.someChatEvent(socket, roomManager);
+
             socket.on("disconnect", () => {
                 console.log(`User disconnected with socket id: ${socket.id}`);
             });
@@ -68,6 +73,4 @@ async function serverStart() {
     }
 }
 
-
-
-serverStart(); // Invoke the function to start the server
+serverStart();
