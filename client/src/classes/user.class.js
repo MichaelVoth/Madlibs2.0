@@ -9,8 +9,9 @@ class PlayerClass {
 }
 
 class UserClass extends PlayerClass {
-    constructor(id, username, avatar, isActive, notifications, friends, activeFriends, accountStatus) {
+    constructor(id, username, avatar, isActive, email, notifications, friends, activeFriends, accountStatus) {
         super(id, username, avatar, isActive);
+        this.email = email || '';
         this.notifications = notifications || [];
         this.friends = friends || [];
         this.activeFriends = activeFriends || [];
