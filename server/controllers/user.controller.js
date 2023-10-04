@@ -49,6 +49,7 @@ const loginUser = async (req, res) => {
             user._id,
             user.username,
             user.avatar,
+            user.email,
             user.isActive,
             user.notifications || [],
             user.friends || [],

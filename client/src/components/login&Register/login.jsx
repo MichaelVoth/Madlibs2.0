@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 import ConsoleLog from '../../developerTools/consoleLogData.jsx';
+import UserInfoDisplay from '../../developerTools/userInfoDisplay.jsx';
 
 
 
@@ -63,9 +64,8 @@ const changeHandler = (e) => {
 return (
     <div className="container">
         <div className="row">
-            <div className="col-6">
+            <div className="col">
                 <h1>Login</h1>
-                {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                 <form onSubmit={submitHandler}>
                     <div className="form-group">
                         <label htmlFor="username">Username: </label>
@@ -77,8 +77,10 @@ return (
                     </div>
                     <input type="submit" value="Login" className="btn btn-primary" />
                 </form>
+                {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                 <p>Don't have an account? <Link to="/register">Register</Link></p>
                 <ConsoleLog />
+                <UserInfoDisplay />
             </div>
         </div>
     </div>
