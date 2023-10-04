@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import { UserClass } from "../../client/src/classes/user.class.js";
-import { hashPassword, checkPassword, generateJWT } from "../utils/login-functions.js";
+import { hashPassword, checkPassword, generateJWT } from "../utils/loginFunctions.js";
 
 
 const registerUser = async (req, res) => {

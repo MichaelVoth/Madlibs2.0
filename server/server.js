@@ -7,7 +7,10 @@ import { Server } from "socket.io";
 import dbConnect from "./mongo/dbConnect.js";
 import userRouter from './routes/user.routes.js';
 import templateRouter from './routes/template.routes.js'; // Assuming you have a file named template.routes.js
-import authMiddleware from './middleware/auth.js';
+import * as roomEvents from "./events/room.events.js"
+import * as userEvents from "./events/user.events.js"
+import * as gameEvents from "./events/game.events.js"
+import * as chatEvents from "./events/chat.events.js"
 
 const app = express();
 
