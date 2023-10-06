@@ -36,7 +36,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         socket.on('CREATE_ROOM_SUCCESS', (roomId) => {
-            navigate(`/rooms/${roomId}`);
+            navigate(`/loggedIn/room/${roomId}`);
         })
 
         socket.on('CREATE_ROOM_FAILURE', (err) => {

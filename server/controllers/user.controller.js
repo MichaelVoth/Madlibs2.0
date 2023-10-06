@@ -21,7 +21,17 @@ const registerUser = async (req, res) => {
         const user = await User.create(newUser); // create the user in the database and set the isActive property to true
         const token = generateJWT({ id: user._id, username: user.username });
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
-        const userInstance = new UserClass(user._id, user.username, user.avatar, token);
+        const userInstance = new UserClass(
+            user._id,
+            user.username,
+            user.avatar,
+            user.isActive,
+            user.email,
+            user.notifications || [],
+            user.friends || [],
+            user.activeFriends || [],
+            user.accountStatus || 'active'
+        );
         return res.json({ user: userInstance, token });
 
     } catch (err) {

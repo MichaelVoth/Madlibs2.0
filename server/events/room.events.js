@@ -1,12 +1,12 @@
+import  RoomManager  from "../../client/src/classes/roomManager.class.js";
 
 
-
-const createRoomRequest = (socket, RoomManager) => {
+const createRoomRequest = (socket, RoomManagerInstance) => {
     socket.on("CREATE_ROOM_REQUEST", (userID) => {
         try {
-            const roomCode = RoomManager.createRoom();
+            const roomCode = RoomManagerInstance.createRoom();
             socket.emit("CREATE_ROOM_SUCCESS", roomCode);
-            RoomManager.joinRoom(roomCode, userID);
+            RoomManagerInstance.joinRoom(roomCode, userID);
             socket.join(roomCode);
         } catch (error) {
             socket.emit("CREATE_ROOM_FAILURE", error.message);
@@ -14,10 +14,10 @@ const createRoomRequest = (socket, RoomManager) => {
     });
 }
 
-const joinRoomRequest = (socket, RoomManager) => {
+const joinRoomRequest = (socket, RoomManagerInstance) => {
     socket.on("JOIN_ROOM_REQUEST", (roomCode, userID) => {
         try {
-            RoomManager.joinRoom(roomCode, userID);
+            RoomManagerInstance.joinRoom(roomCode, userID);
             socket.emit("JOIN_ROOM_SUCCESS", roomCode);
             socket.join(roomCode);
             socket.to(roomCode).emit("USER_JOINED_ROOM", userID);
@@ -27,12 +27,12 @@ const joinRoomRequest = (socket, RoomManager) => {
     });
 }
 
-const randomRoomRequest = (socket, RoomManager) => {
+const randomRoomRequest = (socket, RoomManagerInstance) => {
     socket.on("RANDOM_ROOM_REQUEST", (userID) => {
         try {
-            const roomCode = RoomManager.randomRoom();
+            const roomCode = RoomManagerInstance.randomRoom();
             socket.emit("RANDOM_ROOM_SUCCESS", roomCode);
-            RoomManager.joinRoom(roomCode, userID);
+            RoomManagerInstance.joinRoom(roomCode, userID);
             socket.join(roomCode);
         } catch (error) {
             socket.emit("RANDOM_ROOM_FAILURE", error.message);
@@ -40,10 +40,10 @@ const randomRoomRequest = (socket, RoomManager) => {
     });
 }
 
-const leaveRoomRequest = (socket, RoomManager) => {
+const leaveRoomRequest = (socket, RoomManagerInstance) => {
     socket.on("LEAVE_ROOM_REQUEST", (roomCode, userID) => {
         try {
-            RoomManager.leaveRoom(roomCode, userID);
+            RoomManagerInstance.leaveRoom(roomCode, userID);
             socket.emit("LEAVE_ROOM_SUCCESS", roomCode);
             socket.leave(roomCode);
             socket.to(roomCode).emit("USER_LEFT_ROOM", userID);
@@ -53,9 +53,9 @@ const leaveRoomRequest = (socket, RoomManager) => {
     });
 }
 
-const userDisconnect = (socket, RoomManager) => {
+const userDisconnect = (socket, RoomManagerInstance) => {
     socket.on("disconnect", () => {
-        const rooms = RoomManager.getRooms();
+        const rooms = RoomManagerInstance.getRooms();
         for (const roomCode in rooms) {
             if (rooms.hasOwnProperty(roomCode)) {
                 const index = rooms[roomCode].indexOf(socket.id);

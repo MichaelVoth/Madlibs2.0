@@ -34,7 +34,7 @@ const AvatarModal = ({ show }) => {
       }, { withCredentials: true });
       if (response.status === 200) { 
         setUser(prevUser => ({ ...prevUser, avatar: color }));
-        navigate("/dashboard");
+        navigate("/loggedIn");
       } else {
         console.error("Failed to update avatar");
       }

@@ -6,7 +6,7 @@ import ProtectedRoutes from './components/login&Register/protectedRoutes';
 import Dashboard from './components/dashboard';
 import Login from './components/login&Register/login';
 import Register from './components/login&Register/register';
-import AvatarModal from './forms/avatarModal';
+import RoomView from './views/room.view.jsx';
 
 import ProtectedPage from './developerTools/protectedPage';
 
@@ -19,11 +19,10 @@ function App() {
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/avatar" element={<AvatarModal />} />
                     <Route path="/loggedIn" element={<ProtectedRoutes />}>
                         <Route index path="" element={<Dashboard />} />
                         <Route path="protected" element={<ProtectedPage />} />
-                        <Route path="rooms/:roomId"/>
+                        <Route path="room/:roomId" element={<RoomView />}/>
                     </Route>
                     <Route path="*" element={<Login />} /> {/* Default route */}
                 </Routes>
