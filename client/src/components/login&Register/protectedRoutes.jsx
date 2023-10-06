@@ -9,17 +9,17 @@ const ProtectedRoutes = (props) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("Checking token");
+        // console.log("Checking token");
         axios.get("http://localhost:3001/api/users/verify-token", { withCredentials: true })
             .then(response => {
                 if (response.data.valid) {
-                    console.log("Valid token");
+                    // console.log("Valid token");
                     setIsAuthenticated(true);
                 } else {
-                    console.log("Invalid token");
+                    // console.log("Invalid token");
                     setIsAuthenticated(false);
                 }
-                console.log("response.data", response.data);
+                // console.log("response.data", response.data);
                 setLoading(false);
             })
             .catch(error => {

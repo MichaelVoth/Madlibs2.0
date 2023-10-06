@@ -56,7 +56,8 @@ const loginUser = async (req, res) => {
             user.activeFriends || [],
             user.accountStatus || 'active'
         );
-        console.log("User Instance:", userInstance);
+        // console.log("User Instance:", userInstance);
+        // console.log("Token:", token);
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
         return res.json({ user: userInstance, token }) // send the UserClass object and token back to the client
 

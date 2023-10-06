@@ -8,6 +8,8 @@ import Login from './components/login&Register/login';
 import Register from './components/login&Register/register';
 import AvatarModal from './forms/avatarModal';
 
+import ProtectedPage from './developerTools/protectedPage';
+
 function App() {
 
 
@@ -20,6 +22,7 @@ function App() {
                     <Route path="/avatar" element={<AvatarModal />} />
                     <Route path="/loggedIn" element={<ProtectedRoutes />}>
                         <Route index path="" element={<Dashboard />} />
+                        <Route path="protected" element={<ProtectedPage />} />
                         <Route path="rooms/:roomId"/>
                     </Route>
                     <Route path="*" element={<Login />} /> {/* Default route */}

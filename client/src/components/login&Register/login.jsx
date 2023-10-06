@@ -34,10 +34,10 @@ const Login = () => {
                 setIsActive(true);
                 setUser(user);
                 sessionStorage.setItem("user", JSON.stringify(user));
-                console.log("user logged in:", user);
+                // console.log("user logged in:", user);
                 setUsername("");
                 setPassword("");
-                navigate("/loggedIn/dashboard");
+                navigate("/loggedIn");
             })
 
             .catch (err => {
