@@ -6,7 +6,6 @@ import ProtectedRoutes from './components/login&Register/protectedRoutes';
 import Dashboard from './components/dashboard';
 import Login from './components/login&Register/login';
 import Register from './components/login&Register/register';
-import UserList from './developerTools/userlist';
 import AvatarModal from './forms/avatarModal';
 
 function App() {
@@ -16,12 +15,12 @@ function App() {
         <div className="App">
             <Router>
                 <Routes>
-                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/avatar" element={<AvatarModal />} />
-                    <Route path="/userlist" element={<ProtectedRoutes />}>
-                        <Route index element={<UserList />} />
+                    <Route path="/loggedIn" element={<ProtectedRoutes />}>
+                        <Route index path="" element={<Dashboard />} />
+                        <Route path="rooms/:roomId"/>
                     </Route>
                     <Route path="*" element={<Login />} /> {/* Default route */}
                 </Routes>

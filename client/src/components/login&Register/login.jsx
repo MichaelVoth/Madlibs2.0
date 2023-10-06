@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import ConsoleLog from '../../developerTools/consoleLogData.jsx';
 import UserInfoDisplay from '../../developerTools/userInfoDisplay.jsx';
+import Logout from './logout.jsx';
 
 
 
@@ -33,9 +34,10 @@ const Login = () => {
                 setIsActive(true);
                 setUser(user);
                 sessionStorage.setItem("user", JSON.stringify(user));
+                console.log("user logged in:", user);
                 setUsername("");
                 setPassword("");
-                navigate("/dashboard");
+                navigate("/loggedIn/dashboard");
             })
 
             .catch (err => {
@@ -81,6 +83,7 @@ return (
                 <p>Don't have an account? <Link to="/register">Register</Link></p>
                 <ConsoleLog />
                 <UserInfoDisplay />
+                <Logout />
             </div>
         </div>
     </div>
