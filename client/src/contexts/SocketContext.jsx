@@ -15,7 +15,7 @@ export const SocketProvider = ({ children }) => {
 
             if (newSocket) {  // Check if newSocket is defined before attaching event listeners
                 newSocket.on("connect", () => {
-                    console.log(`Connected with ID: ${newSocket.id}`);
+                    // console.log(`Connected with ID: ${newSocket.id}`);
                     if (user) {
                         sessionStorage.setItem("user", JSON.stringify(user));
                         // If there's a user in context, emit an event to the server to associate this socket ID with the user.
@@ -52,7 +52,7 @@ export const SocketProvider = ({ children }) => {
             setSocket(newSocket); // Set the socket state to the new socket
 
             newSocket.on("connect", () => { // Add event listener for when the socket connects
-                console.log(`Connected to the server with id: ${newSocket.id}`);
+                // console.log(`Connected to the server with id: ${newSocket.id}`);
                 const user = JSON.parse(sessionStorage.getItem("user")); // Get the user from session storage
                 if (user) { // Check that user is not null
                     user.socketId = newSocket.id; // Add the socket ID to the user object

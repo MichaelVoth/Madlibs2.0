@@ -26,8 +26,8 @@ const Dashboard = () => {
         socket.emit('CREATE_ROOM_REQUEST', user.id);
     }
 
-    const joinRoomRequest = () => {
-        socket.emit('JOIN_ROOM_REQUEST', roomCode, user.id);
+    const joinRoomRequest = (roomID) => {
+        socket.emit('JOIN_ROOM_REQUEST', roomID, user.id);
     }
 
     const randomRoomRequest = () => {
@@ -36,11 +36,16 @@ const Dashboard = () => {
 
     useEffect(() => {
         socket.on('CREATE_ROOM_SUCCESS', (roomId) => {
+            // console.log('Room Created: ', roomId);
             navigate(`/loggedIn/room/${roomId}`);
         })
 
         socket.on('CREATE_ROOM_FAILURE', (err) => {
             console.log(err);
+        })
+
+        socket.on('JOIN_ROOM_SUCCESS', (roomId) => {
+            navigate(`/loggedIn/room/${roomId}`);
         })
 
         return () => {

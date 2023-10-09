@@ -54,7 +54,7 @@ async function serverStart() {
         const roomManager = new RoomManager(); // Instantiate the RoomManager
 
         io.on("connection", (socket) => {
-            console.log(`User connected with socket id: ${socket.id}`);
+            // console.log(`User connected with socket id: ${socket.id}`);
 
             // Set up the socket listeners for room events
             roomEvents.createRoomRequest(socket, roomManager);
@@ -70,7 +70,7 @@ async function serverStart() {
             // chatEvents.someChatEvent(socket, roomManager);
 
             socket.on("disconnect", () => {
-                console.log(`User disconnected with socket id: ${socket.id}`);
+                // console.log(`User disconnected with socket id: ${socket.id}`);
             });
         });
 

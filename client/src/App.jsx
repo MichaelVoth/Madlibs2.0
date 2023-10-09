@@ -22,7 +22,7 @@ function App() {
                     <Route path="/loggedIn" element={<ProtectedRoutes />}>
                         <Route index path="" element={<Dashboard />} />
                         <Route path="protected" element={<ProtectedPage />} />
-                        <Route path="room/:roomId" element={<RoomView />}/>
+                        <Route path="room/:roomID" element={<RoomView />}/>
                     </Route>
                     <Route path="*" element={<Login />} /> {/* Default route */}
                 </Routes>

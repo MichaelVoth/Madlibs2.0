@@ -5,50 +5,52 @@ import Logout from '../components/login&Register/logout';
 import { useUserContext } from '../contexts/UserContext.jsx';
 import { useSocketContext } from '../contexts/SocketContext.jsx';
 
-
 const RoomView = () => {
 
     const { user } = useUserContext();
     const { socket } = useSocketContext();
 
-    const { roomCode } = useParams();
+    const { roomID } = useParams();
     const [usersInRoom, setUsersInRoom] = useState([]);
 
-    const navigate = useNavigate();
-
     useEffect(() => {
-        socket.emit('USER_JOINED_ROOM', {
-            roomCode: roomCode,
-            Id: user.id,
-        
+
+        socket.emit('GET_USERS_IN_ROOM', roomID);
+
+        socket.on('USER_JOINED_ROOM', (userID) => {
+            setUsersInRoom(usersInRoom => [...usersInRoom, userID]); 
         });
 
-        socket.on('JOIN_ROOM_ACCEPTED', (listOfUsers) => {
-            console.log('List of users in room from server', listOfUsers);
-            setUsersInRoom(listOfUsers);
+        socket.on('USER_LEFT_ROOM', (userID) => {
+            setUsersInRoom(prevUsers => prevUsers.filter(user => user !== userID));
+        });
 
-            socket.on('JOIN_ROOM_DENIED', (result) => {
-                console.log('room request denied.');
-                navigate('/loggedIn');
-            });
+        socket.on('GET_USERS_IN_ROOM', (users) => {
+            setUsersInRoom(users);
+        });
+
+        socket.on('UPDATE_USERS_IN_ROOM', (users) => {
+            setUsersInRoom(users);
         });
 
         return () => {
-            socket.off('JOIN_ROOM_ACCEPTED');
-            socket.off('JOIN_ROOM_DENIED');
+            socket.off('USER_JOINED_ROOM');
+            socket.off('USER_LEFT_ROOM');
+            socket.off('GET_USERS_IN_ROOM');
+            socket.off('UPDATE_USERS_IN_ROOM');
         };
     }, [socket]);
 
     return (
         <div>
-            <h2>Room View</h2>
+            <h2>Room View: {roomID} </h2>
             <p>Welcome {user && user.username}</p>
 
             <h3>Users in room</h3>
             <ul>
-                {usersInRoom.map((user, index) => (
-                    <li key={index}>{user.username}</li>
-                ))}
+                {usersInRoom.map((userID, index) => { 
+                    return <li key={index}>{userID}</li>;
+                })}
             </ul>
             <Logout />
         </div>

@@ -25,16 +25,18 @@ class RoomManager {
     }
 
     createRoom() { // Returns a room code
-        const roomCode = this.generateRoomCode(Object.keys(this.rooms));
-        this.rooms[roomCode] = [];
-        return roomCode;
+        const roomID = this.generateRoomCode(Object.keys(this.rooms));
+        this.rooms[roomID] = [];
+        // console.log('rooms', this.rooms)
+        return roomID;
     }
 
-    joinRoom(roomCode, userID) {
-        if (this.rooms.hasOwnProperty(roomCode)) {
-            if (!this.rooms[roomCode].includes(userID)) {
-                if (this.rooms[roomCode].length < this.maxUsersPerRoom) {
-                    this.rooms[roomCode].push(userID);
+    joinRoom(roomID, userID) {
+        if (this.rooms.hasOwnProperty(roomID)) { // If room exists
+            if (!this.rooms[roomID].includes(userID)) { // If user is not already in room
+                if (this.rooms[roomID].length < this.maxUsersPerRoom) { // If room is not full
+                    this.rooms[roomID].push(userID); // Add user to room
+                    console.log('users in room', this.rooms[roomID])
                 } else {
                     throw new Error("Room is full.");
                 }
@@ -46,26 +48,31 @@ class RoomManager {
         }
     }
 
-    leaveRoom(roomCode, userID) {
-        if (this.rooms.hasOwnProperty(roomCode)) {
-            const index = this.rooms[roomCode].indexOf(userID);
+    leaveRoom(roomID, userID) {
+        if (this.rooms.hasOwnProperty(roomID)) {
+            const index = this.rooms[roomID].indexOf(userID);
             if (index !== -1) {
-                this.rooms[roomCode].splice(index, 1);
-                if (this.rooms[roomCode].length === 0) {
-                    delete this.rooms[roomCode];
+                this.rooms[roomID].splice(index, 1);
+                if (this.rooms[roomID].length === 0) {
+                    delete this.rooms[roomID];
                 }
             }
         }
     }
 
     randomRoom() {
-        const roomCodes = Object.keys(this.rooms);
-        return roomCodes[Math.floor(Math.random() * roomCodes.length)];
+        const roomIDs = Object.keys(this.rooms); // Get all room IDs
+        let randomRoomPick = roomIDs[Math.floor(Math.random() * roomIDs.length)];
+        while (this.rooms[randomRoomPick].length > this.maxUsersPerRoom) { 
+            // If randomly picked room is full, pick another room
+            randomRoomPick = roomIDs[Math.floor(Math.random() * roomIDs.length)];
+        }
+        return randomRoomPick;
     }
 
-    removeRoom(roomCode) {
-        if (this.rooms.hasOwnProperty(roomCode)) {
-            delete this.rooms[roomCode];
+    removeRoom(roomID) {
+        if (this.rooms.hasOwnProperty(roomID)) {
+            delete this.rooms[roomID];
         }
     }
 
@@ -77,12 +84,12 @@ class RoomManager {
         return Object.keys(this.rooms).length;
     }
 
-    getRoom(roomCode) {
-        return this.rooms[roomCode] || null;
+    getRoom(roomID) {
+        return this.rooms[roomID] || null;
     }
 
-    getUsersInRoom(roomCode) {
-        return this.rooms[roomCode] || [];
+    getUsersInRoom(roomID) {
+        return this.rooms[roomID] || [];
     }
 
     isUserInAnyRoom(userID) {
