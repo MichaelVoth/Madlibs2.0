@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Logout from '../components/login&Register/logout';
 
 import { useUserContext } from '../contexts/UserContext.jsx';
@@ -12,34 +12,27 @@ const RoomView = () => {
 
     const { roomID } = useParams();
     const [usersInRoom, setUsersInRoom] = useState([]);
+    const navigate = useNavigate();
+
+    const leaveRoom = () => {
+        socket.emit('LEAVE_ROOM_REQUEST', roomID, user.id);
+    }
 
     useEffect(() => {
-
-        socket.emit('GET_USERS_IN_ROOM', roomID);
-
-        socket.on('USER_JOINED_ROOM', (userID) => {
-            setUsersInRoom(usersInRoom => [...usersInRoom, userID]); 
-        });
-
-        socket.on('USER_LEFT_ROOM', (userID) => {
-            setUsersInRoom(prevUsers => prevUsers.filter(user => user !== userID));
-        });
-
-        socket.on('GET_USERS_IN_ROOM', (users) => {
-            setUsersInRoom(users);
-        });
 
         socket.on('UPDATE_USERS_IN_ROOM', (users) => {
             setUsersInRoom(users);
         });
 
+        socket.on('LEAVE_ROOM_SUCCESS', () => {
+            navigate('/loggedIn');
+        });
+
         return () => {
-            socket.off('USER_JOINED_ROOM');
-            socket.off('USER_LEFT_ROOM');
-            socket.off('GET_USERS_IN_ROOM');
             socket.off('UPDATE_USERS_IN_ROOM');
+            socket.off('LEAVE_ROOM_SUCCESS');
         };
-    }, [socket]);
+    }, [socket, roomID]);
 
     return (
         <div>
@@ -52,6 +45,7 @@ const RoomView = () => {
                     return <li key={index}>{userID}</li>;
                 })}
             </ul>
+            <button onClick={leaveRoom}>Leave Room</button>
             <Logout />
         </div>
     )

@@ -48,9 +48,26 @@ const Dashboard = () => {
             navigate(`/loggedIn/room/${roomId}`);
         })
 
+        socket.on('JOIN_ROOM_FAILURE', (err) => {
+            console.log(err);
+        })
+
+        socket.on('RANDOM_ROOM_SUCCESS', (roomId) => {
+            navigate(`/loggedIn/room/${roomId}`);
+        })
+
+        socket.on('RANDOM_ROOM_FAILURE', (err) => {
+            console.log(err);
+        })
+
         return () => {
             socket.off('CREATE_ROOM_SUCCESS');
             socket.off('CREATE_ROOM_FAILURE');
+            socket.off('JOIN_ROOM_SUCCESS');
+            socket.off('JOIN_ROOM_FAILURE');
+            socket.off('RANDOM_ROOM_SUCCESS');
+            socket.off('RANDOM_ROOM_FAILURE');
+
         }
     }, [socket])
 

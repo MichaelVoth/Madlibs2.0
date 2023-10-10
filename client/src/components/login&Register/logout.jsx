@@ -19,7 +19,6 @@ const Logout = () => {
                 localStorage.clear("user");
                 disconnectSocket();
                 console.log("Logged out successfully");
-                console.log("User:", user);
                 navigate("/");
             }
         } catch (error) {

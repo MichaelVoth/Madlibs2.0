@@ -27,7 +27,7 @@ class RoomManager {
     createRoom() { // Returns a room code
         const roomID = this.generateRoomCode(Object.keys(this.rooms));
         this.rooms[roomID] = [];
-        // console.log('rooms', this.rooms)
+        console.log('rooms', this.rooms)
         return roomID;
     }
 
@@ -36,7 +36,7 @@ class RoomManager {
             if (!this.rooms[roomID].includes(userID)) { // If user is not already in room
                 if (this.rooms[roomID].length < this.maxUsersPerRoom) { // If room is not full
                     this.rooms[roomID].push(userID); // Add user to room
-                    console.log('users in room', this.rooms[roomID])
+                    // console.log('users in room', this.rooms[roomID])
                 } else {
                     throw new Error("Room is full.");
                 }

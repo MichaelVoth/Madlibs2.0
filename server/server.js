@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -7,11 +6,13 @@ import { Server } from "socket.io";
 import dbConnect from "./mongo/dbConnect.js";
 import userRouter from './routes/user.routes.js';
 import templateRouter from './routes/template.routes.js';
-import * as roomEvents from "./events/room.events.js"
-import * as userEvents from "./events/user.events.js"
-import * as gameEvents from "./events/game.events.js"
-import * as chatEvents from "./events/chat.events.js"
+import * as roomEvents from "./events/room.events.js";
+import * as userEvents from "./events/user.events.js";
+import * as gameEvents from "./events/game.events.js";
+import * as chatEvents from "./events/chat.events.js";
 import RoomManager from '../client/src/classes/roomManager.class.js';
+
+dotenv.config();
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.get('/test', (req, res) => {
     res.send('Test route');
 });
 
+let io;  // Declare io here
 
 async function serverStart() {
     try {
@@ -42,7 +44,7 @@ async function serverStart() {
         const PORT = process.env.PORT;
         const server = app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 
-        const io = new Server(server, {
+        io = new Server(server, {
             cors: {
                 origin: ["http://localhost:5173"],
                 methods: ["GET", "POST"],
@@ -54,8 +56,6 @@ async function serverStart() {
         const roomManager = new RoomManager(); // Instantiate the RoomManager
 
         io.on("connection", (socket) => {
-            // console.log(`User connected with socket id: ${socket.id}`);
-
             // Set up the socket listeners for room events
             roomEvents.createRoomRequest(socket, roomManager);
             roomEvents.joinRoomRequest(socket, roomManager);
@@ -80,3 +80,5 @@ async function serverStart() {
 }
 
 serverStart();
+
+export default { io };  // Export io at the end of the file
