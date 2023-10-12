@@ -69,6 +69,7 @@ async function serverStart() {
             roomEvents.leaveRoomRequest(socket, roomManagerInstance);
             roomEvents.userDisconnect(socket, roomManagerInstance);
 
+            chatEvents.newMessageSent(socket, roomManagerInstance);
             // You can also set up the socket listeners for user, game, and chat events here
             // Example:
             // userEvents.someUserEvent(socket, roomManager);

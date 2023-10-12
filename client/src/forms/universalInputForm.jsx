@@ -19,7 +19,6 @@ const UniversalInputForm = (props) => {
     setLocalValueError('')
     setAction(localValue)
     setLocalValue('')
-    console.log(localValue)
   }
   return(
     <Form onSubmit={handleSubmit}>

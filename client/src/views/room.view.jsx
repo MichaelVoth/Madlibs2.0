@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import UserList from '../components/room/userList';
+import ChatBox from '../components/chat/chatbox.jsx';
 import Logout from '../components/login&Register/logout';
 
 import { useUserContext } from '../contexts/UserContext.jsx';
@@ -53,6 +54,7 @@ const RoomView = () => {
         <div>
             <h2>Room View: {roomID} </h2>
             <p>Welcome {user && user.username}</p>
+            <ChatBox />
             <UserList usersInRoom={usersInRoom} />
             <button onClick={leaveRoom}>Leave Room</button>
             <Logout />
