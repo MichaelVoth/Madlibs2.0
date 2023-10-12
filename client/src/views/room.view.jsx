@@ -36,15 +36,12 @@ const RoomView = () => {
         axios.get(`http://localhost:3001/api/room/${roomID}`, { withCredentials: true })
             .then(res => {
                 setUsersInRoom(res.data);
-                setUsernames(res.data.map(user => user.username));
             })
             .catch(err =>
                 console.log(err));
 
         socket.on('UPDATE_USERS_IN_ROOM', (results) => {
             setUsersInRoom(results);
-            const usernames = results.map(user => user.username);
-            setUsernames(usernames);
         });
 
         return () => {
