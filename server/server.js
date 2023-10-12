@@ -6,11 +6,12 @@ import { Server } from "socket.io";
 import dbConnect from "./mongo/dbConnect.js";
 import userRouter from './routes/user.routes.js';
 import templateRouter from './routes/template.routes.js';
+import roomRouter from './routes/room.routes.js';
 import * as roomEvents from "./events/room.events.js";
 import * as userEvents from "./events/user.events.js";
 import * as gameEvents from "./events/game.events.js";
 import * as chatEvents from "./events/chat.events.js";
-import RoomManager from '../client/src/classes/roomManager.class.js';
+import RoomManager from './classes/roomManager.class.js';
 
 dotenv.config();
 
@@ -23,8 +24,14 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
 app.use('/api/users', userRouter);
 app.use("/api/templates", templateRouter);
+app.use("/api/room", roomRouter);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
@@ -36,7 +43,7 @@ app.get('/test', (req, res) => {
     res.send('Test route');
 });
 
-let io;  // Declare io here
+let io;
 
 async function serverStart() {
     try {
@@ -53,15 +60,12 @@ async function serverStart() {
             },
         });
 
-        const roomManager = new RoomManager(); // Instantiate the RoomManager
+        const roomManagerInstance = new RoomManager(); // Instantiate the RoomManager
+        app.set("roomManagerInstance", roomManagerInstance); // Set the RoomManager instance in the app object (for access in the routes")
 
         io.on("connection", (socket) => {
             // Set up the socket listeners for room events
-            roomEvents.createRoomRequest(socket, roomManager);
-            roomEvents.joinRoomRequest(socket, roomManager);
-            roomEvents.randomRoomRequest(socket, roomManager);
-            roomEvents.leaveRoomRequest(socket, roomManager);
-            roomEvents.userDisconnect(socket, roomManager);
+            roomEvents.userDisconnect(socket, roomManagerInstance);
 
             // You can also set up the socket listeners for user, game, and chat events here
             // Example:
@@ -81,4 +85,4 @@ async function serverStart() {
 
 serverStart();
 
-export default { io };  // Export io at the end of the file
+export { io };

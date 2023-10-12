@@ -2,7 +2,7 @@
 
 class RoomManager {
     constructor() {
-        this.rooms = {};
+        this.rooms = {}; // { roomID: { users: { userID: { username, avatar } } } }
         this.maxUsersPerRoom = 6;
     }
 
@@ -26,17 +26,16 @@ class RoomManager {
 
     createRoom() { // Returns a room code
         const roomID = this.generateRoomCode(Object.keys(this.rooms));
-        this.rooms[roomID] = [];
-        console.log('rooms', this.rooms)
+        this.rooms[roomID] = { users: {} };
         return roomID;
     }
+    
 
-    joinRoom(roomID, userID) {
+    joinRoom(roomID, userID, username, avatar) {
         if (this.rooms.hasOwnProperty(roomID)) { // If room exists
-            if (!this.rooms[roomID].includes(userID)) { // If user is not already in room
-                if (this.rooms[roomID].length < this.maxUsersPerRoom) { // If room is not full
-                    this.rooms[roomID].push(userID); // Add user to room
-                    // console.log('users in room', this.rooms[roomID])
+            if (!this.rooms[roomID].users[userID]) { // If user is not already in room
+                if (Object.keys(this.rooms[roomID].users).length < this.maxUsersPerRoom) { // If room is not full
+                    this.rooms[roomID].users[userID] = { userID, username, avatar }; // Add user to room
                 } else {
                     throw new Error("Room is full.");
                 }
@@ -47,18 +46,17 @@ class RoomManager {
             throw new Error("Room does not exist.");
         }
     }
+    
 
     leaveRoom(roomID, userID) {
-        if (this.rooms.hasOwnProperty(roomID)) {
-            const index = this.rooms[roomID].indexOf(userID);
-            if (index !== -1) {
-                this.rooms[roomID].splice(index, 1);
-                if (this.rooms[roomID].length === 0) {
-                    delete this.rooms[roomID];
-                }
+        if (this.rooms.hasOwnProperty(roomID) && this.rooms[roomID].users[userID]) {
+            delete this.rooms[roomID].users[userID];
+            if (Object.keys(this.rooms[roomID].users).length === 0) {
+                delete this.rooms[roomID];
             }
         }
     }
+    
 
     randomRoom() {
         const roomIDs = Object.keys(this.rooms); // Get all room IDs
@@ -88,13 +86,20 @@ class RoomManager {
         return this.rooms[roomID] || null;
     }
 
+
     getUsersInRoom(roomID) {
-        return this.rooms[roomID] || [];
+        if (this.rooms[roomID]) {
+            return Object.values(this.rooms[roomID].users); // Return an array of user objects
+        } else {
+            throw new Error(`Room with ID ${roomID} does not exist.`);
+        }
     }
+    
+    
 
     isUserInAnyRoom(userID) {
         for (let room in this.rooms) {
-            if (this.rooms[room].includes(userID)) {
+            if (this.rooms[room][userID]) {
                 return true;
             }
         }

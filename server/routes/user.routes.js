@@ -24,6 +24,6 @@ userRouter.delete("/:userId", authMiddleware, deleteUserById);
 userRouter.post("/login", loginUser);
 userRouter.post("/logout", logoutUser);
 
-userRouter.delete("/delete/all", deleteAllUsers);
+userRouter.delete("/delete/all", deleteAllUsers); //Remove this route in production
 
 export default userRouter;

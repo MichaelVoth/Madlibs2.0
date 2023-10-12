@@ -1,6 +1,7 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Logout from './login&Register/logout.jsx';
 import ProfileCard from './profileCard.jsx';
 import UniversalInputForm from '../forms/UniversalInputForm.jsx';
@@ -23,54 +24,32 @@ const Dashboard = () => {
     const closeWithoutJoining = () => setShow(false);
 
     const createRoom = () => {
-        socket.emit('CREATE_ROOM_REQUEST', user.id);
+        axios.post('http://localhost:3001/api/room/create', 
+            { socket: socket.id, 
+            userID: user.id, 
+            username: user.username, 
+            avatar: user.avatar }, { withCredentials: true })
+            .then(res => {
+                navigate(`/loggedIn/room/${res.data.roomID}`);
+            })
+            .catch(err => console.log(err));
     }
 
     const joinRoomRequest = (roomID) => {
-        socket.emit('JOIN_ROOM_REQUEST', roomID, user.id);
+        axios.post('http://localhost:3001/api/room/join', { socket: socket.id, roomID: roomID, userID: user.id, username: user.username, avatar: user.avatar }, { withCredentials: true })
+            .then(res => {
+                navigate(`/loggedIn/room/${roomID}`);
+            })
+            .catch(err => console.log(err));
     }
 
     const randomRoomRequest = () => {
-        socket.emit('RANDOM_ROOM_REQUEST', user.id);
+        axios.post('http://localhost:3001/api/room/random', { socket: socket.id, userID: user.id, username: user.username, avatar: user.avatar }, { withCredentials: true })
+            .then(res => {
+                navigate(`/loggedIn/room/${res.data.roomID}`);
+            })
+            .catch(err => console.log(err));
     }
-
-    useEffect(() => {
-        socket.on('CREATE_ROOM_SUCCESS', (roomId) => {
-            // console.log('Room Created: ', roomId);
-            navigate(`/loggedIn/room/${roomId}`);
-        })
-
-        socket.on('CREATE_ROOM_FAILURE', (err) => {
-            console.log(err);
-        })
-
-        socket.on('JOIN_ROOM_SUCCESS', (roomId) => {
-            navigate(`/loggedIn/room/${roomId}`);
-        })
-
-        socket.on('JOIN_ROOM_FAILURE', (err) => {
-            console.log(err);
-        })
-
-        socket.on('RANDOM_ROOM_SUCCESS', (roomId) => {
-            navigate(`/loggedIn/room/${roomId}`);
-        })
-
-        socket.on('RANDOM_ROOM_FAILURE', (err) => {
-            console.log(err);
-        })
-
-        return () => {
-            socket.off('CREATE_ROOM_SUCCESS');
-            socket.off('CREATE_ROOM_FAILURE');
-            socket.off('JOIN_ROOM_SUCCESS');
-            socket.off('JOIN_ROOM_FAILURE');
-            socket.off('RANDOM_ROOM_SUCCESS');
-            socket.off('RANDOM_ROOM_FAILURE');
-
-        }
-    }, [socket])
-
 
     return (
         <div>

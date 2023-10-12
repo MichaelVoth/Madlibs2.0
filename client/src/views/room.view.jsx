@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Logout from '../components/login&Register/logout';
 
 import { useUserContext } from '../contexts/UserContext.jsx';
@@ -12,25 +13,36 @@ const RoomView = () => {
 
     const { roomID } = useParams();
     const [usersInRoom, setUsersInRoom] = useState([]);
+    const [usernames, setUsernames] = useState([]);
     const navigate = useNavigate();
 
     const leaveRoom = () => {
-        socket.emit('LEAVE_ROOM_REQUEST', roomID, user.id);
+        axios.post('http://localhost:3001/api/room/leave', { roomID: roomID, userID: user.id }, { withCredentials: true })
+            .then(res => {
+                console.log(res);
+                navigate('/loggedIn');
+            })
+            .catch(err => console.log(err));
     }
 
     useEffect(() => {
+        axios.get(`http://localhost:3001/api/room/${roomID}?socketID=${socket.id}`, { withCredentials: true })
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err =>
+                console.log(err));
 
-        socket.on('UPDATE_USERS_IN_ROOM', (users) => {
-            setUsersInRoom(users);
-        });
-
-        socket.on('LEAVE_ROOM_SUCCESS', () => {
-            navigate('/loggedIn');
+        socket.on('UPDATE_USERS_IN_ROOM', (results) => {
+            setUsersInRoom(results);
+            console.log("Users in room: ", results);
+            const usernames = results.updatedUsers.map(user => user.username);
+            console.log("Usernames: ", usernames);
+            setUsernames(usernames);
         });
 
         return () => {
             socket.off('UPDATE_USERS_IN_ROOM');
-            socket.off('LEAVE_ROOM_SUCCESS');
         };
     }, [socket, roomID]);
 
@@ -41,9 +53,7 @@ const RoomView = () => {
 
             <h3>Users in room</h3>
             <ul>
-                {usersInRoom.map((userID, index) => { 
-                    return <li key={index}>{userID}</li>;
-                })}
+                {usernames.map((username, i) => <li key={i}>{username}</li>)}
             </ul>
             <button onClick={leaveRoom}>Leave Room</button>
             <Logout />

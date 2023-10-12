@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import { UserClass } from "../../client/src/classes/user.class.js";
+import { UserClass } from "../classes/user.class.js";
 import { hashPassword, checkPassword, generateJWT } from "../utils/loginFunctions.js";
 
 
