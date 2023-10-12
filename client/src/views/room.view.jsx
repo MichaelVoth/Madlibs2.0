@@ -20,12 +20,11 @@ const RoomView = () => {
     const leaveRoom = () => {
         axios.post('http://localhost:3001/api/room/leave', { roomID: roomID, userID: user.id }, { withCredentials: true })
             .then(res => {
-                socket.emit('LEAVE_ROOM', res.data.roomID, (response) => {
-                if (response === 'success') {
-                    console.log(response.message, res.data.roomID);
+                socket.emit('LEAVE_ROOM_REQUEST', res.data.roomID, (response) => {
+                if (response.status === 'success') {
                     navigate('/loggedIn');
                 } else {
-                    console.log(response.message);
+                    console.log("Fail", response.message);
                 }
             });
             })

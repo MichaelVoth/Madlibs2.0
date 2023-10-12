@@ -10,7 +10,6 @@ export const createRoom = ( RoomManagerInstance, userID, username, avatar) => {
 export const joinRoom = ( RoomManagerInstance, roomID, userID, username, avatar) => {
     RoomManagerInstance.joinRoom(roomID, userID, username, avatar);
     const updatedUsers = RoomManagerInstance.getUsersInRoom(roomID);
-    console.log("updatedUsers from API call: ", updatedUsers);
     return { roomID, updatedUsers };
 }
 

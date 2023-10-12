@@ -51,9 +51,6 @@ class RoomManager {
     leaveRoom(roomID, userID) {
         if (this.rooms.hasOwnProperty(roomID) && this.rooms[roomID].users[userID]) {
             delete this.rooms[roomID].users[userID];
-            if (Object.keys(this.rooms[roomID].users).length === 0) {
-                delete this.rooms[roomID];
-            }
         }
     }
     
@@ -68,8 +65,8 @@ class RoomManager {
         return randomRoomPick;
     }
 
-    removeRoom(roomID) {
-        if (this.rooms.hasOwnProperty(roomID)) {
+    removeRoomCheck(roomID) {
+        if (this.rooms.hasOwnProperty(roomID) && Object.keys(this.rooms[roomID].users).length === 0) {
             delete this.rooms[roomID];
         }
     }

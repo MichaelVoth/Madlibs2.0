@@ -31,9 +31,7 @@ const Dashboard = () => {
                 { withCredentials: true })
             .then(res => {
                 socket.emit('JOIN_ROOM_REQUEST', res.data.roomID, (response) => {
-                    console.log("Response: ", response);
                     if (response.status === 'success') {
-                        console.log(response.message, res.data.roomID);
                         navigate(`/loggedIn/room/${res.data.roomID}`);
                     } else {
                         console.log(response.message);
@@ -53,7 +51,6 @@ const Dashboard = () => {
             .then(res => {
                 socket.emit('JOIN_ROOM_REQUEST', roomID, (response) => {
                     if (response.status === 'success') {
-                        console.log(response.message, roomID);
                         navigate(`/loggedIn/room/${roomID}`);
                     } else {
                         console.log(response.message);
@@ -72,7 +69,6 @@ const Dashboard = () => {
             .then(res => {
                 socket.emit('JOIN_ROOM_REQUEST', res.data.roomID, (response) => {
                     if (response.status === 'success') {
-                        console.log(response.message, res.data.roomID);
                         navigate(`/loggedIn/room/${res.data.roomID}`);
                     } else {
                         console.log(response.message);

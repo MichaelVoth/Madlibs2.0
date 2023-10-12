@@ -62,6 +62,7 @@ roomRouter.post('/leave', authMiddleware, (req, res) => {
         const result = leaveRoom( roomManagerInstance, roomID, userID);
         res.json(result);
     } catch (error) {
+        console.log(error);
         res.status(500).send(error.message);
     }
 });

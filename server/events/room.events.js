@@ -4,7 +4,6 @@ const joinRoomRequest = (socket, roomManagerInstance) => {
         try {
             socket.join(roomID);
             const updatedUsers = roomManagerInstance.getUsersInRoom(roomID);
-            console.log("updatedUsers from JOIN REQUEST socket: ", updatedUsers);
             socket.to(roomID).emit("UPDATE_USERS_IN_ROOM", updatedUsers);
             callback({ status: 'success', message: 'Joined room successfully!' });
         } catch (error) {
@@ -21,6 +20,7 @@ const leaveRoomRequest = (socket, roomManagerInstance) => {
             socket.leave(roomID);
             const updatedUsers = roomManagerInstance.getUsersInRoom(roomID);
             socket.to(roomID).emit("UPDATE_USERS_IN_ROOM", updatedUsers);
+            roomManagerInstance.removeRoomCheck(roomID);
             callback({ status: 'success', message: 'Left room successfully!' });
         } catch (error) {
             console.log(error);
