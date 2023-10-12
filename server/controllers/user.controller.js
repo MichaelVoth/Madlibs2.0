@@ -21,7 +21,6 @@ const registerUser = async (req, res) => {
         const user = await User.create(newUser); // create the user in the database and set the isActive property to true
         const token = generateJWT({ id: user._id, username: user.username }); // generate a JWT token
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); //Create a cookie with the token and set the expiration to 1 hour
-        console.log("cookie:", res.cookie)
         const userInstance = new UserClass(
             user._id,
             user.username,
@@ -77,7 +76,7 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = async (req, res) => {
-    await User.findOneAndUpdate({ username: req.body.username }, { isActive: false }); // set the user's isActive property to false
+    await User.findOneAndUpdate({ username: req.body.username }, { isActive: false }); 
     res.cookie('token', '', { expires: new Date(0) });
     return res.json({ message: "Logged out successfully" });
 };

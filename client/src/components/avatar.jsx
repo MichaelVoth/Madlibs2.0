@@ -1,5 +1,4 @@
-import React from "react";
-import { useUserContext } from "../contexts/UserContext";
+import React, { useState } from "react";
 import blueAvatar from "../assets/blueAvatar.png";
 import greenAvatar from "../assets/greenAvatar.png";
 import orangeAvatar from "../assets/orangeAvatar.png";
@@ -7,9 +6,8 @@ import pinkAvatar from "../assets/pinkAvatar.png";
 import purpleAvatar from "../assets/purpleAvatar.png";
 import yellowAvatar from "../assets/yellowAvatar.png";
 
-const Avatar = () => {
+const Avatar = ({ color, className }) => {
 
-    const { user } = useUserContext(); //custom hook from UserContext.jsx
 
     const avatarList = [ // List of avatars to choose from
     { color: "blue", image: blueAvatar },
@@ -19,11 +17,11 @@ const Avatar = () => {
     { color: "purple", image: purpleAvatar },
     { color: "yellow", image: yellowAvatar },
 ];
-const userAvatar = avatarList.find(avatar => avatar.color === user.avatar);
+const userAvatar = avatarList.find(avatar => avatar.color === color);
 
     return (
         <div>
-            {userAvatar && <img src={userAvatar.image} alt={userAvatar.color} />}
+            {userAvatar && <img className={className} src={userAvatar.image} alt={userAvatar.color} />}
         </div>
     );
 }

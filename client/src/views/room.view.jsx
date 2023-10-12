@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import UserList from '../components/room/userList';
 import Logout from '../components/login&Register/logout';
 
 import { useUserContext } from '../contexts/UserContext.jsx';
@@ -55,11 +56,7 @@ const RoomView = () => {
         <div>
             <h2>Room View: {roomID} </h2>
             <p>Welcome {user && user.username}</p>
-
-            <h3>Users in room</h3>
-            <ul>
-                {usernames.map((username, i) => <li key={i}>{username}</li>)}
-            </ul>
+            <UserList usersInRoom={usersInRoom} />
             <button onClick={leaveRoom}>Leave Room</button>
             <Logout />
         </div>

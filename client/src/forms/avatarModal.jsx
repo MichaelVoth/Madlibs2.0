@@ -55,7 +55,7 @@ const AvatarModal = ({ show }) => {
             return (
               <img
                 key={index}
-                className={`m-2 avatar-image avatar-${index + 1}`}
+                className={`m-2 avatar-image-choose avatar-${index + 1}`}
                 src={avatar.image}
                 onClick={() => handleAvatarClick(avatar.color)}
               />
