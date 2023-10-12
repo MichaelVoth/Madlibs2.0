@@ -6,6 +6,7 @@ import Logout from '../components/login&Register/logout';
 import { useUserContext } from '../contexts/UserContext.jsx';
 import { useSocketContext } from '../contexts/SocketContext.jsx';
 
+
 const RoomView = () => {
 
     const { user } = useUserContext();
@@ -19,25 +20,30 @@ const RoomView = () => {
     const leaveRoom = () => {
         axios.post('http://localhost:3001/api/room/leave', { roomID: roomID, userID: user.id }, { withCredentials: true })
             .then(res => {
-                console.log(res);
-                navigate('/loggedIn');
+                socket.emit('LEAVE_ROOM', res.data.roomID, (response) => {
+                if (response === 'success') {
+                    console.log(response.message, res.data.roomID);
+                    navigate('/loggedIn');
+                } else {
+                    console.log(response.message);
+                }
+            });
             })
             .catch(err => console.log(err));
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/room/${roomID}?socketID=${socket.id}`, { withCredentials: true })
+        axios.get(`http://localhost:3001/api/room/${roomID}`, { withCredentials: true })
             .then(res => {
-                console.log(res);
+                setUsersInRoom(res.data);
+                setUsernames(res.data.map(user => user.username));
             })
             .catch(err =>
                 console.log(err));
 
         socket.on('UPDATE_USERS_IN_ROOM', (results) => {
             setUsersInRoom(results);
-            console.log("Users in room: ", results);
-            const usernames = results.updatedUsers.map(user => user.username);
-            console.log("Usernames: ", usernames);
+            const usernames = results.map(user => user.username);
             setUsernames(usernames);
         });
 

@@ -25,28 +25,59 @@ const Dashboard = () => {
 
     const createRoom = () => {
         axios.post('http://localhost:3001/api/room/create', 
-            { socket: socket.id, 
-            userID: user.id, 
-            username: user.username, 
-            avatar: user.avatar }, { withCredentials: true })
+            {   userID: user.id, 
+                username: user.username, 
+                avatar: user.avatar },
+                { withCredentials: true })
             .then(res => {
-                navigate(`/loggedIn/room/${res.data.roomID}`);
+                socket.emit('JOIN_ROOM_REQUEST', res.data.roomID, (response) => {
+                    console.log("Response: ", response);
+                    if (response.status === 'success') {
+                        console.log(response.message, res.data.roomID);
+                        navigate(`/loggedIn/room/${res.data.roomID}`);
+                    } else {
+                        console.log(response.message);
+                    }
+                });
             })
             .catch(err => console.log(err));
     }
 
     const joinRoomRequest = (roomID) => {
-        axios.post('http://localhost:3001/api/room/join', { socket: socket.id, roomID: roomID, userID: user.id, username: user.username, avatar: user.avatar }, { withCredentials: true })
+        axios.post('http://localhost:3001/api/room/join', 
+            {   roomID: roomID, 
+                userID: user.id, 
+                username: user.username,
+                avatar: user.avatar }, 
+                { withCredentials: true })
             .then(res => {
-                navigate(`/loggedIn/room/${roomID}`);
+                socket.emit('JOIN_ROOM_REQUEST', roomID, (response) => {
+                    if (response.status === 'success') {
+                        console.log(response.message, roomID);
+                        navigate(`/loggedIn/room/${roomID}`);
+                    } else {
+                        console.log(response.message);
+                    }
+                });
             })
             .catch(err => console.log(err));
     }
 
     const randomRoomRequest = () => {
-        axios.post('http://localhost:3001/api/room/random', { socket: socket.id, userID: user.id, username: user.username, avatar: user.avatar }, { withCredentials: true })
+        axios.post('http://localhost:3001/api/room/random', 
+        {   userID: user.id, 
+            username: user.username, 
+            avatar: user.avatar },
+            { withCredentials: true })
             .then(res => {
-                navigate(`/loggedIn/room/${res.data.roomID}`);
+                socket.emit('JOIN_ROOM_REQUEST', res.data.roomID, (response) => {
+                    if (response.status === 'success') {
+                        console.log(response.message, res.data.roomID);
+                        navigate(`/loggedIn/room/${res.data.roomID}`);
+                    } else {
+                        console.log(response.message);
+                    }
+                });
             })
             .catch(err => console.log(err));
     }

@@ -65,6 +65,8 @@ async function serverStart() {
 
         io.on("connection", (socket) => {
             // Set up the socket listeners for room events
+            roomEvents.joinRoomRequest(socket, roomManagerInstance);
+            roomEvents.leaveRoomRequest(socket, roomManagerInstance);
             roomEvents.userDisconnect(socket, roomManagerInstance);
 
             // You can also set up the socket listeners for user, game, and chat events here

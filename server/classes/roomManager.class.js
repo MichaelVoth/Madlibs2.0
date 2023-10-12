@@ -2,7 +2,7 @@
 
 class RoomManager {
     constructor() {
-        this.rooms = {}; // { roomID: { users: { userID: { username, avatar } } } }
+        this.rooms = {}; // { roomID: { users: { userID: { userID, username, avatar } } } }
         this.maxUsersPerRoom = 6;
     }
 
