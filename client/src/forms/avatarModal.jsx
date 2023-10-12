@@ -32,7 +32,7 @@ const AvatarModal = ({ show }) => {
       const response = await axios.put(`http://localhost:3001/api/users/${user.id}`, {
         avatar: color
       }, { withCredentials: true });
-      if (response.status === 200) { 
+      if (response.status === 200) {
         setUser(prevUser => ({ ...prevUser, avatar: color }));
         navigate("/loggedIn");
       } else {
@@ -50,22 +50,20 @@ const AvatarModal = ({ show }) => {
         <Modal.Title>Choose an avatar:</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Row className="justify-content-center">
-          <Col id="avatar-list">
-            {avatarList.map((avatar, index) => {
-              return (
-                <img
-                  key={index}
-                  className="m-2"
-                  style={{ width: "100px", height: "100px" }}
-                  src={avatar.image}
-                  onClick={() => handleAvatarClick(avatar.color)}
-                />
-              );
-            })}
-          </Col>
-        </Row>
+        <div id="avatar-container">
+          {avatarList.map((avatar, index) => {
+            return (
+              <img
+                key={index}
+                className={`m-2 avatar-image avatar-${index + 1}`}
+                src={avatar.image}
+                onClick={() => handleAvatarClick(avatar.color)}
+              />
+            );
+          })}
+        </div>
       </Modal.Body>
+
     </Modal>
   );
 };

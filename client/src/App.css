@@ -5,38 +5,66 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+@keyframes flyIn {
+  0% {
+    transform: translate(-100vw, 100vh);
+  }
+  100% {
+    transform: translate(-50%, -50%);
+  }
 }
 
-@keyframes logo-spin {
-  from {
+@keyframes rotateAvatars {
+  0% {
     transform: rotate(0deg);
   }
-  to {
+  100% {
     transform: rotate(360deg);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+
+@keyframes counterRotateAvatars {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-360deg);
   }
 }
 
-.card {
-  padding: 2em;
+#avatar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; 
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+  animation: rotateAvatars 60s infinite linear 1s;
 }
 
-.read-the-docs {
-  color: #888;
+.avatar-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  animation: 
+    flyIn 1s forwards,
+    counterRotateAvatars 60s infinite linear 1s;
+}
+
+.avatar-image:nth-child(1) { top: 5%; left: 50%; }
+.avatar-image:nth-child(2) { top: 27%; left: 90%; }
+.avatar-image:nth-child(3) { top: 72%; left: 90%; }
+.avatar-image:nth-child(4) { top: 95%; left: 50%; }
+.avatar-image:nth-child(5) { top: 72%; left: 10%; }
+.avatar-image:nth-child(6) { top: 27%; left: 10%; }
+
+
+.modal-body {
+  padding: 20px;
+  margin: 40px 40px 60px 40px;
 }
