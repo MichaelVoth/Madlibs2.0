@@ -18,7 +18,6 @@ const Logout = () => {
                 sessionStorage.clear("user");
                 localStorage.clear("user");
                 disconnectSocket();
-                console.log("Logged out successfully");
                 navigate("/");
             }
         } catch (error) {

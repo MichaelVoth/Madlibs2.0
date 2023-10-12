@@ -25,16 +25,13 @@ const Login = () => {
         axios.post("http://localhost:3001/api/users/login", {
             username,
             password
-        }, { withCredentials: true }) // sends the cookie
+        }, { withCredentials: true }) // sends the cookie with the request
             .then(res => {
                 connectSocket();
-                // console.log("socket.id:", socket.id);
-                // console.log("res.data.user:", res.data.user);
                 const user = { ...res.data.user};
                 setIsActive(true);
                 setUser(user);
                 sessionStorage.setItem("user", JSON.stringify(user));
-                // console.log("user logged in:", user);
                 setUsername("");
                 setPassword("");
                 navigate("/loggedIn");
