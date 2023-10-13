@@ -11,10 +11,9 @@ const MessagesWindow = () => {
     const endRef = useRef();
 
     useEffect(() => {
-        socket.on("NEW_MESSAGE_RECEIVED"), (message) => {
-            console.log("New message received", message);
+        socket.on("NEW_MESSAGE_RECEIVED", (message) => {
             setAllMessages((oldMessages) => [...oldMessages, message]);
-        }
+        });
 
         endRef?.current?.scrollIntoView({ behavior: 'instant' });
 

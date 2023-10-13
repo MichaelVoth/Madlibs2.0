@@ -30,7 +30,7 @@ const Dashboard = () => {
                 avatar: user.avatar },
                 { withCredentials: true })
             .then(res => {
-                socket.emit('JOIN_ROOM_REQUEST', res.data.roomID, (response) => {
+                socket.emit('JOIN_ROOM_REQUEST', res.data.roomID, user.username, (response) => {
                     if (response.status === 'success') {
                         navigate(`/loggedIn/room/${res.data.roomID}`);
                     } else {
@@ -49,7 +49,7 @@ const Dashboard = () => {
                 avatar: user.avatar }, 
                 { withCredentials: true })
             .then(res => {
-                socket.emit('JOIN_ROOM_REQUEST', roomID, (response) => {
+                socket.emit('JOIN_ROOM_REQUEST', roomID, user.username, (response) => {
                     if (response.status === 'success') {
                         navigate(`/loggedIn/room/${roomID}`);
                     } else {
@@ -67,7 +67,7 @@ const Dashboard = () => {
             avatar: user.avatar },
             { withCredentials: true })
             .then(res => {
-                socket.emit('JOIN_ROOM_REQUEST', res.data.roomID, (response) => {
+                socket.emit('JOIN_ROOM_REQUEST', res.data.roomID, user.username, (response) => {
                     if (response.status === 'success') {
                         navigate(`/loggedIn/room/${res.data.roomID}`);
                     } else {

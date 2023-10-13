@@ -1,11 +1,12 @@
 
-const newMessageSent = (socket) => {
+const newMessageSent = (io, socket) => {
     socket.on("NEW_MESSAGE_SENT", (message) => {
         try {
-            socket.to(message.roomID).emit("NEW_MESSAGE_RECEIVED", {
+            io.to(message.roomID).emit("NEW_MESSAGE_RECEIVED", {
             content: message.content,
             username: message.username,
-            roomID: message.roomID
+            roomID: message.roomID,
+            systemMessage: message.systemMessage
             });
         } catch (error) {
             console.log(error);

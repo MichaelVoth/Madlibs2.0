@@ -16,7 +16,8 @@ const ChatBox = () => {
             socket.emit('NEW_MESSAGE_SENT', { 
                 username: user.username,
                 content: message,
-                roomID: roomID
+                roomID: roomID,
+                systemMessage: false
             });
         }
     }, [socket, message]); //If the socket or message changes, run this useEffect

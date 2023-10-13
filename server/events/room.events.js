@@ -1,10 +1,16 @@
 
-const joinRoomRequest = (socket, roomManagerInstance) => {
-    socket.on("JOIN_ROOM_REQUEST", (roomID, callback) => {
+const joinRoomRequest = (io, socket, roomManagerInstance) => {
+    socket.on("JOIN_ROOM_REQUEST", (roomID, username, callback) => {
         try {
             socket.join(roomID);
             const updatedUsers = roomManagerInstance.getUsersInRoom(roomID);
             socket.to(roomID).emit("UPDATE_USERS_IN_ROOM", updatedUsers);
+            io.to(roomID).emit("NEW_MESSAGE_RECEIVED", {
+                content: `${username} has joined the room.`,
+                username: 'System',
+                roomID: roomID,
+                systemMessage: true
+            });
             callback({ status: 'success', message: 'Joined room successfully!' });
         } catch (error) {
             console.log(error);
@@ -14,12 +20,18 @@ const joinRoomRequest = (socket, roomManagerInstance) => {
 }
 
 
-const leaveRoomRequest = (socket, roomManagerInstance) => {
-    socket.on("LEAVE_ROOM_REQUEST", (roomID, callback) => {
+const leaveRoomRequest = (io, socket, roomManagerInstance) => {
+    socket.on("LEAVE_ROOM_REQUEST", (roomID, username, callback) => {
         try {
             socket.leave(roomID);
             const updatedUsers = roomManagerInstance.getUsersInRoom(roomID);
             socket.to(roomID).emit("UPDATE_USERS_IN_ROOM", updatedUsers);
+            io.to(roomID).emit("NEW_MESSAGE_RECEIVED", {
+                content: `${username} has left the room.`,
+                username: 'System',
+                roomID: roomID,
+                systemMessage: true
+            });
             roomManagerInstance.removeRoomCheck(roomID);
             callback({ status: 'success', message: 'Left room successfully!' });
         } catch (error) {
@@ -30,7 +42,7 @@ const leaveRoomRequest = (socket, roomManagerInstance) => {
 }
 
 
-const userDisconnect = (socket, roomManagerInstance) => {
+const userDisconnect = (io, socket, roomManagerInstance) => {
     socket.on("disconnect", () => {
         const rooms = roomManagerInstance.getRooms();
         for (const roomID in rooms) {
