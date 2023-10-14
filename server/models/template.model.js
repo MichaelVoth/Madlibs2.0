@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const TemplateSchema = new mongoose.Schema({
+
   title: { 
     type: String, 
     required: [true, "Title is required"],
@@ -22,23 +23,17 @@ const TemplateSchema = new mongoose.Schema({
     type: String,
     required: true
   }],
-  solutions: {
-    type: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Solution"
-    }]
-  },
   authorID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Author",
     required: true
   },
   rating: {
-    average: {
+    average: { // average rating
       type: Number,
       default: 0
     },
-    count: {
+    count: { // number of ratings
       type: Number,
       default: 0
     }
@@ -46,7 +41,7 @@ const TemplateSchema = new mongoose.Schema({
   tags: [{
     type: String
   }],
-  views: {
+  views: { // number of times this template has been viewed
     type: Number,
     default: 0
   },

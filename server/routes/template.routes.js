@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   createTemplate,
   getAllTemplates,
-  // deleteAllTemplates,
+  deleteAllTemplates,
   getTemplateById,
   deleteTemplateById,
   updateTemplateById,
@@ -14,6 +14,6 @@ templateRouter.get("api/template/:templateId/view", getTemplateById)
 templateRouter.post("api/template/new", createTemplate);
 templateRouter.put("api/template/:templateId/edit", updateTemplateById);
 templateRouter.delete("api/template/:templateId/delete", deleteTemplateById)
-// templateRouter.delete("/delete/all", deleteAllTemplates);
+templateRouter.delete("/delete/all", deleteAllTemplates);
 
 export default templateRouter;

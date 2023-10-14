@@ -78,20 +78,20 @@ const deleteTemplateById = async (req, res) => {
   }
 };
 
-// const deleteAllTemplates = async (req, res) => {
-//   try {
-//     const deletedTemplates = await Template.deleteMany();
-//     return res.json({ message: "All templates deleted", data: deletedTemplates });
-//   } catch (error) {
-//     return res.status(500).json({ message: "Server error", error });
-//   }
-// };
+const deleteAllTemplates = async (req, res) => {
+  try {
+    const deletedTemplates = await Template.deleteMany();
+    return res.json({ message: "All templates deleted", data: deletedTemplates });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
+  }
+};
 
 export {
   createTemplate,
   getAllTemplates,
   getTemplateById,
   deleteTemplateById,
-  // deleteAllTemplates,
+  deleteAllTemplates,
   updateTemplateById,
 };

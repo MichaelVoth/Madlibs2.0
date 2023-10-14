@@ -1,15 +1,22 @@
 import mongoose from "mongoose";
 
 const ReportedSchema = new mongoose.Schema({
+    gameID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Game",
+    },
     templateID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Template",
-        required: [true, "Reference to the reported Madlib template is required"]
     },
-    reportingUserID: {
+    submittingUserID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: [true, "Reference to the reporting user is required"]
+        ref: "Submitting User",
+        required: [true, "Reference to the submitting user is required"]
+    },
+    reportedUserID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Reported User",
     },
     reason: {
         type: String,
