@@ -33,7 +33,7 @@ class Template {
         });
         return renderedText;
     }
-    
+
     getPromptCount() {
         return this.prompts.length;
     }
@@ -74,3 +74,5 @@ class Template {
     
 
 }
+
+export default Template;
