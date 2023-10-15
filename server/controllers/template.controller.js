@@ -9,6 +9,10 @@ class TemplateController {
       const { title, body, summary, authorID, tags } = req.body;
       const prompts = TemplateClass.extractPromptsFromBody(body);
       const template = new TemplateClass(title, body, summary, prompts, authorID, tags);
+      const validateError = template.validatesync();
+      if (validateError) {
+        return res.status(400).json({ message: validateError.message });
+      }
       const savedTemplate = await TemplateModel.create(template);
       res.status(201).json(savedTemplate);
     } catch (error) {

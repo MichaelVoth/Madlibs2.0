@@ -19,7 +19,6 @@ const joinRoomRequest = (io, socket, roomManagerInstance) => {
     });
 }
 
-
 const leaveRoomRequest = (io, socket, roomManagerInstance) => {
     socket.on("LEAVE_ROOM_REQUEST", (roomID, username, callback) => {
         try {

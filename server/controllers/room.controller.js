@@ -34,7 +34,6 @@ class RoomController {
         const rooms = RoomManagerInstance.getRooms();
         return rooms;
     }
-
 }
 
 export default RoomController;

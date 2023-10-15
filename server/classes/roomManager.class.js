@@ -29,7 +29,6 @@ class RoomManager {
         this.rooms[roomID] = { users: {} };
         return roomID;
     }
-    
 
     joinRoom(roomID, userID, username, avatar) {
         if (this.rooms.hasOwnProperty(roomID)) { // If room exists
@@ -46,14 +45,12 @@ class RoomManager {
             throw new Error("Room does not exist.");
         }
     }
-    
 
     leaveRoom(roomID, userID) {
         if (this.rooms.hasOwnProperty(roomID) && this.rooms[roomID].users[userID]) {
             delete this.rooms[roomID].users[userID];
         }
     }
-    
 
     randomRoom() {
         const roomIDs = Object.keys(this.rooms); // Get all room IDs
@@ -83,16 +80,13 @@ class RoomManager {
         return this.rooms[roomID] || null;
     }
 
-
     getUsersInRoom(roomID) {
         if (this.rooms[roomID]) {
-            return Object.values(this.rooms[roomID].users); // Return an array of user objects
+            return Object.values(this.rooms[roomID].users); // Return an array of user objects( userID, username, avatar)
         } else {
             throw new Error(`Room with ID ${roomID} does not exist.`);
         }
     }
-    
-    
 
     isUserInAnyRoom(userID) {
         for (let room in this.rooms) {
@@ -103,5 +97,4 @@ class RoomManager {
         return false;
     }
 }
-
 export default RoomManager;
