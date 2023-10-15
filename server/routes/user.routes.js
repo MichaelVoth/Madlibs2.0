@@ -1,29 +1,23 @@
 import { Router } from "express";
 import authMiddleware from '../middleware/auth.js';
-import {
-    registerUser,
-    getAllUsers,
-    getUserById,
-    updateUserById,
-    deleteUserById,
-    loginUser,
-    logoutUser,
-    deleteAllUsers
-} from "../controllers/user.controller.js";
+import UserController from "../controllers/user.controller.js";
 
-const userRouter = Router(); // create a new router
+const userRouter = Router();
 
 userRouter.get("/verify-token", authMiddleware, (req, res) => {
     res.status(200).send({ valid: true });
 });
-userRouter.get("/all", authMiddleware, getAllUsers);
-userRouter.get("/:userId", authMiddleware, getUserById);
-userRouter.post("/register", registerUser);
-userRouter.put("/:userId", authMiddleware, updateUserById);
-userRouter.delete("/:userId", authMiddleware, deleteUserById);
-userRouter.post("/login", loginUser);
-userRouter.post("/logout", logoutUser);
+userRouter.get("/all", authMiddleware, UserController.getAllUsers);
+userRouter.get("/:userId", authMiddleware, UserController.getUserById);
 
-userRouter.delete("/delete/all", deleteAllUsers); //Remove this route in production
+userRouter.post("/register", UserController.registerUser);
+
+userRouter.put("/:userId", authMiddleware, UserController.updateUserById);
+
+userRouter.delete("/:userId", authMiddleware, UserController.deleteUserById);
+userRouter.delete("/delete/all", authMiddleware, UserController.deleteAllUsers);
+
+userRouter.post("/login", UserController.loginUser);
+userRouter.post("/logout", UserController.logoutUser);
 
 export default userRouter;

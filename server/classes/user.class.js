@@ -1,3 +1,5 @@
+
+
 class PlayerClass {
     constructor(id, username, avatar, isActive) {
         this.id = id || '';
