@@ -1,97 +1,134 @@
-import Template from "../models/template.model.js";
-import { pullPromptsFromText } from "../utils/gameFunctions.js";
+import TemplateClass from '../classes/template.class.js';
+import TemplateModel from '../models/template.model.js';
 
-const createTemplate = async (req, res) => {
-  try {
-    const newTemplate = new Template(req.body); // req.body is the template object from the client
-    const validationError = newTemplate.validateSync(); // validateSync() is a mongoose method that validates the data in the newTemplate object against the TemplateSchema
+class TemplateController {
 
-    if (validationError) { // if there is a validation error, return a 400 response with the errors
-      const errors = {};
-      for (const field in validationError.errors) {
-        errors[field] = validationError.errors[field].message;
+  // Create a new template
+  static async createTemplate(req, res) {
+    try {
+      const { title, body, summary, authorID, tags } = req.body;
+      const prompts = TemplateClass.extractPromptsFromBody(body);
+      const template = new TemplateClass(title, body, summary, prompts, authorID, tags);
+      const savedTemplate = await TemplateModel.create(template);
+      res.status(201).json(savedTemplate);
+    } catch (error) {
+      res.status(500).json({ message: 'Error creating template', error });
+    }
+  }
+
+  // Get all templates
+  static async getAllTemplates(req, res) {
+    try {
+      const templates = await TemplateModel.find();
+      res.status(200).json(templates);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching templates', error });
+    }
+  }
+
+  // Get a template by ID
+  static async getTemplateById(req, res) {
+    try {
+      const template = await TemplateModel.findById(req.params.id);
+      if (!template) {
+        return res.status(404).json({ message: 'Template not found' });
       }
-      return res.status(400).json({ errors });
+      res.status(200).json(template);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching template', error });
     }
-
-    const prompts = pullPromptsFromText(req.body.body); // pull the prompts from the template body
-    const postObj = { ...req.body, prompts }; // create a new object with the prompts array and the rest of the template object
-    const newMadlib = await Template.create(postObj); // create the template in the database
-    return res.json(newMadlib); // send the new template back to the client
-  } catch (err) {
-    return res.status(500).json({ message: "Server error", error: err }); // if there is an error, return a 500 response with the error
   }
-};
 
-const getAllTemplates = async (req, res) => {
-  try {
-    const allTemplates = await Template.find(); // find all templates in the database
-    return res.json(allTemplates);
-  } catch (err) {
-    return res.status(500).json({ message: "Server error", error: err });
-  }
-};
-
-const getTemplateById = async (req, res) => {
-  try {
-    const template = await Template.findById(req.params.templateId); // find the template by id
-    if (!template) {
-      return res.status(404).json({ message: "Template not found" });
+  // Get all templates by author
+  static async getTemplatesByAuthor(req, res) {
+    try {
+      const templates = await TemplateModel.find({ authorID: req.params.authorID });
+      res.status(200).json(templates);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching templates', error });
     }
-    return res.json(template);
-  } catch (error) {
-    return res.status(500).json({ message: "Server error", error });
   }
-};
 
-const updateTemplateById = async (req, res) => {
-  try {
-    const objectToUpdate = req.body; // req.body is the template object from the client
-    const updatedPrompts = pullPromptsFromText(objectToUpdate.body); // pull the prompts from the template body
-    objectToUpdate.prompts = updatedPrompts; // add the prompts array to the object to update
-
-    const template = await Template.findByIdAndUpdate( // find the template by id and update it
-      req.params.templateId,
-      objectToUpdate,
-      { new: true, runValidators: true }
-    );
-
-    if (!template) {
-      return res.status(404).json({ message: "Template not found" });
+  // Get all templates by tag
+  static async getTemplatesByTag(req, res) {
+    try {
+      const templates = await TemplateModel.find({ tags: req.params.tag });
+      res.status(200).json(templates);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching templates', error });
     }
-
-    return res.json(template);
-  } catch (error) {
-    return res.status(500).json({ message: "Server error", error });
   }
-};
 
-const deleteTemplateById = async (req, res) => {
-  try {
-    const deletedMadLib = await Template.findByIdAndDelete(req.params.templateId);
-    if (!deletedMadLib) {
-      return res.status(404).json({ message: "Template not found" });
+  // Get all templates by rating
+  static async getTemplatesByRating(req, res) {
+    try {
+      const templates = await TemplateModel.find({ rating: { $gte: req.params.rating } });
+      res.status(200).json(templates);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching templates', error });
     }
-    return res.json(deletedMadLib);
-  } catch (error) {
-    return res.status(500).json({ message: "Server error", error });
   }
-};
 
-const deleteAllTemplates = async (req, res) => {
-  try {
-    const deletedTemplates = await Template.deleteMany();
-    return res.json({ message: "All templates deleted", data: deletedTemplates });
-  } catch (error) {
-    return res.status(500).json({ message: "Server error", error });
+  // Get all templates by views
+  static async getTemplatesByViews(req, res) {
+    try {
+      const templates = await TemplateModel.find({ views: { $gte: req.params.views } });
+      res.status(200).json(templates);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching templates', error });
+    }
   }
-};
 
-export {
-  createTemplate,
-  getAllTemplates,
-  getTemplateById,
-  deleteTemplateById,
-  deleteAllTemplates,
-  updateTemplateById,
-};
+  // Get a random template
+  static async getRandomTemplate(req, res) {
+    try {
+      const templates = await TemplateModel.find();
+      const randomIndex = Math.floor(Math.random() * templates.length);
+      res.status(200).json(templates[randomIndex]);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching template', error });
+    }
+  }
+
+  // Update a template
+  static async updateTemplate(req, res) {
+    try {
+      const { title, body, summary, tags } = req.body;
+      let template = await TemplateModel.findById(req.params.id);
+      if (!template) {
+        return res.status(404).json({ message: 'Template not found' });
+      }
+      template.updateTemplate(title, body, summary, tags);
+      const updatedTemplate = await template.save();
+      res.status(200).json(updatedTemplate);
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating template', error });
+    }
+  }
+
+  // Delete a template
+  static async deleteTemplate(req, res) {
+    try {
+      const template = await TemplateModel.findByIdAndDelete(req.params.id);
+      if (!template) {
+        return res.status(404).json({ message: 'Template not found' });
+      }
+      res.status(200).json({ message: 'Template deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error deleting template', error });
+    }
+  }
+
+  //Delete all templates by authorID
+  static async deleteTemplatesByAuthor(req, res) {
+    try {
+      const templates = await TemplateModel.deleteMany({ authorID: req.params.authorID });
+      res.status(200).json({ message: 'Templates deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error deleting templates', error });
+    }
+  }
+
+}
+
+export default TemplateController;

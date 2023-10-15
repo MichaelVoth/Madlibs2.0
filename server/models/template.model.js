@@ -19,6 +19,11 @@ const TemplateSchema = new mongoose.Schema({
       message: 'The string must include words surrounded by { and }',
     },
   },
+  summary: {
+    type: String,
+    required: [true, "Summary is required"],
+    maxLength: [150, "Limit summary to 150 characters"]
+  },
   prompts: [{
     type: String,
     required: true
@@ -52,5 +57,5 @@ const TemplateSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-const Template = mongoose.model("Template", TemplateSchema);
-export default Template;
+const TemplateModel = mongoose.model("Template", TemplateSchema);
+export default TemplateModel;

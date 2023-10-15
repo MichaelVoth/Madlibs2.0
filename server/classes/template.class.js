@@ -1,9 +1,10 @@
 
 
-class Template {
-    constructor(title, body, authorID, tags = [], isFeatured = false) {
+class TemplateClass {
+    constructor(title, body, summary, authorID, tags = [], isFeatured = false) {
         this.title = title;
         this.body = body;
+        this.summary = summary;
         this.prompts = this.extractPromptsFromBody(body);
         this.authorID = authorID;
         this.rating = {
@@ -64,15 +65,28 @@ class Template {
     getTags() {
         return this.tags;
     }
-        
 
-    updateTemplate(newTitle, newBody) {
+    getAuthorID() {
+        return this.authorID;
+    }
+
+    getSummary() {
+        return this.summary;
+    }
+
+    getRating() {
+        return this.rating;
+    }
+
+    updateTemplate(newTitle, newBody, newSummary, newTags) {
         this.title = newTitle || this.title;
         this.body = newBody || this.body;
+        this.summary = newSummary || this.summary;
         this.prompts = this.extractPromptsFromBody(this.body);
+        this.addTags(newTags);
     }
     
 
 }
 
-export default Template;
+export default TemplateClass;
