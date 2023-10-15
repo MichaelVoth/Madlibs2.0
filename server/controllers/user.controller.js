@@ -3,7 +3,7 @@ import { UserClass } from "../classes/user.class.js";
 import { hashPassword, checkPassword, generateJWT } from "../utils/loginFunctions.js";
 
 class UserController {
-
+    // Register a new user
     static async registerUser(req, res) {
         try {
             const newUser = new User({...req.body, isActive: true});
@@ -41,7 +41,7 @@ class UserController {
             return res.status(500).json({ message: "Server error", error: err.message || "Unknown error" });
         }
     }
-
+    // Login an existing user
     static async loginUser(req, res) {
         try {
             const user = await User.findOne({ username: req.body.username });
@@ -75,13 +75,13 @@ class UserController {
             return res.status(500).json({ message: "Server error", error: err.message || "Unknown error" });
         }
     }
-
+    // Logout a user
     static async logoutUser(req, res) {
         await User.findOneAndUpdate({ username: req.body.username }, { isActive: false }); 
         res.cookie('token', '', { expires: new Date(0) });
         return res.json({ message: "Logged out successfully" });
     }
-
+    // Get all users
     static async getAllUsers(req, res) {
         try {
             const allUsers = await User.find();
@@ -90,7 +90,7 @@ class UserController {
             return res.status(500).json({ message: "Server error", error: err });
         }
     }
-
+    // Get a user by id
     static async getUserById(req, res) {
         try {
             const user = await User.findById(req.params.userId);
@@ -102,7 +102,7 @@ class UserController {
             return res.status(500).json({ message: "Server error", error });
         }
     }
-
+    // Update a user by id
     static async updateUserById(req, res) {
         try {
             const user = await User.findByIdAndUpdate(
@@ -118,7 +118,7 @@ class UserController {
             return res.status(500).json({ message: "Server error", error });
         }
     }
-
+    // Delete a user by id
     static async deleteUserById(req, res) {
         try {
             const user = await User.findByIdAndDelete(req.params.userId);
@@ -130,7 +130,7 @@ class UserController {
             return res.status(500).json({ message: "Server error", error });
         }
     }
-
+    // Delete all users
     static async deleteAllUsers(req, res) {
         try {
             const users = await User.deleteMany();

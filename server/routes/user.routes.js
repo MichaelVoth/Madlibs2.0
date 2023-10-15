@@ -11,13 +11,14 @@ userRouter.get("/all", authMiddleware, UserController.getAllUsers);
 userRouter.get("/:userId", authMiddleware, UserController.getUserById);
 
 userRouter.post("/register", UserController.registerUser);
+userRouter.post("/login", UserController.loginUser);
+userRouter.post("/logout", UserController.logoutUser);
 
 userRouter.put("/:userId", authMiddleware, UserController.updateUserById);
 
 userRouter.delete("/:userId", authMiddleware, UserController.deleteUserById);
 userRouter.delete("/delete/all", authMiddleware, UserController.deleteAllUsers);
 
-userRouter.post("/login", UserController.loginUser);
-userRouter.post("/logout", UserController.logoutUser);
+
 
 export default userRouter;
