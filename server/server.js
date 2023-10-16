@@ -7,6 +7,7 @@ import dbConnect from "./mongo/dbConnect.js";
 import userRouter from './routes/user.routes.js';
 import templateRouter from './routes/template.routes.js';
 import roomRouter from './routes/room.routes.js';
+import gameRouter from './routes/game.routes.js';
 import * as roomEvents from "./events/room.events.js";
 import * as userEvents from "./events/user.events.js";
 import * as gameEvents from "./events/game.events.js";
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 app.use('/api/users', userRouter);
 app.use("/api/templates", templateRouter);
 app.use("/api/room", roomRouter);
+app.use("/api/game", gameRouter);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

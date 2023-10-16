@@ -20,8 +20,7 @@ const GameSchema = new mongoose.Schema({
         },
         promptsAssigned: [{
             prompt: String,
-            response: String || null,
-            required: true
+            response: String || null
         }],
         timeTaken: {
             type: Number,

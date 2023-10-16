@@ -1,8 +1,8 @@
-import Game from "../models/game.model";
-import GameClass from "../classes/game.class";
-import TemplateClass from "../classes/template.class";
-import TemplateController from "./template.controller";
-import RoomController from "./room.controller";
+import Game from "../models/game.model.js";
+import GameClass from "../classes/game.class.js";
+import TemplateClass from "../classes/template.class.js";
+import TemplateController from "./template.controller.js";
+import RoomController from "./room.controller.js";
 
 class GameController {
 
