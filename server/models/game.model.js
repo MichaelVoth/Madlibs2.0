@@ -15,7 +15,7 @@ const GameSchema = new mongoose.Schema({
         },
         playerStatus: {
             type: String,
-            enum: ["active", "inactive"],
+            enum: ["active", "inactive", "completed"],
             required: true
         },
         promptsAssigned: [{

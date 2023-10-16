@@ -70,11 +70,7 @@ async function serverStart() {
             roomEvents.userDisconnect(io, socket, roomManagerInstance);
 
             chatEvents.newMessageSent(io, socket, roomManagerInstance);
-            // You can also set up the socket listeners for user, game, and chat events here
-            // Example:
-            // userEvents.someUserEvent(socket, roomManager);
-            // gameEvents.someGameEvent(socket, roomManager);
-            // chatEvents.someChatEvent(socket, roomManager);
+
 
             socket.on("disconnect", () => {
                 // console.log(`User disconnected with socket id: ${socket.id}`);

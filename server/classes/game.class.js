@@ -27,7 +27,6 @@ class GameClass {
         this.assignPrompts(template.prompts); // Assign prompts to players
         this.gameStatus = "inProgress";
         this.startTime = Date.now();
-
     }
 
     // Shuffle the prompts using the Fisher-Yates algorithm
@@ -42,15 +41,15 @@ class GameClass {
     // Distribute prompts among all players in the game
     assignPrompts(prompts) {
         // Assign originalIndex to each prompt before shuffling
-        const promptsWithIndex = prompts.map((prompt, index) => ({
+        const promptsWithIndex = prompts.map((prompt, index) => ({ // {prompt: "prompt", originalIndex: 0}
             prompt: prompt,
             originalIndex: index
         }));
-        const shuffledPrompts = this.shufflePrompts(promptsWithIndex);
-        shuffledPrompts.forEach((promptObj, index) => {
-            const player = this.players[index % this.players.length];
-            if (!player.promptsAssigned) player.promptsAssigned = [];
-            player.promptsAssigned.push({
+        const shuffledPrompts = this.shufflePrompts(promptsWithIndex); // Shuffle the prompts
+        shuffledPrompts.forEach((promptObj, index) => { // Assign prompts to players
+            const player = this.players[index % this.players.length]; // Assign prompts in a round-robin fashion
+            if (!player.promptsAssigned) player.promptsAssigned = []; // Initialize promptsAssigned if it doesn't exist
+            player.promptsAssigned.push({ // Add the prompt to the player's promptsAssigned array
                 prompt: promptObj.prompt,
                 response: null,
                 originalIndex: promptObj.originalIndex,
@@ -60,14 +59,26 @@ class GameClass {
 
     // Record a player's response to a prompt
     recordResponse(playerID, prompt, response) {
+        try {
         const player = this.players.find(player => player.user === playerID); // Find the player
-        if (player) { 
-            const promptObj = player.promptsAssigned.find(p => p.prompt === prompt); // Find the prompt
-            if (promptObj) { 
+            try {
+                const promptObj = player.promptsAssigned.find(promptObj => promptObj.prompt === prompt); // Find the prompt
                 promptObj.response = response; // Record the response
+                promptObj.timeTaken = Date.now() - this.startTime; // Record the time taken
+                if (this.hasPlayerCompleted(player)) { // Check if the player has completed all their prompts
+                    player.playerStatus = "completed"; // Mark the player as completed
+                    player.finishTime = Date.now(); // Record the finish time
+                    const allPlayersCompleted = this.players.every(this.hasPlayerCompleted); // Check if all players have completed all their prompts
+                    if (allPlayersCompleted) { // If all players have completed all their prompts
+                        this.completeGame(); // Complete the game
+                    }
+                }
+            } catch (err) {
+                console.log(err);
             }
-        }
-    }
+    } catch (err) {
+        console.log(err);
+    }}
 
     // Check if a player has completed all their prompts
     hasPlayerCompleted(player) {
@@ -95,32 +106,30 @@ class GameClass {
     handleInactivePlayer(player) {
         if (player.playerStatus === "inactive") {
             this.reassignIncompletePrompts();
-            // Optionally, you can also check if the game can be completed after reassigning
-            this.completeGame();
         }
     }
 
     // Reassign incomplete prompts from inactive players to active players
     reassignIncompletePrompts() {
         const incompletePrompts = [];
-        this.players.forEach(player => {
-            if (player.playerStatus === "inactive" && !this.hasPlayerCompleted(player)) {
-                const playerIncompletePrompts = player.promptsAssigned.filter(promptObj => promptObj.response === null);
-                incompletePrompts.push(...playerIncompletePrompts);
+        this.players.forEach(player => { // Find all incomplete prompts from inactive players
+            if (player.playerStatus === "inactive" && !this.hasPlayerCompleted(player)) { // If the player is inactive and has not completed all their prompts
+                const playerIncompletePrompts = player.promptsAssigned.filter(promptObj => promptObj.response === null); // Find all incomplete prompts from the player
+                incompletePrompts.push(...playerIncompletePrompts); // Add the incomplete prompts to the incompletePrompts array
             }
         });
-        const activePlayers = this.players.filter(player => player.playerStatus === "active");
-        incompletePrompts.forEach((promptObj, index) => {
-            const player = activePlayers[index % activePlayers.length];
-            player.promptsAssigned.push(promptObj);
+        const activePlayers = this.players.filter(player => player.playerStatus === "active"); // Find all active players
+        incompletePrompts.forEach((promptObj, index) => { // Reassign the incomplete prompts to active players
+            const player = activePlayers[index % activePlayers.length]; // Assign prompts in a round-robin fashion
+            player.promptsAssigned.push(promptObj); // Add the prompt to the player's promptsAssigned array
         });
     }
 
     // Reassemble the prompts in their original order upon completion
     reassemblePrompts() {
-        const allPrompts = this.players.flatMap(player => player.promptsAssigned);
-        const sortedPrompts = allPrompts.sort((a, b) => a.originalIndex - b.originalIndex);
-        const finalPrompts = sortedPrompts.map(p => ({ prompt: p.prompt, response: p.response }));
+        const allPrompts = this.players.flatMap(player => player.promptsAssigned); // Flatten the promptsAssigned arrays from all players
+        const sortedPrompts = allPrompts.sort((a, b) => a.originalIndex - b.originalIndex); // Sort the prompts by their originalIndex
+        const finalPrompts = sortedPrompts.map(p => ({ prompt: p.prompt, response: p.response })); // Remove the originalIndex property
         return finalPrompts;
     }
 

@@ -85,8 +85,6 @@ class TemplateClass {
         this.prompts = this.extractPromptsFromBody(this.body);
         this.addTags(newTags);
     }
-    
-
 }
 
 export default TemplateClass;
