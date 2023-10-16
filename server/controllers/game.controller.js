@@ -6,7 +6,7 @@ import RoomController from "./room.controller";
 
 class GameController {
 
-    static async beginGame(req, res) {
+    static async createGame(req, res) {
         try {
             const template = await TemplateController.getRandomTemplate();
             const players = await RoomController.updateUsersInRoom(req.params.roomID);
@@ -57,7 +57,7 @@ class GameController {
         }
     }
 
-    static async getGame(req, res) {
+    static async getGameByID(req, res) {
         try {
             const game = await Game.findOne({ _id: req.params.gameID });
             res.status(200).json(game);
@@ -67,7 +67,7 @@ class GameController {
         }
     }
 
-    static async getGames(req, res) {
+    static async getAllGames(req, res) {
         try {
             const games = await Game.find();
             res.status(200).json(games);
