@@ -1,8 +1,9 @@
 
 
 class GameClass {
-    constructor(template, players) {
+    constructor(template, players, roomID) {
         this.template = template;
+        this.roomID = roomID
         this.players = players || []; // {user: playerID, playerStatus: "active", promptsAssigned: [], timeTaken: 0, finishTime: null}
         this.duration = 0;
         this.completed = false;

@@ -26,8 +26,8 @@ class TemplateClass {
         return prompts;
     }
 
-    renderMadlib(answers) {
-        let renderedText = this.body;
+    renderMadlib(template, answers) {
+        let renderedText = template.body;
         this.prompts.forEach((prompt, index) => {
             const answer = answers[index] || `{${prompt}}`; // Use the original prompt if no answer is provided
             renderedText = renderedText.replace(`{${prompt}}`, answer);

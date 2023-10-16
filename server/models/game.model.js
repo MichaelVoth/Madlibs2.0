@@ -64,6 +64,3 @@ const GameSchema = new mongoose.Schema({
 
 const Game = mongoose.model("Game", GameSchema);
 export default Game;
-
-
-
