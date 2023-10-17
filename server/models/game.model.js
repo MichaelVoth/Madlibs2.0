@@ -46,7 +46,7 @@ const GameSchema = new mongoose.Schema({
     },
     gameStatus: {
         type: String,
-        enum: [ "inProgress", "completed", "abandoned"],
+        enum: [ "notStarted","inProgress", "completed", "abandoned"],
         required: true,
         default: "inProgress"
     },

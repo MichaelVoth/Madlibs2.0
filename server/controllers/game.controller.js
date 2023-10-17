@@ -14,7 +14,7 @@ class GameController {
             gameInstance.startGame();
             const game = new Game(gameInstance);
             await game.save();
-            res.status(201).json(game);
+            res.status(201).json(game); // Return the game
         } catch (err) {
             res.status(500).json(err);
         }
@@ -23,7 +23,7 @@ class GameController {
     static async recordResponse(req, res) {
         try {
             const game = await Game.findOne({ _id: req.params.gameID });
-            game.gameInstance.recordResponse(req.params.userID, req.body.prompt, req.body.response);
+            game.gameInstance.recordResponse(req.body.userID, req.body.originalIndex, req.body.response);
             await game.save();
             res.status(200).json(game);
         } 

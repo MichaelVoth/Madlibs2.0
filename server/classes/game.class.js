@@ -8,19 +8,9 @@ class GameClass {
         this.duration = 0;
         this.completed = false;
         this.solution = null;
-        this.gameStatus = "inProgress";
+        this.gameStatus = "notStarted";
         this.gamesInSuccession = 0;
         this.reports = [];
-    }
-
-    // Add a player to the game
-    addPlayer(player) {
-        this.players.push(player);
-    }
-
-    // Remove a player from the game
-    removePlayer(playerID) {
-        this.players = this.players.filter(player => player.user !== playerID);
     }
 
     // Start the game
@@ -58,28 +48,34 @@ class GameClass {
         });
     }
 
-    // Record a player's response to a prompt
-    recordResponse(playerID, prompt, response) {
-        try {
+    // Distribute prompts to each player
+    distributePrompts(playerID) {
         const player = this.players.find(player => player.user === playerID); // Find the player
-            try {
-                const promptObj = player.promptsAssigned.find(promptObj => promptObj.prompt === prompt); // Find the prompt
-                promptObj.response = response; // Record the response
-                promptObj.timeTaken = Date.now() - this.startTime; // Record the time taken
-                if (this.hasPlayerCompleted(player)) { // Check if the player has completed all their prompts
-                    player.playerStatus = "completed"; // Mark the player as completed
-                    player.finishTime = Date.now(); // Record the finish time
-                    const allPlayersCompleted = this.players.every(this.hasPlayerCompleted); // Check if all players have completed all their prompts
-                    if (allPlayersCompleted) { // If all players have completed all their prompts
-                        this.completeGame(); // Complete the game
-                    }
-                }
-            } catch (err) {
-                console.log(err);
-            }
+        const prompts = player.promptsAssigned; // Get the player's prompts
+        return prompts;
+    }
+
+// Record a player's response to a prompt
+recordResponse(playerID, originalIndex, response) {
+    try {
+        const player = this.players.find(player => player.user === playerID); // Find the player
+        const promptObj = player.promptsAssigned.find(promptObj => promptObj.originalIndex === originalIndex); // Find the prompt
+        
+        if (!promptObj) {
+            console.error("Prompt not found for given originalIndex");
+            return false;
+        }
+
+        promptObj.response = response; // Record the response
+        promptObj.timeTaken = Date.now() - this.startTime; // Record the time taken to respond
+        
+        return this.hasPlayerCompleted(player); // Return true if the player has completed all their prompts
     } catch (err) {
-        console.log(err);
-    }}
+        console.error(err);
+        return false; // Return false in case of any error
+    }
+}
+
 
     // Check if a player has completed all their prompts
     hasPlayerCompleted(player) {

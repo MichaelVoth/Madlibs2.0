@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import blueAvatar from "../assets/blueAvatar.png";
 import greenAvatar from "../assets/greenAvatar.png";
 import orangeAvatar from "../assets/orangeAvatar.png";
