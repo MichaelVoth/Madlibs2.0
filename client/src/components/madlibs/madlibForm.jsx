@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import { useNavigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext.jsx";
 import axios from "axios";
 
@@ -10,6 +10,7 @@ const MadlibForm = (props) => {
     const [body, setBody] = useState("");
     const [titleErrors, setTitleErrors] = useState("");
     const [bodyErrors, setBodyErrors] = useState("");
+    const [summary, setSummary] = useState("");
     const [tags, setTags] = useState([]);
 
     const navigate = useNavigate();
@@ -31,14 +32,14 @@ const MadlibForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (title.length < 2) {
             setTitleErrors("Title must be at least two characters");
             return;
         } else {
             setTitleErrors("");
         }
-    
+
         if (body.length < 100) {
             setBodyErrors("Madlib text must be at least 100 characters");
             return;
@@ -54,12 +55,26 @@ const MadlibForm = (props) => {
             summary,
             tags,
             authorID: user._id,
-        }, {withCredentials: true})
+        }, { withCredentials: true })
     };
-    
+
     return (
         <div>
             <h1>Madlib Form</h1>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label>Title: </label>
+                    <input type="text" onChange={(e) => setTitle(e.target.value)} value={title} />
+                    {titleErrors ? <p style={{ color: "red" }}>{titleErrors}</p> : null}
+                    <label>Summary: </label>
+                    <input type="text" onChange={(e) => setSummary(e.target.value)} value={summary} />
+                    <label>Madlib Text: </label>
+                    <textarea onChange={(e) => setBody(e.target.value)} value={body} />
+                    <label>Tags: </label>
+                    <input type="text" onChange={(e) => setTags(e.target.value.split(","))} value={tags} />
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
         </div>
     )
 }
