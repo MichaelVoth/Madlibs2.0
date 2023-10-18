@@ -8,11 +8,10 @@ import GamePrompts from './gamePrompts.jsx';
 import GameWaiting from './gameWaiting.jsx';
 import GameComplete from './game.complete.jsx';
 
-import axios from 'axios';
 
 const GameBoard = (props) => {
 
-    const { roomId } = useParams();
+    const { roomID } = useParams();
     const { user } = useUserContext();
     const { socket } = useSocketContext();
 
@@ -36,19 +35,19 @@ const GameBoard = (props) => {
             )
         case "Loading":
             return (
-                <GameLoading gameID = {gameID} />
+                <GameLoading gameID = {gameID} roomID = { roomID } />
             )
         case "inProgress":
             return (
-                <GamePrompts gameID = {gameID}/>
+                <GamePrompts gameID = {gameID} roomID = { roomID }/>
             )
         case "waiting":
             return (
-                <GameWaiting gameID = {gameID} />
+                <GameWaiting gameID = {gameID} roomID = { roomID } />
             )
         case "complete":
             return (
-                <GameComplete gameID = {gameID}/>
+                <GameComplete gameID = {gameID} roomID = { roomID }/>
             )
         default:
             return (
