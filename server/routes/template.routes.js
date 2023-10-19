@@ -5,7 +5,7 @@ import authMiddleware from "../middleware/auth.js";
 const templateRouter = Router();
 
 templateRouter.post("/create", authMiddleware, TemplateController.createTemplate);
-templateRouter.get("/all", authMiddleware, TemplateController.getAllTemplates);
+templateRouter.get("/all", TemplateController.getAllTemplates); //Add authmiddleware back in
 templateRouter.get("/:id", authMiddleware, TemplateController.getTemplateById);
 templateRouter.get("/author/:authorID", authMiddleware, TemplateController.getTemplatesByAuthor);
 templateRouter.get("/tag/:tag", authMiddleware, TemplateController.getTemplatesByTag);

@@ -7,15 +7,12 @@ class TemplateController {
   static async createTemplate(req, res) {
     try {
       const { title, body, summary, authorID, tags } = req.body;
-      const prompts = TemplateClass.extractPromptsFromBody(body);
-      const template = new TemplateClass(title, body, summary, prompts, authorID, tags);
-      const validateError = template.validatesync();
-      if (validateError) {
-        return res.status(400).json({ message: validateError.message });
-      }
+      const template = new TemplateClass(title, body, summary, authorID, tags);
+      template.extractPromptsFromBody(template.body);
       const savedTemplate = await TemplateModel.create(template);
       res.status(201).json(savedTemplate);
     } catch (error) {
+      console.log("Error:",error);
       res.status(500).json({ message: 'Error creating template', error });
     }
   }

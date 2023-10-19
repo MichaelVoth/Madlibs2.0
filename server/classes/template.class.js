@@ -23,6 +23,7 @@ class TemplateClass {
         while ((match = regex.exec(text)) !== null) {
             prompts.push(match[1].trim()); // Add the matched prompt (without curly brackets) to the prompts array
         }
+        this.prompts = prompts;
         return prompts;
     }
 

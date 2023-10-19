@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext.jsx";
 import axios from "axios";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 const MadlibForm = (props) => {
 
@@ -30,6 +32,10 @@ const MadlibForm = (props) => {
         return stack.length === 0;
     };
 
+    const handleCancel = () => {
+        navigate("/loggedIn");
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -54,27 +60,71 @@ const MadlibForm = (props) => {
             body,
             summary,
             tags,
-            authorID: user._id,
+            authorID: user.id,
         }, { withCredentials: true })
+            .then((res) => {
+                navigate("/loggedIn");
+            }
+            )
+            .catch((err) => {
+                console.log(err);
+            }
+            );
+
     };
 
     return (
         <div>
             <h1>Madlib Form</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Title: </label>
-                    <input type="text" onChange={(e) => setTitle(e.target.value)} value={title} />
-                    {titleErrors ? <p style={{ color: "red" }}>{titleErrors}</p> : null}
-                    <label>Summary: </label>
-                    <input type="text" onChange={(e) => setSummary(e.target.value)} value={summary} />
-                    <label>Madlib Text: </label>
-                    <textarea onChange={(e) => setBody(e.target.value)} value={body} />
-                    <label>Tags: </label>
-                    <input type="text" onChange={(e) => setTags(e.target.value.split(","))} value={tags} />
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
+            <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                        type="text"
+                        className="mb-2"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    {titleErrors && <p style={{ color: "red" }}>{titleErrors}</p>}
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Summary</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        className="mb-2"
+                        value={summary}
+                        onChange={(e) => setSummary(e.target.value)}
+                    />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Madlib</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={10}
+                        className="mb-2"
+                        value={body}
+                        placeholder="Enter MadLib text here. Use {} around the word you'd like replace. For example: I walked to {noun}."
+                        onChange={(e) => setBody(e.target.value)}
+                    />
+                    {bodyErrors && <p style={{ color: "red" }}>{bodyErrors}</p>}
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Tags</Form.Label>
+                    <Form.Control
+                        type="text"
+                        className="mb-2"
+                        value={tags}
+                        onChange={(e) => setTags(e.target.value)}
+                    />
+                </Form.Group>
+                    <Button className="mx-4" onClick={handleCancel}>
+                        Back
+                    </Button>
+                    <Button  type="submit">
+                        Save
+                    </Button>
+            </Form>
         </div>
     )
 }

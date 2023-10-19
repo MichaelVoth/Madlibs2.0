@@ -22,7 +22,7 @@ const TemplateSchema = new mongoose.Schema({
   summary: {
     type: String,
     required: [true, "Summary is required"],
-    maxLength: [150, "Limit summary to 150 characters"]
+    maxLength: [250, "Limit summary to 250 characters"]
   },
   prompts: [{
     type: String,
