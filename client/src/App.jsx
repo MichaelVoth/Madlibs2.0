@@ -7,6 +7,7 @@ import Dashboard from './components/dashboard';
 import Login from './components/login&Register/login';
 import Register from './components/login&Register/register';
 import RoomView from './views/room.view.jsx';
+import MadlibForm from './components/madlibs/madlibForm.jsx';
 
 import ProtectedPage from './developerTools/protectedPage';
 
@@ -22,6 +23,7 @@ function App() {
                     <Route path="/loggedIn" element={<ProtectedRoutes />}>
                         <Route index path="" element={<Dashboard />} />
                         <Route path="protected" element={<ProtectedPage />} />
+                        <Route path="madlib/create" element= {<MadlibForm />} />
                         <Route path="room/:roomID" element={<RoomView />}/>
                     </Route>
                     <Route path="*" element={<Login />} /> {/* Default route */}

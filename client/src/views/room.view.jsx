@@ -55,7 +55,7 @@ const RoomView = () => {
         <div>
             <h2>Room View: {roomID} </h2>
             <p>Welcome {user && user.username}</p>
-            <GameBoard />
+            <GameBoard roomID = {roomID}/>
             <ChatBox />
             <UserList usersInRoom={usersInRoom} />
             <button onClick={leaveRoom}>Leave Room</button>

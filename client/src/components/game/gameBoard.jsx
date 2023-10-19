@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import useUserContext from '../../contexts/UserContext.jsx';
-import useSocketContext from '../../contexts/SocketContext.jsx';
+import { useUserContext } from '../../contexts/UserContext.jsx';
+import { useSocketContext } from '../../contexts/SocketContext.jsx';
 import { useParams } from 'react-router-dom';
 import GameStart from './gameStart.jsx';
 import GameLoading from './gameLoading.jsx';
@@ -11,7 +11,7 @@ import GameComplete from './game.complete.jsx';
 
 const GameBoard = (props) => {
 
-    const { roomID } = useParams();
+    const {roomID}  = useParams();
     const { user } = useUserContext();
     const { socket } = useSocketContext();
 
@@ -35,7 +35,7 @@ const GameBoard = (props) => {
             )
         case "Loading":
             return (
-                <GameLoading gameID = {gameID} roomID = { roomID } />
+                <GameLoading gameID = {gameID} roomID = {roomID}  />
             )
         case "inProgress":
             return (

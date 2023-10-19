@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Logout from './login&Register/logout.jsx';
 import ProfileCard from './profileCard.jsx';
@@ -82,6 +82,7 @@ const Dashboard = () => {
         <div>
             <h2>Dashboard</h2>
             <p>Welcome {user && user.username}</p>
+            <Link to="/loggedIn/madlib/create">Create Madlib</Link>
             <button onClick={createRoom}>Create Room</button>
             <button onClick={handleShow}>Join Room</button>
 
