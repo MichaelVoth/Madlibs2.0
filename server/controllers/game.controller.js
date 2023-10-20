@@ -74,6 +74,7 @@ class GameController {
     static async getGameByID(req, res) {
         try {
             const game = await Game.findOne({ _id: req.params.gameID });
+            console.log("Game Found: ", game);
             res.status(200).json(game);
         }
         catch (err) {

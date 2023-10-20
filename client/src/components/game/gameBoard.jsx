@@ -23,6 +23,7 @@ const GameBoard = (props) => {
         socket.on("GAME_STARTED", (gameID) => {
             console.log("GAME_STARTED", gameID);
             setGameState("inProgress");
+            console.log("gameID", gameID);
             setGameID(gameID);
         })
         return () => {
@@ -46,11 +47,11 @@ const GameBoard = (props) => {
             )
         case "waiting":
             return (
-                <GameWaiting gameID = {gameID} roomID = { roomID } />
+                <GameWaiting gameID = {gameID} />
             )
         case "complete":
             return (
-                <GameComplete gameID = {gameID} roomID = { roomID }/>
+                <GameComplete gameID = {gameID} />
             )
         default:
             return (

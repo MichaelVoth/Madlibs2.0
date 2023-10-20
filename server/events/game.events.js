@@ -7,9 +7,9 @@ const beginGame = (io, socket) => {
                 roomID: roomID,
                 systemMessage: true
             });
-            io.to(roomID).emit("GAME_STARTED", {
-                gameID: gameID,
-            });
+            console.log(`Game ${gameID} started in room ${roomID}`);
+            io.to(roomID).emit("GAME_STARTED", gameID,
+            );
         }
         catch (error) {
             console.log(error);
