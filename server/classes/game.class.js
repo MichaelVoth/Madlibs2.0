@@ -15,7 +15,7 @@ class GameClass {
 
     // Start the game
     startGame() {
-        this.assignPrompts(template.prompts); // Assign prompts to players
+        this.assignPrompts(this.template.prompts); // Assign prompts to players
         this.gameStatus = "inProgress";
         this.startTime = Date.now();
     }

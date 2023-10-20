@@ -73,6 +73,8 @@ async function serverStart() {
 
             chatEvents.newMessageSent(io, socket, roomManagerInstance);
 
+            gameEvents.beginGame(io, socket, roomManagerInstance);
+
 
             socket.on("disconnect", () => {
                 // console.log(`User disconnected with socket id: ${socket.id}`);

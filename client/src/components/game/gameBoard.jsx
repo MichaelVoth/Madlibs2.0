@@ -21,10 +21,13 @@ const GameBoard = (props) => {
 
     useEffect(() => {
         socket.on("GAME_STARTED", (gameID) => {
+            console.log("GAME_STARTED", gameID);
             setGameState("inProgress");
             setGameID(gameID);
-
         })
+        return () => {
+            socket.off("GAME_STARTED");
+        }
     }
     , []);
 
@@ -35,11 +38,11 @@ const GameBoard = (props) => {
             )
         case "Loading":
             return (
-                <GameLoading gameID = {gameID} roomID = {roomID}  />
+                <GameLoading gameID = {gameID} />
             )
         case "inProgress":
             return (
-                <GamePrompts gameID = {gameID} roomID = { roomID }/>
+                <GamePrompts gameID = {gameID} />
             )
         case "waiting":
             return (

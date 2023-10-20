@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const GameSchema = new mongoose.Schema({
 
-    templateID: {
+    template: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Template",
         required: true
     },
     players: [
-        {user: {
+        {userID: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true
@@ -16,6 +16,7 @@ const GameSchema = new mongoose.Schema({
         playerStatus: {
             type: String,
             enum: ["active", "inactive", "completed"],
+            default: "active",
             required: true
         },
         promptsAssigned: [{
@@ -24,16 +25,16 @@ const GameSchema = new mongoose.Schema({
         }],
         timeTaken: {
             type: Number,
+            default: 0,
             required: true
         },
         finishTime: {
             type: Date,
-            required: true
         },
     }],
     Duration: {
         type: Number,
-        required: true
+        default: 0,
     },
     completed: {
         type: Boolean,
@@ -48,7 +49,7 @@ const GameSchema = new mongoose.Schema({
         type: String,
         enum: [ "notStarted","inProgress", "completed", "abandoned"],
         required: true,
-        default: "inProgress"
+        default: "notStarted"
     },
     gamesInSuccession: {
         type: Number,

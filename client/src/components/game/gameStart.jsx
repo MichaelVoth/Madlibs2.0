@@ -1,5 +1,6 @@
 import React from "react";
 import { useSocketContext } from "../../contexts/SocketContext.jsx";
+import { useUserContext } from "../../contexts/UserContext.jsx";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -7,16 +8,17 @@ const GameStart = (props) => {
 
     const { roomID } = useParams();
     const { socket } = useSocketContext();
+    const { user } = useUserContext();
 
     const startGame = () => {
-        axios.post(`http://localhost:3001/api/game/create/${roomID}`), { withCredentials: true}
+        axios.post(`http://localhost:3001/api/game/create`, {roomID:roomID}, { withCredentials: true})
             .then(res => {
-                console.log(res.data);
-                socket.emit("START_GAME", { gameID: res.data._id }); 
-                setGameState("loading");
+                console.log("res.data", res.data._id);
+                socket.emit("START_GAME", { gameID: res.data._id, roomID: roomID, username: user.username }); 
             })
             .catch(err => console.log(err));
-        }
+    }
+    
     
     return (
         <div>

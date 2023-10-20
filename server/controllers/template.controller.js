@@ -87,6 +87,7 @@ class TemplateController {
       const randomIndex = Math.floor(Math.random() * templates.length);
       res.status(200).json(templates[randomIndex]);
     } catch (error) {
+      console.log("Error:",error);
       res.status(500).json({ message: 'Error fetching template', error });
     }
   }
