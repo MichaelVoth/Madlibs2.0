@@ -11,17 +11,21 @@ const GamePrompts = (props) => {
     const { user } = useUserContext();
 
     const gameID = props.gameID;
-    const [assignedPrompts, setAssignedPrompts] = useState(null);
+    const [assignedPrompts, setAssignedPrompts] = useState([]);
 
     useEffect(() => {
         axios.get(`http://localhost:3001/api/game/${gameID}/room/${roomID}/user/${user.id}`, { withCredentials: true })
             .then(res => {
-                console.log("res.data", res.data);
                 setAssignedPrompts(res.data);
             })
             
             .catch(err => console.log(err));
     }, []);
+
+    useEffect(() => {
+        console.log("assignedPrompts after update:", assignedPrompts);
+    }, [assignedPrompts]);
+    
 
 
     return (
