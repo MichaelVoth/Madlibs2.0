@@ -85,10 +85,25 @@ class GameClass {
         }
     }
 
+    userFinished(playerID) {
+        const player = this.players.find(player => player.userID === playerID); // Find the player
+        if (!player) {
+            console.error("Player not found");
+            return false;
+        }
+        player.finishTime = (Date.now() - this.startTime) / 1000; // Record the time the player finished
+        player.status = "completed"; // Mark the player as completed
+        return this.hasPlayerCompleted(player); // Return true if the player has completed all their prompts
+    }
 
     // Check if a player has completed all their prompts
     hasPlayerCompleted(player) {
         return player.promptsAssigned.every(promptObj => promptObj.response !== null); // returns true if all responses are not null
+    }
+
+    // Check if all players have completed all their prompts
+    allUsersFinished() {
+        return this.players.every(player => this.hasPlayerCompleted(player)); // returns true if all players have completed all their prompts
     }
 
     // Mark a player as inactive

@@ -24,8 +24,7 @@ const GamePrompts = (props) => {
                 if(currentPromptIndex < assignedPrompts.length - 1) {
                     setCurrentPromptIndex(currentPromptIndex + 1);
                 } else {
-                    socket.emit("USER_FINISHED", { roomID, userID: user.id });
-                    console.log("Switching to waiting state...")
+                    socket.emit("USER_FINISHED", { gameID, roomID, userID: user.id, username: user.username });
                     setGameState("waiting");
                 }
             })
