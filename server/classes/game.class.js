@@ -69,9 +69,8 @@ class GameClass {
     // Record a player's response to a prompt
     recordResponse(playerID, originalIndex, response) {
         try {
-            const player = this.players.find(player => player.user === playerID); // Find the player
+            const player = this.players.find(player => player.userID === playerID); // Find the player
             const promptObj = player.promptsAssigned.find(promptObj => promptObj.originalIndex === originalIndex); // Find the prompt
-
             if (!promptObj) {
                 console.error("Prompt not found for given originalIndex");
                 return false;

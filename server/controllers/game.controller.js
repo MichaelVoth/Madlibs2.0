@@ -41,9 +41,9 @@ class GameController {
         try {
             const roomManagerInstance = req.app.get('roomManagerInstance');
             const game = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
-            game.recordResponse(req.body.userID, req.body.originalIndex, req.body.response);
-            await roomManagerInstance.updateGame(game);
-            res.status(200).json(game);
+            game.recordResponse(req.params.userID, req.body.originalIndex, req.body.response);
+            await roomManagerInstance.updateGame(req.params.roomID, req.params.gameID, game);
+            res.status(200).json( { message: "Response recorded." } );
         }
         catch (err) {
             console.log(err);

@@ -129,9 +129,9 @@ class RoomManager {
             throw new Error("Game or Room does not exist.");
         }
     }
-    updateGame(roomID, game) {
-        if (this.rooms[roomID] && this.rooms[roomID].games[game.id]) {
-            this.rooms[roomID].games[game.id] = game;
+    updateGame(roomID, gameID, game) {
+        if (this.rooms[roomID] && this.rooms[roomID].games[gameID]) {
+            this.rooms[roomID].games[gameID] = game;
         } else {
             throw new Error("Game or Room does not exist.");
         }
