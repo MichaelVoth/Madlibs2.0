@@ -14,10 +14,10 @@ const GamePrompts = (props) => {
     const [assignedPrompts, setAssignedPrompts] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/game/${gameID}`, { withCredentials: true })
+        axios.get(`http://localhost:3001/api/game/${gameID}/room/${roomID}/user/${user.id}`, { withCredentials: true })
             .then(res => {
                 console.log("res.data", res.data);
-                setAssignedPrompts(res.data.user.promptsAssigned);
+                setAssignedPrompts(res.data);
             })
             
             .catch(err => console.log(err));

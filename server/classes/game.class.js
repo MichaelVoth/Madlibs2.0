@@ -4,7 +4,14 @@ class GameClass {
     constructor(template, players, roomID) {
         this.template = template;
         this.roomID = roomID
-        this.players = players || []; // {user: playerID, playerStatus: "active", promptsAssigned: [], timeTaken: 0, finishTime: null}
+        this.players = players || []; 
+        // {user: playerID, 
+        //      playerStatus: "active",
+        //      promptsAssigned: []
+        //          prompt:
+        //          response: null, 
+        //      timeTaken: 0, 
+        //      finishTime: null}
         this.duration = 0;
         this.completed = false;
         this.solution = null;
@@ -48,33 +55,36 @@ class GameClass {
         });
     }
 
-    // Distribute prompts to each player
-    distributePrompts(playerID) {
-        const player = this.players.find(player => player.user === playerID); // Find the player
+    //Get prompts for a specific user
+    getUserPrompts(playerID) {
+        const player = this.players.find(player => player.userID === playerID); // Find the player
+        if (!player) {
+            console.error("Player not found");
+            return false;
+        }
         const prompts = player.promptsAssigned; // Get the player's prompts
         return prompts;
     }
 
-// Record a player's response to a prompt
-recordResponse(playerID, originalIndex, response) {
-    try {
-        const player = this.players.find(player => player.user === playerID); // Find the player
-        const promptObj = player.promptsAssigned.find(promptObj => promptObj.originalIndex === originalIndex); // Find the prompt
-        
-        if (!promptObj) {
-            console.error("Prompt not found for given originalIndex");
-            return false;
-        }
+    // Record a player's response to a prompt
+    recordResponse(playerID, originalIndex, response) {
+        try {
+            const player = this.players.find(player => player.user === playerID); // Find the player
+            const promptObj = player.promptsAssigned.find(promptObj => promptObj.originalIndex === originalIndex); // Find the prompt
 
-        promptObj.response = response; // Record the response
-        promptObj.timeTaken = Date.now() - this.startTime; // Record the time taken to respond
-        
-        return this.hasPlayerCompleted(player); // Return true if the player has completed all their prompts
-    } catch (err) {
-        console.error(err);
-        return false; // Return false in case of any error
+            if (!promptObj) {
+                console.error("Prompt not found for given originalIndex");
+                return false;
+            }
+            promptObj.response = response; // Record the response
+            promptObj.timeTaken = Date.now() - this.startTime; // Record the time taken to respond
+
+            return this.hasPlayerCompleted(player); // Return true if the player has completed all their prompts
+        } catch (err) {
+            console.error(err);
+            return false; // Return false in case of any error
+        }
     }
-}
 
 
     // Check if a player has completed all their prompts

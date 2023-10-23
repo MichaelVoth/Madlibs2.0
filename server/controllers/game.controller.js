@@ -11,11 +11,14 @@ class GameController {
         try {
             const template = await GameController.getRandomTemplate();
             const roomManagerInstance = req.app.get('roomManagerInstance')
-            const players = await roomManagerInstance.getUsersInRoom(req.body.roomID);
-            const gameInstance = new GameClass(template, players, req.body.roomID);
+            const roomID = req.body.roomID;
+            const players = await roomManagerInstance.getUsersInRoom(roomID);
+            const gameInstance = new GameClass(template, players, roomID);
             gameInstance.startGame();
             const game = new Game(gameInstance);
             await game.save();
+            const gameID = game._id;
+            roomManagerInstance.addGameToRoom(roomID, gameInstance, gameID);
             res.status(201).json(game); // Return the game
         } catch (err) {
             console.log(err);
@@ -36,12 +39,27 @@ class GameController {
 
     static async recordResponse(req, res) {
         try {
-            const game = await Game.findOne({ _id: req.params.gameID });
-            game.gameInstance.recordResponse(req.body.userID, req.body.originalIndex, req.body.response);
-            await game.save();
+            const roomManagerInstance = req.app.get('roomManagerInstance');
+            const game = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
+            game.recordResponse(req.body.userID, req.body.originalIndex, req.body.response);
+            await roomManagerInstance.updateGame(game);
             res.status(200).json(game);
         }
         catch (err) {
+            console.log(err);
+            res.status(500).json(err);
+        }
+    }
+
+    static async getUserPrompts(req, res) {
+        try {
+            const roomManagerInstance = req.app.get('roomManagerInstance');
+            const game = await roomManagerInstance.getGame( req.params.roomID, req.params.gameID);
+            const userPrompts = game.getUserPrompts(req.params.userID);
+            res.status(200).json(userPrompts);
+        }
+        catch (err) {
+            console.log(err);
             res.status(500).json(err);
         }
     }
@@ -55,6 +73,7 @@ class GameController {
             res.status(200).json(completedMadlib);
         }
         catch (err) {
+            console.log(err);
             res.status(500).json(err);
         }
     }
