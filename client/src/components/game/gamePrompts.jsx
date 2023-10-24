@@ -40,12 +40,6 @@ const GamePrompts = (props) => {
             .catch(err => console.log(err));
     }, []);
 
-    useEffect(() => {
-        console.log("assignedPrompts after update:", assignedPrompts);
-        console.log("currentPromptIndex after update:", currentPromptIndex)
-    }, [assignedPrompts]);
-    
-
 
     return (
         <div>

@@ -21,12 +21,17 @@ const GameBoard = (props) => {
 
     useEffect(() => {
         socket.on("GAME_STARTED", (gameID) => {
-            console.log("GAME_STARTED", gameID);
             setGameState("inProgress");
             setGameID(gameID);
         })
+
+        socket.on("GAME_COMPLETE", () => {
+            setGameState("complete");
+        })
+
         return () => {
             socket.off("GAME_STARTED");
+            socket.off("GAME_COMPLETE");
         }
     }
     , []);

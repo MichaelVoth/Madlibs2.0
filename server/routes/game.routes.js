@@ -6,7 +6,7 @@ const gameRouter = Router();
 
 gameRouter.post("/create", authMiddleware, GameController.createGame);
 gameRouter.put("/response/:gameID/room/:roomID/user/:userID", authMiddleware, GameController.recordResponse);
-gameRouter.post('/complete/:gameID', authMiddleware, GameController.completeGame);
+gameRouter.get('/complete/:gameID/room/:roomID', authMiddleware, GameController.completeGame);
 gameRouter.get("/all", authMiddleware, GameController.getAllGames);
 gameRouter.get("/:gameID/room/:roomID/user/:userID", authMiddleware, GameController.getUserPrompts);
 gameRouter.get("/:gameID", authMiddleware, GameController.getGameByID);

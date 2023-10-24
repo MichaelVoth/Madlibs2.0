@@ -66,10 +66,9 @@ class GameController {
 
     static async completeGame(req, res) {
         try {
-            const game = await Game.findOne({ _id: req.params.gameID });
-            game.gameInstance.completeGame();
-            await game.save();
-            const completedMadlib = TemplateClass.renderMadlib(game.gameInstance.template, game.gameInstance.responses);
+            const roomManagerInstance = req.app.get('roomManagerInstance');
+            const game = roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
+            const completedMadlib = TemplateClass.renderMadlib(game.template, game.solution);
             res.status(200).json(completedMadlib);
         }
         catch (err) {

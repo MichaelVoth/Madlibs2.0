@@ -28,10 +28,12 @@ class TemplateClass {
     }
 
     renderMadlib(template, answers) {
+        console.log("Answers: ", answers);
         let renderedText = template.body;
         this.prompts.forEach((prompt, index) => {
             const answer = answers[index] || `{${prompt}}`; // Use the original prompt if no answer is provided
             renderedText = renderedText.replace(`{${prompt}}`, answer);
+            console.log("Rendered text: ", renderedText);
         });
         return renderedText;
     }

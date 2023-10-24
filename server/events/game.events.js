@@ -19,10 +19,10 @@ const beginGame = (io, socket) => {
     });
 }
 
-const userFinished = (io, socket) => {
+const userFinished = (io, socket, roomManagerInstance) => {
     socket.on("USER_FINISHED", async ({ gameID, roomID, userID, username }) => {
         try{
-            const roomManagerInstance = app.get('roomManagerInstance');
+            // const roomManagerInstance = app.get('roomManagerInstance');
             const gameInstance = roomManagerInstance.getGame(roomID, gameID);
             gameInstance.userFinished(userID);
             await Game.findByIdAndUpdate(gameID, { gameInstance });
@@ -36,6 +36,7 @@ const userFinished = (io, socket) => {
             //Check if all users are finished. If so, run completeGame()
             if (gameInstance.allUsersFinished()) {
                 gameInstance.completeGame();
+                console.log("Completed gameInstance", gameInstance);
             //Save final game instance to the database
                 await Game.findByIdAndUpdate(gameID, { gameInstance });
             //emit to the room the solution
