@@ -77,9 +77,7 @@ async function serverStart() {
             gameEvents.userFinished(io, socket, roomManagerInstance);
 
 
-            socket.on("disconnect", () => {
-                // console.log(`User disconnected with socket id: ${socket.id}`);
-            });
+            socket.on("disconnect", () => {            });
         });
 
     } catch (error) {
