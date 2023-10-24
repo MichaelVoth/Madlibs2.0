@@ -1,7 +1,8 @@
-
+import Game from "../models/game.model.js";
 
 class GameClass {
     constructor(template, players, roomID) {
+        this.gameID = null;
         this.template = template;
         this.roomID = roomID
         this.players = players || []; 
@@ -14,17 +15,23 @@ class GameClass {
         //      finishTime: null}
         this.duration = 0;
         this.completed = false;
-        this.solution = null;
+        this.filledPrompts = null;
         this.gameStatus = "notStarted";
         this.gamesInSuccession = 0;
         this.reports = [];
     }
 
     // Start the game
-    startGame() {
+    async startGame() {
         this.assignPrompts(this.template.prompts); // Assign prompts to players
         this.gameStatus = "inProgress";
         this.startTime = Date.now();
+        const game = new Game({
+            templateID: this.template._id,
+            roomID: this.roomID,
+            players: this.players,
+        });
+        this.gameID = game._id;
     }
 
     // Shuffle the prompts using the Fisher-Yates algorithm
@@ -163,12 +170,21 @@ class GameClass {
         this.gameStatus = "completed";
         this.duration = (Date.now() - this.startTime) / 1000;
         this.completed = true;
-        this.solution = this.reassemblePrompts();
+        this.filledPrompts = this.reassemblePrompts();
     }
 
     // Abandon the game
-    abandonGame() {
-        this.gameStatus = "abandoned";
+    static async abandonGame(gameID) {
+        try {
+            const game = await Game.findOne({ _id: gameID });
+            game.gameStatus = "abandoned";
+            await game.save();
+            return game;
+        }
+        catch (err) {
+            console.error(err);
+            return false;
+        }
     }
 
     //Count how many games in succession a this group has played

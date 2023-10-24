@@ -36,7 +36,6 @@ const userFinished = (io, socket, roomManagerInstance) => {
             //Check if all users are finished. If so, run completeGame()
             if (gameInstance.allUsersFinished()) {
                 gameInstance.completeGame();
-                console.log("Completed gameInstance", gameInstance);
             //Save final game instance to the database
                 await Game.findByIdAndUpdate(gameID, { gameInstance });
             //emit to the room the solution

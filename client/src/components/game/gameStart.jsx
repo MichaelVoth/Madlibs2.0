@@ -13,7 +13,7 @@ const GameStart = (props) => {
     const startGame = () => {
         axios.post(`http://localhost:3001/api/game/create`, {roomID:roomID}, { withCredentials: true})
             .then(res => {
-                socket.emit("START_GAME", { gameID: res.data._id, roomID: roomID, username: user.username }); 
+                socket.emit("START_GAME", { gameID: res.data.gameID, roomID: roomID, username: user.username }); 
             })
             .catch(err => console.log(err));
     }
