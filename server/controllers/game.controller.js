@@ -1,13 +1,11 @@
 import Game from "../models/game.model.js";
 import GameClass from "../classes/game.class.js";
-import TemplateClass from "../classes/template.class.js";
-import TemplateController from "./template.controller.js";
 import Template from "../models/template.model.js";
-import RoomController from "./room.controller.js";
 import SolutionClass from "../classes/solution.class.js";
 
 class GameController {
 
+//Game Logic
     static async createGame(req, res) {
         try {
             const template = await GameController.getRandomTemplate();
@@ -23,7 +21,6 @@ class GameController {
         }
     }
 
-    // Get a random template
     static async getRandomTemplate() {
         try {
             const templates = await Template.find();
@@ -69,8 +66,7 @@ class GameController {
             const players = game.players.map(player => player.userID);
             const solution = new SolutionClass(game.template._id, game.template.title, players, game.filledPrompts);
             await solution.createSolution();
-            const completeMadlib = solution.getCompletedText();
-            res.status(200).json(completeMadlib);
+            res.status(200).json(solution);
         }
         catch (err) {
             console.log(err);
@@ -78,6 +74,7 @@ class GameController {
         }
     }
 
+//CRUD
     static async getGameByID(req, res) {
         try {
             const game = await Game.findOne({ _id: req.params.gameID });

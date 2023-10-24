@@ -49,7 +49,8 @@ const GameBoard = (props) => {
             return (
                 <GamePrompts gameID = {gameID}
                 gameState = {gameState}
-                setGameState = {setGameState}/>
+                setGameState = {setGameState}
+                />
             )
         case "waiting":
             return (
@@ -57,7 +58,10 @@ const GameBoard = (props) => {
             )
         case "complete":
             return (
-                <GameComplete gameID = {gameID} />
+                <GameComplete gameID = {gameID}
+                gameState={gameState}
+                setGameState={setGameState}
+                />
             )
         default:
             return (
