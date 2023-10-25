@@ -8,7 +8,7 @@ const GameComplete = (props) => {
     const { roomID } = useParams();
     const { socket } = useSocketContext();
     const { user } = useUserContext();
-    const [gameState, setGameState] = props;
+    const {gameState, setGameState} = props;
     const [title, setTitle] = useState("");
     const [completedMadlib, setCompletedMadlib] = useState(null);
     const gameID = props.gameID;

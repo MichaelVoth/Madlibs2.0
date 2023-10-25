@@ -59,6 +59,21 @@ class GameController {
         }
     }
 
+    static async inactiveUser(req, res) {
+        try {
+            const roomManagerInstance = req.app.get('roomManagerInstance');
+            const game = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
+            game.inactiveUser(req.params.userID);
+            await roomManagerInstance.updateGame(req.params.roomID, req.params.gameID, game);
+            console.log("User marked inactive.", game);
+            res.status(200).json({ message: "User marked inactive." });
+        }
+        catch (err) {
+            console.log(err);
+            res.status(500).json(err);
+        }
+    }
+
     static async completeGame(req, res) {
         try {
             const roomManagerInstance = req.app.get('roomManagerInstance');

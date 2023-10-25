@@ -118,16 +118,8 @@ class GameClass {
         const player = this.players.find(player => player.user === playerID);
         if (player) {
             player.playerStatus = "inactive";
+            this.handleInactivePlayer(player);
         }
-    }
-
-    // Check for inactive players periodically
-    checkForInactivePlayers() {
-        this.players.forEach(player => {
-            if (player.timeTaken >= 30) {
-                this.markPlayerInactive(player.user);
-            }
-        });
     }
 
     // This function can be called whenever a player's status changes to "inactive"
@@ -145,11 +137,13 @@ class GameClass {
                 const playerIncompletePrompts = player.promptsAssigned.filter(promptObj => promptObj.response === null); // Find all incomplete prompts from the player
                 incompletePrompts.push(...playerIncompletePrompts); // Add the incomplete prompts to the incompletePrompts array
             }
+            console.log("incompletePrompts:", incompletePrompts);
         });
         const activePlayers = this.players.filter(player => player.playerStatus === "active"); // Find all active players
         incompletePrompts.forEach((promptObj, index) => { // Reassign the incomplete prompts to active players
             const player = activePlayers[index % activePlayers.length]; // Assign prompts in a round-robin fashion
             player.promptsAssigned.push(promptObj); // Add the prompt to the player's promptsAssigned array
+            console.log("player:", player);
         });
     }
 
