@@ -11,7 +11,7 @@ const GameStart = (props) => {
     const { user } = useUserContext();
 
     const startGame = () => {
-        axios.post(`http://localhost:3001/api/game/create`, {roomID:roomID}, { withCredentials: true})
+        axios.post(`http://localhost:3001/api/game/create/${roomID}`,{},{ withCredentials: true })
             .then(res => {
                 socket.emit("START_GAME", { gameID: res.data.gameID, roomID: roomID, username: user.username }); 
             })

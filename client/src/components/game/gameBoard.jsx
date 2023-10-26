@@ -43,7 +43,9 @@ const GameBoard = (props) => {
             )
         case "Loading":
             return (
-                <GameLoading gameID = {gameID} />
+                <GameLoading gameID = {gameID}
+                gameState = {gameState}
+                setGameState = {setGameState} />
             )
         case "inProgress":
             return (
@@ -54,7 +56,9 @@ const GameBoard = (props) => {
             )
         case "waiting":
             return (
-                <GameWaiting gameID = {gameID} />
+                <GameWaiting gameID = {gameID}
+                gameState = {gameState}
+                setGameState = {setGameState} />
             )
         case "complete":
             return (

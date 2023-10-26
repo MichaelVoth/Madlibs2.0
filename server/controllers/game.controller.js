@@ -10,7 +10,7 @@ class GameController {
         try {
             const template = await GameController.getRandomTemplate();
             const roomManagerInstance = req.app.get('roomManagerInstance')
-            const roomID = req.body.roomID;
+            const roomID = req.params.roomID;
             const players = await roomManagerInstance.getUsersInRoom(roomID);
             const gameInstance = new GameClass(template, players, roomID);
             gameInstance.startGame();
@@ -63,9 +63,8 @@ class GameController {
         try {
             const roomManagerInstance = req.app.get('roomManagerInstance');
             const game = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
-            game.inactiveUser(req.params.userID);
+            game.markPlayerInactive(req.params.userID);
             await roomManagerInstance.updateGame(req.params.roomID, req.params.gameID, game);
-            console.log("User marked inactive.", game);
             res.status(200).json({ message: "User marked inactive." });
         }
         catch (err) {

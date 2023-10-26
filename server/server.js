@@ -75,6 +75,8 @@ async function serverStart() {
 
             gameEvents.beginGame(io, socket, roomManagerInstance);
             gameEvents.userFinished(io, socket, roomManagerInstance);
+            gameEvents.inactivePlayer(io, socket, roomManagerInstance);
+            // gameEvents.playAgain(io, socket, roomManagerInstance);
 
 
             socket.on("disconnect", () => {            });

@@ -69,7 +69,8 @@ class GameClass {
             console.error("Player not found");
             return false;
         }
-        const prompts = player.promptsAssigned; // Get the player's prompts
+        player.playerStatus = "active"; // Mark the player as active
+        const prompts = player.promptsAssigned.filter(prompt => prompt.response === null); // Get the player's empty prompts
         return prompts;
     }
 
@@ -99,7 +100,7 @@ class GameClass {
             return false;
         }
         player.finishTime = (Date.now() - this.startTime) / 1000; // Record the time the player finished
-        player.status = "completed"; // Mark the player as completed
+        player.playerStatus = "completed"; // Mark the player as completed
         return this.hasPlayerCompleted(player); // Return true if the player has completed all their prompts
     }
 
@@ -114,18 +115,17 @@ class GameClass {
     }
 
     // Mark a player as inactive
-    markPlayerInactive(playerID) {
-        const player = this.players.find(player => player.user === playerID);
+    markPlayerInactive(userID) {
+        const player = this.players.find(player => player.userID === userID);
         if (player) {
             player.playerStatus = "inactive";
-            this.handleInactivePlayer(player);
+            this.reassignIncompletePrompts();
         }
     }
 
-    // This function can be called whenever a player's status changes to "inactive"
-    handleInactivePlayer(player) {
-        if (player.playerStatus === "inactive") {
-            this.reassignIncompletePrompts();
+    allUsersInactive() {
+        if (this.players.every(player => player.playerStatus === "inactive")) {
+            return true;
         }
     }
 
@@ -139,11 +139,11 @@ class GameClass {
             }
             console.log("incompletePrompts:", incompletePrompts);
         });
-        const activePlayers = this.players.filter(player => player.playerStatus === "active"); // Find all active players
+        const activePlayers = this.players.filter(player => player.playerStatus === "active" || player.playerStatus === "completed"); // Find all active players or completed players
+        console.log("activePlayers:", activePlayers);
         incompletePrompts.forEach((promptObj, index) => { // Reassign the incomplete prompts to active players
             const player = activePlayers[index % activePlayers.length]; // Assign prompts in a round-robin fashion
             player.promptsAssigned.push(promptObj); // Add the prompt to the player's promptsAssigned array
-            console.log("player:", player);
         });
     }
 
