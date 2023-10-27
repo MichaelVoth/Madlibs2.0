@@ -1,8 +1,8 @@
 import Game from "../models/game.model.js";
 import GameClass from "../classes/game.class.js";
 
-const beginGame = (io, socket) => {
-    socket.on("START_GAME", ({ gameID, roomID, username }) => {
+const beginGame = (io, socket, roomManagerInstance) => {
+    socket.on("CREATE_GAME", ({ gameID, roomID, username }) => {
         try{
             io.to(roomID).emit("NEW_MESSAGE_RECEIVED", {
                 content: `${username} has started the game.`,
@@ -10,14 +10,35 @@ const beginGame = (io, socket) => {
                 roomID: roomID,
                 systemMessage: true
             });
-            io.to(roomID).emit("GAME_STARTED", gameID,
-            );
+            roomManagerInstance.playerJoinedGame(roomID);
+            io.to(roomID).emit("GAME_CREATED", gameID); //Send gameID to everyone in room so they can join the game socket room.
         }
         catch (error) {
             console.log(error);
         }
     });
 }
+
+const joinGame = (io, socket, roomManagerInstance) => {
+    socket.on("JOIN_GAME", async ({ gameID, roomID, userID }) => {
+        try{
+            socket.join(gameID);
+            const gameInstance = roomManagerInstance.getGame(gameID);
+            gameInstance.addPlayer(userID);
+            roomManagerInstance.playerJoinedGame();
+            console.log("joinGame()gameInstance", gameInstance);
+            socket.emit("GAME_JOINED", gameID);
+            if (roomManagerInstance.playerCheck(roomID)) { //If all players have joined, start the game
+                gameInstance.startGame();
+                socket.to(gameID).emit("GAME_STARTED");
+            }
+        }
+        catch (error) {
+            console.log("joinGame()",error);
+        }
+    });
+}
+
 
 const inactivePlayer = (io, socket, roomManagerInstance) => {
     socket.on("USER_INACTIVE", async ({ gameID, roomID, userID, username }) => {
@@ -29,7 +50,9 @@ const inactivePlayer = (io, socket, roomManagerInstance) => {
                 roomID: roomID,
                 systemMessage: true
             });
-            socket.to(roomID).emit("GET_NEW_PROMPTS"); //Send to all other users in room to update their prompts
+            socket.leave(gameID);
+            roomManagerInstance.playerLeftGame(roomID);
+            socket.to(gameID).emit("GET_NEW_PROMPTS"); //Send to all other users in room to update their prompts
             //Check if all users are inactive. If so, run abandonGame()
             if (gameInstance.allUsersInactive()) {
                 gameInstance.abandonGame(gameID);
@@ -88,6 +111,7 @@ const playAgain = (io, socket, roomManagerInstance) => {
 
 export {
     beginGame,
+    joinGame,
     userFinished,
     inactivePlayer,
     playAgain

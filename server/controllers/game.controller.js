@@ -11,9 +11,8 @@ class GameController {
             const template = await GameController.getRandomTemplate();
             const roomManagerInstance = req.app.get('roomManagerInstance')
             const roomID = req.params.roomID;
-            const players = await roomManagerInstance.getUsersInRoom(roomID);
-            const gameInstance = new GameClass(template, players, roomID);
-            gameInstance.startGame();
+            const gameInstance = new GameClass(template, roomID);
+            gameInstance.createGame();
             roomManagerInstance.addGameToRoom(roomID, gameInstance, gameInstance.gameID);
             res.status(201).json(gameInstance);
         } catch (err) {

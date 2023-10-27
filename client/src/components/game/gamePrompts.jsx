@@ -65,9 +65,13 @@ const GamePrompts = (props) => {
     useEffect(() => {
         if (timeExpired) {
             axios.put(`http://localhost:3001/api/game/inactive/${gameID}/room/${roomID}/user/${user.id}`, {}, { withCredentials: true })
-            socket.emit("USER_INACTIVE", { gameID, roomID, userID: user.id, username: user.username });
-            setGameState("waiting");
+                .then(res => {
+                    socket.emit("USER_INACTIVE", { gameID, roomID, userID: user.id, username: user.username });
+                    setGameState("waiting");
+                })
+                .catch(err => console.log(err));
         }
+
     }, [timeExpired]);
 
     //Get new prompts when another user becomes inactive

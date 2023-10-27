@@ -20,9 +20,17 @@ const GameBoard = (props) => {
 
 
     useEffect(() => {
-        socket.on("GAME_STARTED", (gameID) => {
-            setGameState("inProgress");
+        socket.on("GAME_CREATED", (gameID) => {
+            socket.emit("JOIN_GAME", { gameID, roomID, userID: user.id });
+            setGameState("Loading");
+        })
+
+        socket.on("GAME_JOINED", gameID => {
             setGameID(gameID);
+        })
+
+        socket.on("GAME_STARTED", () => {
+            setGameState("inProgress");
         })
 
         socket.on("GAME_COMPLETE", () => {

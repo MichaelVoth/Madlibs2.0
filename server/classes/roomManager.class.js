@@ -20,7 +20,9 @@ class RoomManager {
         //              solutionID, 
         //              gameStatus, 
         //              gamesInSuccession, 
-        //              reports: [reportID] } } }
+        //              reports: [reportID] }}}
+        //       { expectedPlayers: 0 }
+        //       { joinedPlayers: 0 }
         this.maxUsersPerRoom = 6;
     }
 
@@ -44,7 +46,7 @@ class RoomManager {
 
     createRoom() { // Returns a room code
         const roomID = this.generateRoomCode(Object.keys(this.rooms));
-        this.rooms[roomID] = { users: {} };
+        this.rooms[roomID] = { users: {}, games: {}, expectedPlayers: 0, joinedPlayers: 0 };
         return roomID;
     }
 
@@ -53,6 +55,7 @@ class RoomManager {
             if (!this.rooms[roomID].users[userID]) { // If user is not already in room
                 if (Object.keys(this.rooms[roomID].users).length < this.maxUsersPerRoom) { // If room is not full
                     this.rooms[roomID].users[userID] = { userID, username, avatar }; // Add user to room
+                    this.playerJoinedRoom(roomID);
                 } else {
                     throw new Error("Room is full.");
                 }
@@ -66,10 +69,34 @@ class RoomManager {
 
     leaveRoom(roomID, userID) {
         if (this.rooms.hasOwnProperty(roomID) && this.rooms[roomID].users[userID]) {
+            this.playerLeftRoom(roomID);
             delete this.rooms[roomID].users[userID];
         }
     }
 
+    playerJoinedRoom(roomID) {
+        this.rooms[roomID].expectedPlayers++;
+    }
+
+    playerLeftRoom(roomID) {
+        this.rooms[roomID].expectedPlayers--;
+    }
+
+    playerJoinedGame(roomID) {
+        this.rooms[roomID].joinedPlayers++;
+    }
+
+    playerLeftGame(roomID) {
+        this.rooms[roomID].joinedPlayers--;
+    }
+
+    playerCheck(roomID) {
+        if(this.rooms[roomID].expectedPlayers === this.rooms[roomID].joinedPlayers) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     randomRoom() {
         const roomIDs = Object.keys(this.rooms); // Get all room IDs
         let randomRoomPick = roomIDs[Math.floor(Math.random() * roomIDs.length)];
@@ -86,33 +113,12 @@ class RoomManager {
         }
     }
 
-    getRooms() {
-        return this.rooms;
-    }
-
-    getRoomCount() {
-        return Object.keys(this.rooms).length;
-    }
-
-    getRoom(roomID) {
-        return this.rooms[roomID] || null;
-    }
-
     getUsersInRoom(roomID) {
         if (this.rooms[roomID]) {
             return Object.values(this.rooms[roomID].users); // Return an array of user objects( userID, username, avatar)
         } else {
             throw new Error(`getUsersInRoom: Room with ID ${roomID} does not exist.`);
         }
-    }
-
-    isUserInAnyRoom(userID) {
-        for (let room in this.rooms) {
-            if (this.rooms[room][userID]) {
-                return true;
-            }
-        }
-        return false;
     }
 
     addGameToRoom(roomID, game, gameID) {

@@ -1,10 +1,10 @@
 import Game from "../models/game.model.js";
 
 class GameClass {
-    constructor(template, players, roomID) {
+    constructor(template, roomID) {
         this.gameID = null;
         this.template = template;
-        this.roomID = roomID
+        this.roomID = roomID;
         this.players = players || []; 
         // {user: playerID, 
         //      playerStatus: "active",
@@ -20,18 +20,54 @@ class GameClass {
         this.gamesInSuccession = 0;
         this.reports = [];
     }
+    // Create a game
+    async createGame() {
+        try {
+            const game = new Game({
+                templateID: this.template._id,
+                roomID: this.roomID,
+            });
+            this.gameID = game._id;
+            await game.save();
+            return game;
+        }
+        catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
+
+    // Add a player to the game
+    addPlayer(playerID) {
+        const player = this.players.find(player => player.userID === playerID); // Find the player
+        if (!player) {
+            this.players.push({ // Add the player to the game
+                userID: playerID,
+                playerStatus: "inactive",
+                promptsAssigned: [],
+                timeTaken: 0,
+                finishTime: null
+            });
+        } else {
+            throw new Error("addPlayer(): Player already exists in game");
+        }
+    }
+
+    // Remove a player from the game
+    removePlayer(playerID) {
+        const playerIndex = this.players.findIndex(player => player.userID === playerID); // Find the player
+        if (playerIndex !== -1) {
+            this.players.splice(playerIndex, 1); // Remove the player from the game
+        } else {
+            throw new Error("removePlayer(): Player does not exist in game");
+        }
+    }
 
     // Start the game
     async startGame() {
         this.assignPrompts(this.template.prompts); // Assign prompts to players
         this.gameStatus = "inProgress";
         this.startTime = Date.now();
-        const game = new Game({
-            templateID: this.template._id,
-            roomID: this.roomID,
-            players: this.players,
-        });
-        this.gameID = game._id;
     }
 
     // Shuffle the prompts using the Fisher-Yates algorithm
@@ -129,23 +165,34 @@ class GameClass {
         }
     }
 
-    // Reassign incomplete prompts from inactive players to active players
     reassignIncompletePrompts() {
         const incompletePrompts = [];
-        this.players.forEach(player => { // Find all incomplete prompts from inactive players
-            if (player.playerStatus === "inactive" && !this.hasPlayerCompleted(player)) { // If the player is inactive and has not completed all their prompts
-                const playerIncompletePrompts = player.promptsAssigned.filter(promptObj => promptObj.response === null); // Find all incomplete prompts from the player
-                incompletePrompts.push(...playerIncompletePrompts); // Add the incomplete prompts to the incompletePrompts array
+        const seenOriginalIndices = new Set(); // Set to keep track of originalIndex values
+    
+        this.players.forEach(player => { 
+            if (player.playerStatus === "inactive" && !this.hasPlayerCompleted(player)) { 
+                const playerIncompletePrompts = player.promptsAssigned.filter(promptObj => {
+                    // Check if the prompt is incomplete and its originalIndex hasn't been seen before
+                    if (promptObj.response === null && !seenOriginalIndices.has(promptObj.originalIndex)) {
+                        seenOriginalIndices.add(promptObj.originalIndex); // Add the originalIndex to the Set
+                        return true; // Include this prompt in the filtered result
+                    }
+                    return false; // Exclude this prompt from the filtered result
+                });
+                incompletePrompts.push(...playerIncompletePrompts); 
             }
             console.log("incompletePrompts:", incompletePrompts);
         });
-        const activePlayers = this.players.filter(player => player.playerStatus === "active" || player.playerStatus === "completed"); // Find all active players or completed players
+    
+        const activePlayers = this.players.filter(player => player.playerStatus === "active" || player.playerStatus === "completed"); 
         console.log("activePlayers:", activePlayers);
-        incompletePrompts.forEach((promptObj, index) => { // Reassign the incomplete prompts to active players
-            const player = activePlayers[index % activePlayers.length]; // Assign prompts in a round-robin fashion
-            player.promptsAssigned.push(promptObj); // Add the prompt to the player's promptsAssigned array
+    
+        incompletePrompts.forEach((promptObj, index) => { 
+            const player = activePlayers[index % activePlayers.length]; 
+            player.promptsAssigned.push(promptObj); 
         });
     }
+    
 
     // Reassemble the prompts in their original order upon completion
     reassemblePrompts() {
