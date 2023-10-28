@@ -113,6 +113,18 @@ class RoomManager {
         }
     }
 
+    getRooms() {
+        return this.rooms;
+    }
+
+    getRoomCount() {
+        return Object.keys(this.rooms).length;
+    }
+
+    getRoom(roomID) {
+        return this.rooms[roomID] || null;
+    }
+
     getUsersInRoom(roomID) {
         if (this.rooms[roomID]) {
             return Object.values(this.rooms[roomID].users); // Return an array of user objects( userID, username, avatar)
@@ -132,14 +144,14 @@ class RoomManager {
         if (this.rooms[roomID] && this.rooms[roomID].games[gameID]) { // If room and game exist
             return this.rooms[roomID].games[gameID]; // Return game
         } else {
-            throw new Error("getGame: Game or Room does not exist.");
+            throw new Error("roomManager getGame(): Game or Room does not exist.");
         }
     }
     updateGame(roomID, gameID, game) {
         if (this.rooms[roomID] && this.rooms[roomID].games[gameID]) {
             this.rooms[roomID].games[gameID] = game;
         } else {
-            throw new Error("updateGame: Game or Room does not exist.");
+            throw new Error("roomManager updateGame(): Game or Room does not exist.");
         }
     }
 
@@ -147,7 +159,7 @@ class RoomManager {
         if (this.rooms[roomID] && this.rooms[roomID].games[gameID]) {
             delete this.rooms[roomID].games[gameID];
         } else {
-            throw new Error("removeGame: Game or Room does not exist.");
+            throw new Error("roomManager removeGame(): Game or Room does not exist.");
         }
     }
 

@@ -10,31 +10,29 @@ const beginGame = (io, socket, roomManagerInstance) => {
                 roomID: roomID,
                 systemMessage: true
             });
-            roomManagerInstance.playerJoinedGame(roomID);
             io.to(roomID).emit("GAME_CREATED", gameID); //Send gameID to everyone in room so they can join the game socket room.
         }
         catch (error) {
-            console.log(error);
+            console.log("game.events beginGame()",error);
         }
     });
 }
 
 const joinGame = (io, socket, roomManagerInstance) => {
-    socket.on("JOIN_GAME", async ({ gameID, roomID, userID }) => {
+    socket.on("JOIN_GAME", ({ gameID, roomID, userID }) => {
         try{
             socket.join(gameID);
-            const gameInstance = roomManagerInstance.getGame(gameID);
+            const gameInstance = roomManagerInstance.getGame(roomID, gameID);
             gameInstance.addPlayer(userID);
-            roomManagerInstance.playerJoinedGame();
-            console.log("joinGame()gameInstance", gameInstance);
+            roomManagerInstance.playerJoinedGame(roomID);
             socket.emit("GAME_JOINED", gameID);
             if (roomManagerInstance.playerCheck(roomID)) { //If all players have joined, start the game
                 gameInstance.startGame();
-                socket.to(gameID).emit("GAME_STARTED");
+                io.to(gameID).emit("GAME_STARTED");
             }
         }
         catch (error) {
-            console.log("joinGame()",error);
+            console.log("game.events joinGame()",error);
         }
     });
 }
@@ -52,7 +50,7 @@ const inactivePlayer = (io, socket, roomManagerInstance) => {
             });
             socket.leave(gameID);
             roomManagerInstance.playerLeftGame(roomID);
-            socket.to(gameID).emit("GET_NEW_PROMPTS"); //Send to all other users in room to update their prompts
+            socket.to(gameID).emit("GET_NEW_PROMPTS"); //Send to all other users in game to update their prompts
             //Check if all users are inactive. If so, run abandonGame()
             if (gameInstance.allUsersInactive()) {
                 gameInstance.abandonGame(gameID);

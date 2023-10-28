@@ -5,7 +5,7 @@ class GameClass {
         this.gameID = null;
         this.template = template;
         this.roomID = roomID;
-        this.players = players || []; 
+        this.players = []; 
         // {user: playerID, 
         //      playerStatus: "active",
         //      promptsAssigned: []
@@ -24,8 +24,9 @@ class GameClass {
     async createGame() {
         try {
             const game = new Game({
-                templateID: this.template._id,
+                template: this.template,
                 roomID: this.roomID,
+                players: this.players,
             });
             this.gameID = game._id;
             await game.save();
@@ -49,7 +50,7 @@ class GameClass {
                 finishTime: null
             });
         } else {
-            throw new Error("addPlayer(): Player already exists in game");
+            throw new Error("game.class addPlayer(): Player already exists in game");
         }
     }
 
@@ -181,11 +182,11 @@ class GameClass {
                 });
                 incompletePrompts.push(...playerIncompletePrompts); 
             }
-            console.log("incompletePrompts:", incompletePrompts);
+            // console.log("incompletePrompts:", incompletePrompts);
         });
     
         const activePlayers = this.players.filter(player => player.playerStatus === "active" || player.playerStatus === "completed"); 
-        console.log("activePlayers:", activePlayers);
+        // console.log("activePlayers:", activePlayers);
     
         incompletePrompts.forEach((promptObj, index) => { 
             const player = activePlayers[index % activePlayers.length]; 

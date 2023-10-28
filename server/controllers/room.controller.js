@@ -23,6 +23,8 @@ class RoomController {
     // Leave a room
     static leaveRoom(RoomManagerInstance, roomID, userID) {
         RoomManagerInstance.leaveRoom(roomID, userID);
+        console.log("Room Left: ", roomID);
+        console.log("Room Expected Players: ", RoomManagerInstance.rooms[roomID].expectedPlayers);
         return { roomID };
     }
     // Get users in a room

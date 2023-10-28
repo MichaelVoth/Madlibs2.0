@@ -74,6 +74,7 @@ async function serverStart() {
             chatEvents.newMessageSent(io, socket, roomManagerInstance);
 
             gameEvents.beginGame(io, socket, roomManagerInstance);
+            gameEvents.joinGame(io, socket, roomManagerInstance);
             gameEvents.userFinished(io, socket, roomManagerInstance);
             gameEvents.inactivePlayer(io, socket, roomManagerInstance);
             // gameEvents.playAgain(io, socket, roomManagerInstance);
