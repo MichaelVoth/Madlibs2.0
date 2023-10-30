@@ -222,7 +222,6 @@ class GameClass {
             const game = await Game.findOne({ _id: gameID });
             game.gameStatus = "abandoned";
             await game.save();
-            console.log("Game abandoned");
             return game;
         }
         catch (err) {

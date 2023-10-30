@@ -25,10 +25,10 @@ const joinGame = (io, socket, roomManagerInstance) => {
             const gameInstance = roomManagerInstance.getGame(roomID, gameID);
             gameInstance.addPlayer(userID);
             roomManagerInstance.playerJoinedGame(roomID);
-            socket.emit("GAME_JOINED", gameID);
             if (roomManagerInstance.playerCheck(roomID)) { //If all players have joined, start the game
                 gameInstance.startGame();
-                io.to(gameID).emit("GAME_STARTED");
+                const gameState = "inProgress"
+                io.to(gameID).emit("GAMESTATE_CHANGE", gameState);
             }
         }
         catch (error) {
@@ -37,17 +37,11 @@ const joinGame = (io, socket, roomManagerInstance) => {
     });
 }
 
-// const leaveRoom = (socket, room) => {
-//     return new Promise((resolve) => {
-//         socket.leave(room, resolve);
-//     });
-// };
-
 const inactivePlayer = (io, socket, roomManagerInstance) => {
     socket.on("USER_INACTIVE", async ({ gameID, roomID, userID, username }) => {
         try{
             const gameInstance = roomManagerInstance.getGame(roomID, gameID);
-            const gameState = "waiting"
+            let gameState = "waiting"
             socket.emit("GAMESTATE_CHANGE", gameState)
             io.to(roomID).emit("NEW_MESSAGE_RECEIVED", {
                 content: `${username} has been marked inactive.`,
@@ -66,7 +60,8 @@ const inactivePlayer = (io, socket, roomManagerInstance) => {
                     roomID: roomID,
                     systemMessage: true
                 });
-                io.to(roomID).emit("GAME_ABANDONED", gameID); //Send the gameID to the client for api call for solution
+                let gameState = "abandoned"
+                io.to(roomID).emit("GAMESTATE_CHANGE", gameState); //Send the gameID to the client for api call for solution
             }
         }
         catch (error) {
@@ -97,7 +92,8 @@ const userFinished = (io, socket, roomManagerInstance) => {
                     roomID: roomID,
                     systemMessage: true
                 });
-                io.to(roomID).emit("GAME_COMPLETE", gameID); //Send the gameID to the client for api call for solution
+                const gameState = "complete"
+                io.to(roomID).emit("GAMESTATE_CHANGE", gameState); //Send the gameID to the client for api call for solution
             }
         }
         catch (error) {

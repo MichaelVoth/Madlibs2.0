@@ -9,6 +9,9 @@ import Logout from '../components/login&Register/logout';
 import { useUserContext } from '../contexts/UserContext.jsx';
 import { useSocketContext } from '../contexts/SocketContext.jsx';
 
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 
 const RoomView = () => {
 
@@ -24,12 +27,12 @@ const RoomView = () => {
         axios.post('http://localhost:3001/api/room/leave', { roomID: roomID, userID: user.id }, { withCredentials: true })
             .then(res => {
                 socket.emit('LEAVE_ROOM_REQUEST', res.data.roomID, user.username, (response) => {
-                if (response.status === 'success') {
-                    navigate('/loggedIn');
-                } else {
-                    console.log("Fail", response.message);
-                }
-            });
+                    if (response.status === 'success') {
+                        navigate('/loggedIn');
+                    } else {
+                        console.log("Fail", response.message);
+                    }
+                });
             })
             .catch(err => console.log(err));
     }
@@ -53,13 +56,19 @@ const RoomView = () => {
 
     return (
         <div>
-            <h2>Room View: {roomID} </h2>
-            <p>Welcome {user && user.username}</p>
-            <GameBoard roomID = {roomID}/>
-            <ChatBox />
-            <UserList usersInRoom={usersInRoom} />
-            <button onClick={leaveRoom}>Leave Room</button>
-            <Logout />
+            <Row>
+                <h2>Room View: {roomID} </h2>
+                <p>Welcome {user && user.username}</p>
+                <Col>
+                    <GameBoard roomID={roomID} />
+                </Col>
+                <Col>
+                    <ChatBox />
+                    <UserList usersInRoom={usersInRoom} />
+                    <button onClick={leaveRoom}>Leave Room</button>
+                    <Logout />
+                </Col>
+            </Row>
         </div>
     )
 }

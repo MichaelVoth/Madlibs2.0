@@ -6,7 +6,8 @@ import GameStart from './gameStart.jsx';
 import GameLoading from './gameLoading.jsx';
 import GamePrompts from './gamePrompts.jsx';
 import GameWaiting from './gameWaiting.jsx';
-import GameComplete from './game.complete.jsx';
+import GameComplete from './gameComplete.jsx';
+import GameAbandoned from './gameAbandoned.jsx';
 
 
 const GameBoard = (props) => {
@@ -26,31 +27,12 @@ const GameBoard = (props) => {
             setGameState("Loading");
         })
 
-        socket.on("GAME_JOINED", gameID => {
-        })
-
-        socket.on("GAME_STARTED", () => {
-            setGameState("inProgress");
-        })
-
-        socket.on("GAME_COMPLETE", () => {
-            setGameState("complete");
-        })
-
-        socket.on("GAME_ABANDONED", () => {
-            console.log("GAME_ABANDONED");
-        })
-
         socket.on("GAMESTATE_CHANGE", (gameState) => {
-            console.log("GAMESTATE_CHANGE", gameState);
             setGameState(gameState);
         })
 
         return () => {
             socket.off("GAME_CREATED");
-            socket.off("GAME_JOINED");
-            socket.off("GAME_STARTED");
-            socket.off("GAME_COMPLETE");
             socket.off("GAMESTATE_CHANGE");
         }
     }
@@ -83,6 +65,13 @@ const GameBoard = (props) => {
         case "complete":
             return (
                 <GameComplete gameID = {gameID}
+                gameState={gameState}
+                setGameState={setGameState}
+                />
+            )
+        case "abandoned":
+            return (
+                <GameAbandoned gameID = {gameID}
                 gameState={gameState}
                 setGameState={setGameState}
                 />
