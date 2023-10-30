@@ -37,6 +37,10 @@ const GameBoard = (props) => {
             setGameState("complete");
         })
 
+        socket.on("GAME_ABANDONED", () => {
+            console.log("GAME_ABANDONED");
+        })
+
         socket.on("GAMESTATE_CHANGE", (gameState) => {
             console.log("GAMESTATE_CHANGE", gameState);
             setGameState(gameState);

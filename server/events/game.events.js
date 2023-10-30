@@ -56,15 +56,12 @@ const inactivePlayer = (io, socket, roomManagerInstance) => {
                 systemMessage: true
             });
             socket.leave(gameID);
-            console.log("Sockets in room:", io.sockets.adapter.rooms.get(gameID).size);
             roomManagerInstance.playerLeftGame(roomID);
             socket.to(gameID).emit("GET_NEW_PROMPTS"); //Send to all other users in game to update their prompts
             //Check if all users are inactive. If so, run abandonGame()
             if (gameInstance.allUsersInactive()) {
-                gameInstance.abandonGame(gameID);
-                await Game.findByIdAndUpdate(gameID, { gameInstance }); //This should also update inactive prompts, I think.
                 io.to(roomID).emit("NEW_MESSAGE_RECEIVED", {
-                    content: 'Everyone has been marked inactive',
+                    content: 'Game Abandoned.',
                     username: 'System',
                     roomID: roomID,
                     systemMessage: true

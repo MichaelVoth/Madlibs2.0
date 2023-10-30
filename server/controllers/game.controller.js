@@ -5,7 +5,7 @@ import SolutionClass from "../classes/solution.class.js";
 
 class GameController {
 
-//Game Logic
+    //Game Logic
     static async createGame(req, res) {
         try {
             const template = await GameController.getRandomTemplate();
@@ -34,9 +34,9 @@ class GameController {
     static async recordResponse(req, res) {
         try {
             const roomManagerInstance = req.app.get('roomManagerInstance');
-            const game = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
-            game.recordResponse(req.params.userID, req.body.originalIndex, req.body.response);
-            await roomManagerInstance.updateGame(req.params.roomID, req.params.gameID, game);
+            const gameInstance = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
+            gameInstance.recordResponse(req.params.userID, req.body.originalIndex, req.body.response);
+            await roomManagerInstance.updateGame(req.params.roomID, req.params.gameID, gameInstance);
             res.status(200).json({ message: "Response recorded." });
         }
         catch (err) {
@@ -48,8 +48,8 @@ class GameController {
     static async getUserPrompts(req, res) {
         try {
             const roomManagerInstance = req.app.get('roomManagerInstance');
-            const game = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
-            const userPrompts = game.getUserPrompts(req.params.userID);
+            const gameInstance = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
+            const userPrompts = gameInstance.getUserPrompts(req.params.userID);
             res.status(200).json(userPrompts);
         }
         catch (err) {
@@ -60,12 +60,18 @@ class GameController {
 
     static async inactiveUser(req, res) {
         try {
-            console.log("Inactive User Hit");
             const roomManagerInstance = req.app.get('roomManagerInstance');
-            const game = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
-            game.markPlayerInactive(req.params.userID);
-            await roomManagerInstance.updateGame(req.params.roomID, req.params.gameID, game);
-            res.status(200).json({ message: "User marked inactive." });
+            const gameInstance = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
+            gameInstance.markPlayerInactive(req.params.userID);
+            if (gameInstance.allUsersInactive()) {
+                gameInstance.abandonGame(req.params.gameID);
+                await roomManagerInstance.updateGame(req.params.roomID, req.params.gameID, gameInstance);
+                return res.status(200).json({ message: "All users inactive. Game abandoned." });
+            } else {
+                gameInstance.reassignIncompletePrompts();
+                await roomManagerInstance.updateGame(req.params.roomID, req.params.gameID, gameInstance);
+                res.status(200).json({ message: "User marked inactive." });
+            }
         }
         catch (err) {
             console.log("game.controller inactiveUser()", err);
@@ -76,9 +82,9 @@ class GameController {
     static async completeGame(req, res) {
         try {
             const roomManagerInstance = req.app.get('roomManagerInstance');
-            const game = roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
-            const players = game.players.map(player => player.userID);
-            const solution = new SolutionClass(game.template._id, game.template.title, players, game.filledPrompts);
+            const gameInstance = roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
+            const players = gameInstance.players.map(player => player.userID);
+            const solution = new SolutionClass(gameInstance.template._id, gameInstance.template.title, players, gameInstance.filledPrompts);
             await solution.createSolution();
             res.status(200).json(solution);
         }
@@ -88,7 +94,7 @@ class GameController {
         }
     }
 
-//CRUD
+    //CRUD
     static async getGameByID(req, res) {
         try {
             const game = await Game.findOne({ _id: req.params.gameID });

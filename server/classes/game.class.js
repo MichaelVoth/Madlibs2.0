@@ -5,7 +5,7 @@ class GameClass {
         this.gameID = null;
         this.template = template;
         this.roomID = roomID;
-        this.players = []; 
+        this.players = [];
         // {user: playerID, 
         //      playerStatus: "active",
         //      promptsAssigned: []
@@ -33,7 +33,7 @@ class GameClass {
             return game;
         }
         catch (err) {
-            console.log(err);
+            console.log("game.class createGame():", err);
             return false;
         }
     }
@@ -125,7 +125,7 @@ class GameClass {
 
             return this.hasPlayerCompleted(player); // Return true if the player has completed all their prompts
         } catch (err) {
-            console.error(err);
+            console.error("game.class recordResponse():", err);
             return false; // Return false in case of any error
         }
     }
@@ -156,7 +156,7 @@ class GameClass {
         const player = this.players.find(player => player.userID === userID);
         if (player) {
             player.playerStatus = "inactive";
-            this.reassignIncompletePrompts();
+            // this.reassignIncompletePrompts();
             // console.log("Player marked as inactive", player);
         }
     }
@@ -170,9 +170,9 @@ class GameClass {
     reassignIncompletePrompts() {
         const incompletePrompts = [];
         const seenOriginalIndices = new Set(); // Set to keep track of originalIndex values
-    
-        this.players.forEach(player => { 
-            if (player.playerStatus === "inactive" && !this.hasPlayerCompleted(player)) { 
+
+        this.players.forEach(player => {
+            if (player.playerStatus === "inactive" && !this.hasPlayerCompleted(player)) {
                 const playerIncompletePrompts = player.promptsAssigned.filter(promptObj => {
                     // Check if the prompt is incomplete and its originalIndex hasn't been seen before
                     if (promptObj.response === null && !seenOriginalIndices.has(promptObj.originalIndex)) {
@@ -181,20 +181,20 @@ class GameClass {
                     }
                     return false; // Exclude this prompt from the filtered result
                 });
-                incompletePrompts.push(...playerIncompletePrompts); 
+                incompletePrompts.push(...playerIncompletePrompts);
             }
             // console.log("incompletePrompts:", incompletePrompts);
         });
-    
-        const activePlayers = this.players.filter(player => player.playerStatus === "active" || player.playerStatus === "completed"); 
+
+        const activePlayers = this.players.filter(player => player.playerStatus === "active" || player.playerStatus === "completed");
         // console.log("activePlayers:", activePlayers);
-    
-        incompletePrompts.forEach((promptObj, index) => { 
-            const player = activePlayers[index % activePlayers.length]; 
-            player.promptsAssigned.push(promptObj); 
+
+        incompletePrompts.forEach((promptObj, index) => {
+            const player = activePlayers[index % activePlayers.length];
+            player.promptsAssigned.push(promptObj);
         });
     }
-    
+
 
     // Reassemble the prompts in their original order upon completion
     reassemblePrompts() {
@@ -217,15 +217,16 @@ class GameClass {
     }
 
     // Abandon the game
-    static async abandonGame(gameID) {
+    async abandonGame(gameID) {
         try {
             const game = await Game.findOne({ _id: gameID });
             game.gameStatus = "abandoned";
             await game.save();
+            console.log("Game abandoned");
             return game;
         }
         catch (err) {
-            console.error(err);
+            console.error("game.class abandonGame():", err);
             return false;
         }
     }

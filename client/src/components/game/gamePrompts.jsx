@@ -14,7 +14,7 @@ const GamePrompts = (props) => {
     const gameID = props.gameID;
     const [assignedPrompts, setAssignedPrompts] = useState([]);
     const currentPromptsRef = useRef(assignedPrompts); //Used to compare previous prompts to new prompts
-    const [timer, setTimer] = useState(30);
+    const [timer, setTimer] = useState(45);
     const [timeExpired, setTimeExpired] = useState(false);
 
     //Submit prompt response and remove prompt from assignedPrompts. If no more prompts, set game state to waiting
@@ -26,7 +26,7 @@ const GamePrompts = (props) => {
             }, { withCredentials: true })
             .then(res => {
                 setAssignedPrompts(prevPrompts => prevPrompts.slice(1));
-                setTimer(30);
+                setTimer(45);
                 if (assignedPrompts.length === 1) {
                     socket.emit("USER_FINISHED", { gameID, roomID, userID: user.id, username: user.username });
                     setGameState("waiting");
@@ -52,7 +52,7 @@ const GamePrompts = (props) => {
         const getPrompts = () => {
             axios.get(`http://localhost:3001/api/game/prompts/${gameID}/room/${roomID}/user/${user.id}`, { withCredentials: true })
                 .then(res => {
-                    console.log("Prompts", res.data);
+                    console.log("New Prompts", res.data);
                     const existingIndexes = new Set(currentPromptsRef.current.map(prompt => prompt.originalIndex));
                     const uniquePrompts = res.data.filter(prompt => !existingIndexes.has(prompt.originalIndex) && prompt.response === null);
                     setAssignedPrompts(prevPrompts => [...prevPrompts, ...uniquePrompts]);
@@ -90,7 +90,6 @@ const GamePrompts = (props) => {
         if (timeExpired) {
             axios.put(`http://localhost:3001/api/game/inactive/${gameID}/room/${roomID}/user/${user.id}`, {}, { withCredentials: true })
                 .then(res => {
-                    console.log("User Inactive", res.data);
                     socket.emit("USER_INACTIVE", { gameID, roomID, userID: user.id, username: user.username });
                     setGameState("waiting");
                 })
