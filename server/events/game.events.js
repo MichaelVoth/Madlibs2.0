@@ -37,11 +37,18 @@ const joinGame = (io, socket, roomManagerInstance) => {
     });
 }
 
+// const leaveRoom = (socket, room) => {
+//     return new Promise((resolve) => {
+//         socket.leave(room, resolve);
+//     });
+// };
 
 const inactivePlayer = (io, socket, roomManagerInstance) => {
     socket.on("USER_INACTIVE", async ({ gameID, roomID, userID, username }) => {
         try{
             const gameInstance = roomManagerInstance.getGame(roomID, gameID);
+            const gameState = "waiting"
+            socket.emit("GAMESTATE_CHANGE", gameState)
             io.to(roomID).emit("NEW_MESSAGE_RECEIVED", {
                 content: `${username} has been marked inactive.`,
                 username: 'System',
@@ -49,6 +56,7 @@ const inactivePlayer = (io, socket, roomManagerInstance) => {
                 systemMessage: true
             });
             socket.leave(gameID);
+            console.log("Sockets in room:", io.sockets.adapter.rooms.get(gameID).size);
             roomManagerInstance.playerLeftGame(roomID);
             socket.to(gameID).emit("GET_NEW_PROMPTS"); //Send to all other users in game to update their prompts
             //Check if all users are inactive. If so, run abandonGame()

@@ -15,15 +15,21 @@ const GameWaiting = (props) => {
 
     //Get new prompts when another user is inactive
     useEffect(() => {
-        socket.on("GET_NEW_PROMPTS")
+        socket.on("GET_NEW_PROMPTS", () => { 
+            console.log("GET_NEW_PROMPTS Heard");
             setGameState("inProgress");
+        })
+        return () => {
+            socket.off("GET_NEW_PROMPTS");
+        }
     }, [socket]);
 
-    return (
-        <div>
-            <h1>Game Waiting</h1>
-        </div>
-    )
+
+return (
+    <div>
+        <h1>Game Waiting</h1>
+    </div>
+)
 
 }
 

@@ -157,6 +157,7 @@ class GameClass {
         if (player) {
             player.playerStatus = "inactive";
             this.reassignIncompletePrompts();
+            // console.log("Player marked as inactive", player);
         }
     }
 

@@ -22,17 +22,14 @@ const GameBoard = (props) => {
     useEffect(() => {
         socket.on("GAME_CREATED", (gameID) => {
             socket.emit("JOIN_GAME", { gameID, roomID, userID: user.id });
-            console.log("game created");
             setGameID(gameID);
             setGameState("Loading");
         })
 
         socket.on("GAME_JOINED", gameID => {
-            console.log("game joined");
         })
 
         socket.on("GAME_STARTED", () => {
-            console.log("game started");
             setGameState("inProgress");
         })
 
@@ -40,21 +37,27 @@ const GameBoard = (props) => {
             setGameState("complete");
         })
 
+        socket.on("GAMESTATE_CHANGE", (gameState) => {
+            console.log("GAMESTATE_CHANGE", gameState);
+            setGameState(gameState);
+        })
+
         return () => {
             socket.off("GAME_CREATED");
             socket.off("GAME_JOINED");
             socket.off("GAME_STARTED");
             socket.off("GAME_COMPLETE");
+            socket.off("GAMESTATE_CHANGE");
         }
     }
-    , []);
+    , [gameState, socket]);
 
     switch (gameState) {
         case "notStarted":
             return (
                 <GameStart />
             )
-        case "Loading":
+        case "loading":
             return (
                 <GameLoading gameID = {gameID}
                 gameState = {gameState}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSocketContext } from "../../contexts/SocketContext.jsx";
 import { useUserContext } from "../../contexts/UserContext.jsx";
 import { useParams } from "react-router-dom";
@@ -13,7 +13,7 @@ const GamePrompts = (props) => {
     const { gameState, setGameState } = props;
     const gameID = props.gameID;
     const [assignedPrompts, setAssignedPrompts] = useState([]);
-    const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
+    const currentPromptsRef = useRef(assignedPrompts); //Used to compare previous prompts to new prompts
     const [timer, setTimer] = useState(30);
     const [timeExpired, setTimeExpired] = useState(false);
 
@@ -35,25 +35,39 @@ const GamePrompts = (props) => {
             .catch(err => console.log(err));
     };
 
-    //Get prompts for the user
+    //Get prompts for the user upon initial render
     useEffect(() => {
         axios.get(`http://localhost:3001/api/game/prompts/${gameID}/room/${roomID}/user/${user.id}`, { withCredentials: true })
             .then(res => {
-                console.log(res.data);
-                // Create a set of originalIndex values from the current state
-                const existingIndexes = new Set(assignedPrompts.map(prompt => prompt.originalIndex));
-    
-                // Filter the received data to only include unique prompts
-                const uniquePrompts = res.data.filter(prompt => !existingIndexes.has(prompt.originalIndex));
-    
-                // Merge the unique prompts with the current state
+                console.log("Prompts", res.data);
+                const existingIndexes = new Set(currentPromptsRef.current.map(prompt => prompt.originalIndex));
+                const uniquePrompts = res.data.filter(prompt => !existingIndexes.has(prompt.originalIndex) && prompt.response === null);
                 setAssignedPrompts(prevPrompts => [...prevPrompts, ...uniquePrompts]);
-                console.log(assignedPrompts);
             })
             .catch(err => console.log(err));
     }, []);
-    
-    
+
+    //Get prompts for the user when another user is marked inactive
+    useEffect(() => {
+        const getPrompts = () => {
+            axios.get(`http://localhost:3001/api/game/prompts/${gameID}/room/${roomID}/user/${user.id}`, { withCredentials: true })
+                .then(res => {
+                    console.log("Prompts", res.data);
+                    const existingIndexes = new Set(currentPromptsRef.current.map(prompt => prompt.originalIndex));
+                    const uniquePrompts = res.data.filter(prompt => !existingIndexes.has(prompt.originalIndex) && prompt.response === null);
+                    setAssignedPrompts(prevPrompts => [...prevPrompts, ...uniquePrompts]);
+                })
+                .catch(err => console.log(err));
+        };
+        socket.on("GET_NEW_PROMPTS", getPrompts);
+
+        return () => socket.off("GET_NEW_PROMPTS");
+    }, [gameState, socket]);
+
+    // Update the ref whenever assignedPrompts changes
+    useEffect(() => {
+        currentPromptsRef.current = assignedPrompts;
+    }, [assignedPrompts]);
 
     //Timer to set time expired to true
     useEffect(() => {
@@ -76,28 +90,14 @@ const GamePrompts = (props) => {
         if (timeExpired) {
             axios.put(`http://localhost:3001/api/game/inactive/${gameID}/room/${roomID}/user/${user.id}`, {}, { withCredentials: true })
                 .then(res => {
+                    console.log("User Inactive", res.data);
                     socket.emit("USER_INACTIVE", { gameID, roomID, userID: user.id, username: user.username });
                     setGameState("waiting");
                 })
                 .catch(err => console.log(err));
         }
 
-    }, [timeExpired]);
-
-    //Get new prompts when another user becomes inactive
-    // useEffect(() => {
-    //     socket.on("GET_NEW_PROMPTS")
-    //     axios.get(`http://localhost:3001/api/game/prompts/${gameID}/room/${roomID}/user/${user.id}`, { withCredentials: true })
-    //         .then(res => {
-    //             console.log(res.data);
-    //             setAssignedPrompts(prePrompts => [...prePrompts, ...res.data]);
-    //         })
-
-    //         .catch(err => console.log(err));
-    //     return () => socket.off("GET_NEW_PROMPTS");
-    // }, [socket]);
-
-
+    }, [gameState, timeExpired]);
 
     return (
         <div>

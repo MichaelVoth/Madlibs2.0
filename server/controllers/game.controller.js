@@ -16,7 +16,7 @@ class GameController {
             roomManagerInstance.addGameToRoom(roomID, gameInstance, gameInstance.gameID);
             res.status(201).json(gameInstance);
         } catch (err) {
-            console.log(err);
+            console.log("gamecontroller createGame():", err);
         }
     }
 
@@ -26,7 +26,7 @@ class GameController {
             const randomIndex = Math.floor(Math.random() * templates.length);
             return templates[randomIndex];
         } catch (error) {
-            console.log("Error:", error);
+            console.log("game.controler getRandomTemplate():", error);
             throw new Error('Error fetching random template');
         }
     }
@@ -40,7 +40,7 @@ class GameController {
             res.status(200).json({ message: "Response recorded." });
         }
         catch (err) {
-            console.log(err);
+            console.log("game.controller recordResponse():", err);
             res.status(500).json(err);
         }
     }
@@ -53,13 +53,14 @@ class GameController {
             res.status(200).json(userPrompts);
         }
         catch (err) {
-            console.log(err);
+            console.log("game.controller getUserPrompts():", err);
             res.status(500).json(err);
         }
     }
 
     static async inactiveUser(req, res) {
         try {
+            console.log("Inactive User Hit");
             const roomManagerInstance = req.app.get('roomManagerInstance');
             const game = await roomManagerInstance.getGame(req.params.roomID, req.params.gameID);
             game.markPlayerInactive(req.params.userID);
@@ -67,7 +68,7 @@ class GameController {
             res.status(200).json({ message: "User marked inactive." });
         }
         catch (err) {
-            console.log(err);
+            console.log("game.controller inactiveUser()", err);
             res.status(500).json(err);
         }
     }
@@ -82,7 +83,7 @@ class GameController {
             res.status(200).json(solution);
         }
         catch (err) {
-            console.log(err);
+            console.log("game.controller completeGame():", err);
             res.status(500).json(err);
         }
     }
