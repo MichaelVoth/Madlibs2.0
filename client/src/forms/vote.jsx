@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import useUserContext from "../contexts/UserContext.jsx";
-import useSocketContext from "../contexts/SocketContext.jsx";
+import { useSocketContext } from "../contexts/SocketContext.jsx";
+import { useUserContext } from "../contexts/UserContext.jsx";
 
 const VoteForm = (props) => {
 
-    const user = useUserContext();
-    const socket = useSocketContext();
-    const roomID = props.roomID;
+    const { user } = useUserContext();
+    const { socket } = useSocketContext();
+    const { roomID } = props.roomID;
     const [voteType, setVoteType] = useState(props.voteType);
 
     const [vote, setVote] = useState(null);
@@ -41,11 +41,11 @@ const VoteForm = (props) => {
     return (
         <div>
             {isDisplayed && <div> 
-                <label>{props.topic}</label>
+                <label>{props.topic} </label>
                 <input type="radio" name="vote" value="yes" onChange={() => setVote(true)} />
-                <label>Yes</label>
+                <label> Yes </label>
                 <input type="radio" name="vote" value="no" onChange={() => setVote(false)} />
-                <label>No</label>
+                <label> No </label>
                 <div>Time left: {timer} seconds</div>
             </div>
             }

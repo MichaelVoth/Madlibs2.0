@@ -14,7 +14,12 @@ const GameComplete = (props) => {
     const gameID = props.gameID;
 
     const handlePlayAgain = () => {
-        socket.emit("PLAY_AGAIN", { roomID: roomID, username: user.username });
+        socket.emit('NEW_MESSAGE_SENT', { 
+            username: user.username,
+            content: "Play again?",
+            roomID: roomID,
+            messageType: "vote"
+        });
         setGameState("waiting");
     }
     useEffect(() => {

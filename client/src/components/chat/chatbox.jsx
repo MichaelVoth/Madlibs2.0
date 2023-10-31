@@ -17,7 +17,7 @@ const ChatBox = () => {
                 username: user.username,
                 content: message,
                 roomID: roomID,
-                systemMessage: false
+                messageType: "text"
             });
         }
     }, [socket, message]); //If the socket or message changes, run this useEffect

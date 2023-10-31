@@ -8,7 +8,7 @@ const beginGame = (io, socket, roomManagerInstance) => {
                 content: `${username} has started the game.`,
                 username: 'System',
                 roomID: roomID,
-                systemMessage: true
+                messageType: "system"
             });
             io.to(roomID).emit("GAME_CREATED", gameID); //Send gameID to everyone in room so they can join the game socket room.
         }
@@ -47,7 +47,7 @@ const inactivePlayer = (io, socket, roomManagerInstance) => {
                 content: `${username} has been marked inactive.`,
                 username: 'System',
                 roomID: roomID,
-                systemMessage: true
+                messageType: "system"
             });
             socket.leave(gameID);
             roomManagerInstance.playerLeftGame(roomID);
@@ -58,7 +58,7 @@ const inactivePlayer = (io, socket, roomManagerInstance) => {
                     content: 'Game Abandoned.',
                     username: 'System',
                     roomID: roomID,
-                    systemMessage: true
+                    messageType: "system"
                 });
                 let gameState = "abandoned"
                 io.to(roomID).emit("GAMESTATE_CHANGE", gameState); //Send the gameID to the client for api call for solution
@@ -80,7 +80,7 @@ const userFinished = (io, socket, roomManagerInstance) => {
                 content: `${username} has finished their prompts.`,
                 username: 'System',
                 roomID: roomID,
-                systemMessage: true
+                messageType: "system"
             });
             //Check if all users are finished. If so, run completeGame()
             if (gameInstance.allUsersFinished()) {
@@ -90,7 +90,7 @@ const userFinished = (io, socket, roomManagerInstance) => {
                     content: 'Everyone has finished',
                     username: 'System',
                     roomID: roomID,
-                    systemMessage: true
+                    messageType: "system"
                 });
                 const gameState = "complete"
                 io.to(roomID).emit("GAMESTATE_CHANGE", gameState); //Send the gameID to the client for api call for solution

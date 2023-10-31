@@ -12,6 +12,7 @@ import * as roomEvents from "./events/room.events.js";
 import * as userEvents from "./events/user.events.js";
 import * as gameEvents from "./events/game.events.js";
 import * as chatEvents from "./events/chat.events.js";
+import * as voteEvents from "./events/vote.events.js";
 import RoomManager from './classes/roomManager.class.js';
 
 dotenv.config();
@@ -72,6 +73,7 @@ async function serverStart() {
             roomEvents.userDisconnect(io, socket, roomManagerInstance);
 
             chatEvents.newMessageSent(io, socket, roomManagerInstance);
+            voteEvents.playAgainVote(io, socket, roomManagerInstance);
 
             gameEvents.beginGame(io, socket, roomManagerInstance);
             gameEvents.joinGame(io, socket, roomManagerInstance);

@@ -9,7 +9,7 @@ const joinRoomRequest = (io, socket, roomManagerInstance) => {
                 content: `${username} has joined the room.`,
                 username: 'System',
                 roomID: roomID,
-                systemMessage: true
+                messageType: "system"
             });
             callback({ status: 'success', message: 'Joined room successfully!' });
         } catch (error) {
@@ -29,7 +29,7 @@ const leaveRoomRequest = (io, socket, roomManagerInstance) => {
                 content: `${username} has left the room.`,
                 username: 'System',
                 roomID: roomID,
-                systemMessage: true
+                messageType: "system"
             });
             roomManagerInstance.removeRoomCheck(roomID);
             callback({ status: 'success', message: 'Left room successfully!' });
