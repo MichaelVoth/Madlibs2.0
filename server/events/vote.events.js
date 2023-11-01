@@ -1,44 +1,52 @@
 import EventEmitter from 'events'; // Import events module
 const voteEvents = new EventEmitter();
 
+const playAgainVotes = {};
+
 const playAgainVote = (io, socket, roomManagerInstance) => {
-    const playAgainVotes = {};
     socket.on("VOTE_SUBMIT playAgain", (data) => {
-        console.log("vote.events playAgainVote() data:", data); 
-        console.log("User:", data.user);
         try {
-        if (!playAgainVotes[data.roomID]) { // If room doesn't exist in votes object, create it
-            playAgainVotes[data.roomID] = { "yes": [], "no": [], "noResponse": [] };
-        }
-        // ['yes', 'no', 'noResponse'].forEach((vote) => { // For each vote type
-        //     const index = playAgainVotes[data.roomID][data.vote].indexOf(data.user); // Check if user is in other votes
-        //     if (index !== -1) { // If user is in other votes
-        //         playAgainVotes[data.roomID][data.vote].splice(index, 1); // Remove user from other votes
-        //     }
-        // });
-        if (data.vote === true) {
-            playAgainVotes[data.roomID].yes.push(data.user);
-        } else if (data.vote === false) {
-            playAgainVotes[data.roomID].no.push(data.user);
-        } else {
-            playAgainVotes[data.roomID].noResponse.push(data.user);
-        }
+            console.log("data.user:", data.user);
+            if (!playAgainVotes[data.roomID]) { // If room doesn't exist in votes object, create it
+                playAgainVotes[data.roomID] = { "yes": [], "no": [], "noResponse": [] };
+            }
+            
+            // Check if the user has already voted
+            const hasVoted = ["yes", "no", "noResponse"].some(voteType => {
+                return playAgainVotes[data.roomID][voteType].some(voter => voter.id === data.user.id);
+            });
 
-        const playerCount = roomManagerInstance.getUsersInRoom(data.roomID).length;
-        const totalVotes = playAgainVotes[data.roomID].yes.length + playAgainVotes[data.roomID].no.length + playAgainVotes[data.roomID].noResponse.length;
-    
-        console.log(playAgainVotes[data.roomID])
+            // If the user has already voted, return early and do not process the vote again
+            if (hasVoted) {
+                return;
+            }
 
-        if (playerCount === totalVotes) {
-            voteEvents.emit('PLAY_AGAIN_VOTE_COMPLETE', playAgainVotes[data.roomID]); // Emit custom event
-            delete playAgainVotes[data.roomID];
+            if (data.vote === true) {
+                playAgainVotes[data.roomID].yes.push(data.user);
+            } else if (data.vote === false) {
+                playAgainVotes[data.roomID].no.push(data.user);
+            } else {
+                playAgainVotes[data.roomID].noResponse.push(data.user);
+            }
+            console.log("playAgainVotes:", playAgainVotes);
+            const playerCount = roomManagerInstance.getUsersInRoom(data.roomID).length;
+            console.log("playerCount:", playerCount);
+            const totalVotes = playAgainVotes[data.roomID].yes.length + playAgainVotes[data.roomID].no.length + playAgainVotes[data.roomID].noResponse.length;
+            console.log("totalVotes:", totalVotes);
+
+            if (playerCount === totalVotes) {
+                voteEvents.emit('PLAY_AGAIN_VOTE_COMPLETE', playAgainVotes[data.roomID]); // Emit custom event
+                delete playAgainVotes[data.roomID];
+                console.log("voteEvent emitted")
+                console.log("playAgainVotes:", playAgainVotes);
+            }
         }
-    }
         catch (err) {
             console.log("vote.events playAgainVote():", err);
         }
     });
 };
+
 
 const kickVote = (io, socket) => {
     socket.on("VOTE_SUBMIT kick", (data) => {

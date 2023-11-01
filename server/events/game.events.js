@@ -40,6 +40,8 @@ const joinGame = (io, socket, roomManagerInstance) => {
 const playAgainGame = (io, socket, roomManagerInstance) => {
     voteEvents.on('PLAY_AGAIN_VOTE_COMPLETE', (voteResults) => {
         try{
+            console.log("Game Events PlayAgain hit")
+            console.log("voteResults", voteResults)
             roomManagerInstance.setExpectedPlayers(voteResults.roomID, voteResults.roomID.yes.length);
 
 
