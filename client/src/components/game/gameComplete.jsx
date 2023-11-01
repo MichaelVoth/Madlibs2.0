@@ -18,7 +18,8 @@ const GameComplete = (props) => {
             username: user.username,
             content: "Play again?",
             roomID: roomID,
-            messageType: "vote"
+            messageType: "vote",
+            voteType: "playAgain"
         });
         setGameState("waiting");
     }

@@ -6,7 +6,8 @@ const newMessageSent = (io, socket) => {
             content: message.content,
             username: message.username,
             roomID: message.roomID,
-            messageType: message.messageType
+            messageType: message.messageType,
+            voteType: message.voteType
             });
         } catch (error) {
             console.log(error);

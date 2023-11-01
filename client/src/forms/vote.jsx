@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useSocketContext } from "../contexts/SocketContext.jsx";
 import { useUserContext } from "../contexts/UserContext.jsx";
 
@@ -6,7 +7,7 @@ const VoteForm = (props) => {
 
     const { user } = useUserContext();
     const { socket } = useSocketContext();
-    const { roomID } = props.roomID;
+    const { roomID } = useParams();
     const [voteType, setVoteType] = useState(props.voteType);
 
     const [vote, setVote] = useState(null);
@@ -26,7 +27,7 @@ const VoteForm = (props) => {
                 if (prevTimer === 1) {
                     clearInterval(countdown);
                     if (vote === null) {
-                        socket.emit("VOTE_SUBMIT", { topic: props.topic, vote: "no response", user: user.id, roomID: roomID });
+                        socket.emit("VOTE_SUBMIT", { topic: props.topic, vote: "no response", user: user, roomID: roomID });
                         setIsDisplayed(false);
                     }
                     return 0;

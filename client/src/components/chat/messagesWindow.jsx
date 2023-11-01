@@ -35,7 +35,8 @@ const MessagesWindow = () => {
             case 'text':
                 return <p key={index}><strong>{message.username}:</strong> {message.content}</p>;
             case 'vote':
-                return <VoteForm key={index} topic={message.content} roomID={message.roomID} />;
+                console.log(message);
+                return <VoteForm key={index} voteType={message.voteType} topic={message.content} roomID={message.roomID} />;
             case 'system':
                 return <p key={index}>({message.content})</p>;
             default:

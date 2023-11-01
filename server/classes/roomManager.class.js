@@ -91,12 +91,25 @@ class RoomManager {
     }
 
     playerCheck(roomID) {
-        if(this.rooms[roomID].expectedPlayers === this.rooms[roomID].joinedPlayers) {
-            return true;
+        return this.rooms[roomID].expectedPlayers === this.rooms[roomID].joinedPlayers;
+    }
+
+    setExpectedPlayers(roomID, count) {
+        if( this.rooms[roomID]) {
+            this.rooms[roomID].expectedPlayers = count;
         } else {
-            return false;
+            throw new Error(`setExpectedPlayers: Room with ID ${roomID} does not exist.`);
         }
     }
+
+    resetExpectedPlayers(roomID) {
+        if(this.rooms[roomID]) {
+        this.rooms[roomID].expectedPlayers = 0;
+        } else {
+            throw new Error(`resetExpectedPlayers: Room with ID ${roomID} does not exist.`);
+        }
+    }
+
     randomRoom() {
         const roomIDs = Object.keys(this.rooms); // Get all room IDs
         let randomRoomPick = roomIDs[Math.floor(Math.random() * roomIDs.length)];
@@ -162,8 +175,5 @@ class RoomManager {
             throw new Error("roomManager removeGame(): Game or Room does not exist.");
         }
     }
-
-
-
 }
 export default RoomManager;

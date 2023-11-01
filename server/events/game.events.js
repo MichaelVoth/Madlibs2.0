@@ -1,5 +1,5 @@
 import Game from "../models/game.model.js";
-import GameClass from "../classes/game.class.js";
+import { voteEvents } from "./vote.events.js";
 
 const beginGame = (io, socket, roomManagerInstance) => {
     socket.on("CREATE_GAME", ({ gameID, roomID, username }) => {
@@ -33,6 +33,20 @@ const joinGame = (io, socket, roomManagerInstance) => {
         }
         catch (error) {
             console.log("game.events joinGame()",error);
+        }
+    });
+}
+
+const playAgainGame = (io, socket, roomManagerInstance) => {
+    voteEvents.on('PLAY_AGAIN_VOTE_COMPLETE', (voteResults) => {
+        try{
+            roomManagerInstance.setExpectedPlayers(voteResults.roomID, voteResults.roomID.yes.length);
+
+
+
+        }
+        catch (error) {
+            console.log("game.events playAgainGame()",error);
         }
     });
 }
@@ -102,16 +116,11 @@ const userFinished = (io, socket, roomManagerInstance) => {
     });
 }
 
-const playAgain = (io, socket, roomManagerInstance) => {
-    socket.on("PLAY_AGAIN"), ({roomID, username}) => {
-        //Begin voting process for playing again
-    }
-}
 
 export {
     beginGame,
     joinGame,
+    playAgainGame,
     userFinished,
-    inactivePlayer,
-    playAgain
+    inactivePlayer
 }
