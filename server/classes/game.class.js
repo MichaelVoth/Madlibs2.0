@@ -49,8 +49,6 @@ class GameClass {
                 timeTaken: 0,
                 finishTime: null
             });
-        } else {
-            throw new Error("game.class addPlayer(): Player already exists in game");
         }
     }
 

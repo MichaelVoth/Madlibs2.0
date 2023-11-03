@@ -19,8 +19,6 @@ const beginGame = (io, socket, roomManagerInstance) => {
 
 const updateGameID = (io, socket, roomManagerInstance) => {
     socket.on("UPDATE_GAME_ID", ({ roomID, gameID }) => {
-        console.log("game.events updateGameID()", gameID);
-
         io.to(roomID).emit("GAME_ID_UPDATED", gameID);
     });
 }
@@ -46,7 +44,6 @@ const joinGame = (io, socket, roomManagerInstance) => {
 
 const proposeNewGame = (io, socket, roomManagerInstance) => {
 socket.on('PROPOSE_NEW_GAME', (roomID, gameID) => {
-    console.log("game.events proposeNewGame()", gameID);
     io.to(roomID).emit('SHOW_VOTE_MODAL', gameID);
 });
 }
@@ -54,25 +51,16 @@ socket.on('PROPOSE_NEW_GAME', (roomID, gameID) => {
 const playAgainGame = (io, socket, roomManagerInstance) => {
     voteEvents.on('PLAY_AGAIN_VOTE_COMPLETE', (voteResults, roomID, gameID) => {
         try {
-            roomManagerInstance.setExpectedPlayers(roomID, voteResults.yes.length);
+            roomManagerInstance.setExpectedPlayers(roomID, voteResults.yes.length); //Set expected players to the number of yes votes
             const gameInstance = roomManagerInstance.getGame(roomID, gameID);
-            console.log("gameInstance:", gameInstance);
             const yesVoterSocketIDs = voteResults.yes.map(voter => voter.socketID);
-            const newPlayers = voteResults.yes.map(voter => voter.userID);
-            console.log("yesVoterSocketIDs:", yesVoterSocketIDs);
             yesVoterSocketIDs.forEach(socketID => {
-                socket.join(gameID);
+                const voterSocket = io.sockets.sockets.get(socketID);
+                voterSocket.join(gameID);
             });
-            newPlayers.forEach(userID => {
-            gameInstance.addPlayer(userID);
-            roomManagerInstance.playerJoinedGame(roomID);
-            });
+            io.to(gameID).emit("GAME_CREATED", gameID); //Send gameID to everyone in room so they can join the game socket room.
 
-            if (roomManagerInstance.playerCheck(roomID)) { //If all players have joined, start the game
-                gameInstance.startGame();
-                const gameState = "inProgress"
-                io.to(gameID).emit("GAMESTATE_CHANGE", gameState);
-            }
+    
         }
         catch (error) {
             console.log("game.events playAgainGame()", error);

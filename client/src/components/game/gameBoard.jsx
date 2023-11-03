@@ -22,19 +22,16 @@ const GameBoard = (props) => {
 
     useEffect(() => {
         socket.on("GAME_CREATED", (gameID) => {
-            console.log("GAME_CREATED", gameID);
             socket.emit("JOIN_GAME", { gameID, roomID, userID: user.id });
             setGameID(gameID);
             setGameState("Loading");
         })
 
         socket.on("GAMESTATE_CHANGE", (gameState) => {
-            console.log("GAMESTATE_CHANGE", gameState);
             setGameState(gameState);
         })
 
         socket.on("GAME_ID_UPDATED", (gameID) => {
-            console.log("GAME_ID_UPDATED", gameID);
             setGameID(gameID);
         })
 
@@ -73,6 +70,7 @@ const GameBoard = (props) => {
         case "complete":
             return (
                 <GameComplete gameID = {gameID}
+                setGameID = {setGameID}
                 gameState={gameState}
                 setGameState={setGameState}
                 />
@@ -80,6 +78,7 @@ const GameBoard = (props) => {
         case "abandoned":
             return (
                 <GameAbandoned gameID = {gameID}
+                setGameID = {setGameID}
                 gameState={gameState}
                 setGameState={setGameState}
                 />

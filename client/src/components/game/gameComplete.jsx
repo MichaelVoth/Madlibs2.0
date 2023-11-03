@@ -13,21 +13,21 @@ const GameComplete = (props) => {
     const { gameState, setGameState } = props;
     const [title, setTitle] = useState("");
     const [completedMadlib, setCompletedMadlib] = useState(null);
-    const gameID = props.gameID;
+    const { gameID, setGameID } = props
 
     const [showVoteModal, setShowVoteModal] = useState(false);
 
     const handlePlayAgain = () => {
         axios.post(`http://localhost:3001/api/game/create/${roomID}`, {}, { withCredentials: true })
             .then(res => {
-                console.log("res.data.gameID", res.data.gameID);
-                socket.emit('UPDATE_GAME_ID', {roomID, gameID: res.data.gameID});
                 socket.emit('PROPOSE_NEW_GAME', roomID, res.data.gameID);
+                setGameID(res.data.gameID);
             })
             .catch(err => console.log(err));
     }
     useEffect(() => {
         socket.on('SHOW_VOTE_MODAL', (gameID) => {
+            setGameID(gameID);
             setShowVoteModal(true);
         });
         return () => {
