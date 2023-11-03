@@ -50,11 +50,11 @@ class RoomManager {
         return roomID;
     }
 
-    joinRoom(roomID, userID, username, avatar) {
+    joinRoom(roomID, userID, username, avatar, socketID) {
         if (this.rooms.hasOwnProperty(roomID)) { // If room exists
             if (!this.rooms[roomID].users[userID]) { // If user is not already in room
                 if (Object.keys(this.rooms[roomID].users).length < this.maxUsersPerRoom) { // If room is not full
-                    this.rooms[roomID].users[userID] = { userID, username, avatar }; // Add user to room
+                    this.rooms[roomID].users[userID] = { userID, username, avatar, socketID }; // Add user to room
                     this.playerJoinedRoom(roomID);
                 } else {
                     throw new Error("Room is full.");
@@ -109,6 +109,15 @@ class RoomManager {
             throw new Error(`resetExpectedPlayers: Room with ID ${roomID} does not exist.`);
         }
     }
+
+    gameComplete(roomID, gameID) {
+        if (this.rooms[roomID] && this.rooms[roomID].games[gameID]) {
+            this.rooms[roomID].joinedPlayers = 0; // Reset joinedPlayers
+        } else {
+            throw new Error(`gameComplete(): Game ${gameID} in Room with ID ${roomID} does not exist.`);
+        }
+    }
+
 
     randomRoom() {
         const roomIDs = Object.keys(this.rooms); // Get all room IDs

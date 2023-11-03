@@ -24,10 +24,12 @@ const Dashboard = () => {
     const closeWithoutJoining = () => setShow(false);
 
     const createRoom = () => {
+
         axios.post('http://localhost:3001/api/room/create', 
             {   userID: user.id, 
                 username: user.username, 
-                avatar: user.avatar },
+                avatar: user.avatar,
+                socketID: socket.id },
                 { withCredentials: true })
             .then(res => {
                 socket.emit('JOIN_ROOM_REQUEST', res.data.roomID, user.username, (response) => {
@@ -46,7 +48,8 @@ const Dashboard = () => {
             {   roomID: roomID, 
                 userID: user.id, 
                 username: user.username,
-                avatar: user.avatar }, 
+                avatar: user.avatar,
+                socketID: socket.id }, 
                 { withCredentials: true })
             .then(res => {
                 socket.emit('JOIN_ROOM_REQUEST', roomID, user.username, (response) => {
@@ -64,7 +67,8 @@ const Dashboard = () => {
         axios.post('http://localhost:3001/api/room/random', 
         {   userID: user.id, 
             username: user.username, 
-            avatar: user.avatar },
+            avatar: user.avatar,
+            socketID: socket.id },
             { withCredentials: true })
             .then(res => {
                 socket.emit('JOIN_ROOM_REQUEST', res.data.roomID, user.username, (response) => {

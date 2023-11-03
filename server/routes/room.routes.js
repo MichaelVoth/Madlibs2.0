@@ -18,10 +18,10 @@ roomRouter.get('/:roomID', authMiddleware, (req, res) => {
 });
 
 roomRouter.post('/create', authMiddleware, (req, res) => {
-    const { userID, username, avatar } = req.body;
+    const { userID, username, avatar, socketID } = req.body;
     const roomManagerInstance = req.app.get('roomManagerInstance')
     try {
-        const result = RoomController.createRoom(roomManagerInstance, userID, username, avatar);
+        const result = RoomController.createRoom(roomManagerInstance, userID, username, avatar, socketID);
         res.json(result);
     } catch (error) {
         console.log(error);
@@ -30,10 +30,10 @@ roomRouter.post('/create', authMiddleware, (req, res) => {
 });
 
 roomRouter.post('/join', authMiddleware, (req, res) => {
-    const { roomID, userID, username, avatar } = req.body;
+    const { roomID, userID, username, avatar, socketID } = req.body;
     const roomManagerInstance = req.app.get('roomManagerInstance')
     try {
-        const result = RoomController.joinRoom(roomManagerInstance, roomID, userID, username, avatar);
+        const result = RoomController.joinRoom(roomManagerInstance, roomID, userID, username, avatar, socketID);
         res.json(result);
     } catch (error) {
         res.status(500).send(error.message);
@@ -41,10 +41,10 @@ roomRouter.post('/join', authMiddleware, (req, res) => {
 });
 
 roomRouter.post('/random', authMiddleware, (req, res) => {
-    const { userID, username, avatar } = req.body;
+    const { userID, username, avatar, socketID } = req.body;
     const roomManagerInstance = req.app.get('roomManagerInstance')
     try {
-        const result = RoomController.randomRoom(roomManagerInstance, userID, username, avatar);
+        const result = RoomController.randomRoom(roomManagerInstance, userID, username, avatar, socketID);
         res.json(result);
     } catch (error) {
         res.status(500).send(error.message);

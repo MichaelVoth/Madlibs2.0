@@ -14,6 +14,8 @@ class GameController {
             const gameInstance = new GameClass(template, roomID);
             gameInstance.createGame();
             roomManagerInstance.addGameToRoom(roomID, gameInstance, gameInstance.gameID);
+            console.log("gamecontroller createGame():", gameInstance);
+            console.log("RoomManagerInstance.rooms[roomID]:", roomManagerInstance.rooms[roomID]);
             res.status(201).json(gameInstance);
         } catch (err) {
             console.log("gamecontroller createGame():", err);

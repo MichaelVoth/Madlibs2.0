@@ -20,11 +20,13 @@ class UserController {
             const hashedPassword = await hashPassword(req.body.password);
             newUser.password = hashedPassword;
             const user = await User.create(newUser);
+            const socketID = req.body.socketID;
             const token = generateJWT({ id: user._id, username: user.username });
             res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
             const userInstance = new UserClass(
                 user._id,
+                socketID,
                 user.username,
                 user.avatar,
                 user.isActive,
@@ -56,8 +58,11 @@ class UserController {
             const token = generateJWT({ id: user._id, username: user.username });
             await User.findOneAndUpdate({ username: req.body.username }, { isActive: true });
 
+            const socketID = req.body.socketID;
+
             const userInstance = new UserClass(
                 user._id,
+                socketID,
                 user.username,
                 user.avatar,
                 user.isActive,

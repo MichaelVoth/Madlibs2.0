@@ -1,22 +1,22 @@
 class RoomController {
 
     // Create a new room
-    static createRoom(RoomManagerInstance, userID, username, avatar) {
+    static createRoom(RoomManagerInstance, userID, username, avatar, socketID) {
         const roomID = RoomManagerInstance.createRoom();
-        RoomManagerInstance.joinRoom(roomID, userID, username, avatar);
+        RoomManagerInstance.joinRoom(roomID, userID, username, avatar, socketID);
         const updatedUsers = RoomManagerInstance.getUsersInRoom(roomID);
         return { roomID, updatedUsers };
     }
     // Join a room
-    static joinRoom(RoomManagerInstance, roomID, userID, username, avatar) {
-        RoomManagerInstance.joinRoom(roomID, userID, username, avatar);
+    static joinRoom(RoomManagerInstance, roomID, userID, username, avatar, socketID) {
+        RoomManagerInstance.joinRoom(roomID, userID, username, avatar, socketID);
         const updatedUsers = RoomManagerInstance.getUsersInRoom(roomID);
         return { roomID, updatedUsers };
     }
     // Randomly join a room
-    static randomRoom(RoomManagerInstance, userID, username, avatar) {
+    static randomRoom(RoomManagerInstance, userID, username, avatar, socketID) {
         const roomID = RoomManagerInstance.randomRoom();
-        RoomManagerInstance.joinRoom(roomID, userID, username, avatar);
+        RoomManagerInstance.joinRoom(roomID, userID, username, avatar, socketID);
         const updatedUsers = RoomManagerInstance.getUsersInRoom(roomID);
         return { roomID, updatedUsers };
     }

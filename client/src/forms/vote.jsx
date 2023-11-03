@@ -2,37 +2,50 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSocketContext } from "../contexts/SocketContext.jsx";
 import { useUserContext } from "../contexts/UserContext.jsx";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
-const VoteForm = (props) => {
-
+const VoteModal = (props) => {
     const { user } = useUserContext();
     const { socket } = useSocketContext();
     const { roomID } = useParams();
-    const [voteType, setVoteType] = useState(props.voteType);
-
     const [vote, setVote] = useState(null);
     const [timer, setTimer] = useState(45);
-    const [isDisplayed, setIsDisplayed] = useState(true);
+    const [show, setShow] = useState(true);
 
+    const handleClose = () => setShow(false);
     const handleVote = (voteValue) => {
         setVote(voteValue);
-        setIsDisplayed(false);
+        setShow(false);
     };
 
     useEffect(() => {
         if (vote !== null) {
-            socket.emit(`VOTE_SUBMIT ${voteType}`, { voteType: voteType, topic: props.topic, vote: vote, user: user, roomID: roomID });
+            socket.emit(`VOTE_SUBMIT ${props.voteType}`, {
+                voteType: props.voteType,
+                topic: props.topic,
+                vote: vote,
+                user: user,
+                roomID: roomID,
+                gameID: props.gameID
+            });
         }
     }, [vote]);
 
     useEffect(() => {
         const countdown = setInterval(() => {
             setTimer(prevTimer => {
-                if (prevTimer === 1 || !isDisplayed) {
+                if (prevTimer === 1 || !show) {
                     clearInterval(countdown);
-                    if (vote === null && isDisplayed) {
-                        socket.emit(`VOTE_SUBMIT ${voteType}`, { voteType: voteType, topic: props.topic, vote: "no response", user: user, roomID: roomID });
-                        setIsDisplayed(false);
+                    if (vote === null && show) {
+                        socket.emit(`VOTE_SUBMIT ${props.voteType}`, {
+                            voteType: props.voteType,
+                            topic: props.topic,
+                            vote: "no response",
+                            user: user,
+                            roomID: roomID
+                        });
+                        setShow(false);
                     }
                     return 0;
                 }
@@ -41,22 +54,27 @@ const VoteForm = (props) => {
         }, 1000);
 
         return () => clearInterval(countdown);
-    }, [isDisplayed]);
+    }, [show]);
 
     return (
-        <div>
-            {isDisplayed && <div>
-                <div>
-                    <label>{props.topic} </label>
-                </div>
-                <div>
-                    <button onClick={() => handleVote(true)}>Yes</button>
-                    <button onClick={() => handleVote(false)}>No</button>
-                </div>
+        <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Vote</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>{props.topic}</p>
                 <div>Time left: {timer} seconds</div>
-            </div>}
-        </div>
-    )
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={() => handleVote(false)}>
+                    No
+                </Button>
+                <Button variant="primary" onClick={() => handleVote(true)}>
+                    Yes
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    );
 }
 
-export default VoteForm;
+export default VoteModal;

@@ -130,7 +130,7 @@ class GameClass {
         }
     }
 
-    userFinished(playerID) {
+    async userFinished(playerID, gameID) {
         const player = this.players.find(player => player.userID === playerID); // Find the player
         if (!player) {
             console.error("Player not found");
@@ -138,7 +138,7 @@ class GameClass {
         }
         player.finishTime = (Date.now() - this.startTime) / 1000; // Record the time the player finished
         player.playerStatus = "completed"; // Mark the player as completed
-        return this.hasPlayerCompleted(player); // Return true if the player has completed all their prompts
+        await Game.findByIdAndUpdate(gameID, this);
     }
 
     // Check if a player has completed all their prompts
@@ -205,7 +205,7 @@ class GameClass {
     }
 
     // Complete the game
-    completeGame() {
+    async completeGame(gameID){
         const allPlayersCompleted = this.players.every(this.hasPlayerCompleted);
         if (!allPlayersCompleted) {
             this.reassignIncompletePrompts();
@@ -214,6 +214,7 @@ class GameClass {
         this.duration = (Date.now() - this.startTime) / 1000;
         this.completed = true;
         this.filledPrompts = this.reassemblePrompts();
+        await Game.findByIdAndUpdate(gameID, this);
     }
 
     // Abandon the game
@@ -221,7 +222,7 @@ class GameClass {
         try {
             const game = await Game.findOne({ _id: gameID });
             game.gameStatus = "abandoned";
-            await game.save();
+            await Game.findByIdAndUpdate(gameID, this);
             return game;
         }
         catch (err) {

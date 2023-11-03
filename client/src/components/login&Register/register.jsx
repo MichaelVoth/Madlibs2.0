@@ -50,7 +50,7 @@ const Register = () => {
         return password === confirmPW;
     }
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
         const passwordValidationError = validatePassword(password);
         if (passwordValidationError) {
@@ -69,25 +69,49 @@ const Register = () => {
         } else {
             setPasswordError("");
         }
-        axios.post("http://localhost:3001/api/users/register", {
-            username,
-            email,
-            password
-        }, { withCredentials: true }) // sends the cookie
-            .then(res => {
-                console.log(res);
-                connectSocket();
-                const userData = res.data.user;
-                setUser(userData);
-                sessionStorage.setItem("user", JSON.stringify(userData));
-                setIsActive(true);
-                setShowAvatarModal(true); // Show avatar modal
-                setUsername("");
-                setEmail("");
-                setPassword("");
-                setConfirmPW("");
-            })
-            .catch(err => console.log(err));
+
+        const currentSocket = connectSocket(); // Connect socket if not already connected
+
+        const ensureSocketConnection = new Promise((resolve, reject) => {
+            if (currentSocket && currentSocket.connected) { // If socket is already connected, resolve promise
+                resolve();
+            } else {
+                currentSocket.on("connect", () => { // If socket is not connected, wait for it to connect and then resolve promise
+                    resolve();
+                });
+                currentSocket.on("connect_error", (err) => {
+                    reject(new Error("Socket connection failed"));
+                });
+            }
+        });
+
+        try {
+            await ensureSocketConnection; // Wait for socket connection to be established so you can send the socket ID to the server
+
+            axios.post("http://localhost:3001/api/users/register", {
+                username,
+                email,
+                password,
+                socketID: currentSocket.id
+            }, { withCredentials: true }) // sends the cookie
+
+
+                .then(res => {
+                    console.log(res);
+                    const userData = res.data.user;
+                    setUser(userData);
+                    sessionStorage.setItem("user", JSON.stringify(userData));
+                    setIsActive(true);
+                    setShowAvatarModal(true); // Show avatar modal
+                    setUsername("");
+                    setEmail("");
+                    setPassword("");
+                    setConfirmPW("");
+                })
+                .catch(err => console.log(err));
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     const changeHandler = (e) => {

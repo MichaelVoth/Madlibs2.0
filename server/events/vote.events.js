@@ -6,7 +6,6 @@ const playAgainVotes = {};
 const playAgainVote = (io, socket, roomManagerInstance) => {
     socket.on("VOTE_SUBMIT playAgain", (data) => {
         try {
-            console.log("data.user:", data.user);
             if (!playAgainVotes[data.roomID]) { // If room doesn't exist in votes object, create it
                 playAgainVotes[data.roomID] = { "yes": [], "no": [], "noResponse": [] };
             }
@@ -22,23 +21,18 @@ const playAgainVote = (io, socket, roomManagerInstance) => {
             }
 
             if (data.vote === true) {
-                playAgainVotes[data.roomID].yes.push(data.user);
+                playAgainVotes[data.roomID].yes.push(data.user); // Add user to yes votes
             } else if (data.vote === false) {
-                playAgainVotes[data.roomID].no.push(data.user);
+                playAgainVotes[data.roomID].no.push(data.user); // Add user to no votes
             } else {
-                playAgainVotes[data.roomID].noResponse.push(data.user);
+                playAgainVotes[data.roomID].noResponse.push(data.user); // Add user to no response votes
             }
-            console.log("playAgainVotes:", playAgainVotes);
             const playerCount = roomManagerInstance.getUsersInRoom(data.roomID).length;
-            console.log("playerCount:", playerCount);
             const totalVotes = playAgainVotes[data.roomID].yes.length + playAgainVotes[data.roomID].no.length + playAgainVotes[data.roomID].noResponse.length;
-            console.log("totalVotes:", totalVotes);
 
             if (playerCount === totalVotes) {
-                voteEvents.emit('PLAY_AGAIN_VOTE_COMPLETE', playAgainVotes[data.roomID]); // Emit custom event
+                voteEvents.emit('PLAY_AGAIN_VOTE_COMPLETE', playAgainVotes[data.roomID], data.roomID, data.gameID); // Emit custom event
                 delete playAgainVotes[data.roomID];
-                console.log("voteEvent emitted")
-                console.log("playAgainVotes:", playAgainVotes);
             }
         }
         catch (err) {

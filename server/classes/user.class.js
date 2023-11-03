@@ -1,8 +1,9 @@
 
 
 class PlayerClass {
-    constructor(id, username, avatar, isActive) {
+    constructor(id, socketID, username, avatar, isActive) {
         this.id = id || '';
+        this.socketID = socketID || '';
         this.username = username || '';
         this.avatar = avatar || '';
         this.isActive = isActive;

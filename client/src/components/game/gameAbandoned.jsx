@@ -12,13 +12,17 @@ const GameAbandoned = () => {
     const gameID = props.gameID;
 
     const handlePlayAgain = () => {
-        socket.emit('NEW_MESSAGE_SENT', { 
-            username: user.username,
-            content: "Play again?",
-            roomID: roomID,
-            messageType: "vote"
-        });
-        setGameState("waiting");
+        axios.post(`http://localhost:3001/api/game/create/${roomID}`,{},{ withCredentials: true })
+        .then(res => {
+            socket.emit('NEW_MESSAGE_SENT', { 
+                username: user.username,
+                content: "Play again?",
+                roomID: roomID,
+                gameID: res.data.gameID,
+                messageType: "vote",
+                voteType: "playAgain"
+            });
+        })
     }
     return (
         <div>

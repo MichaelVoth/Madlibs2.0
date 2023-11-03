@@ -1,25 +1,26 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import io from 'socket.io-client';
+import { useUserContext } from './UserContext.jsx';
 
 const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
-    const user = JSON.parse(sessionStorage.getItem("user")); // Get user from sessionStorage
+    const { user, setUser } = useUserContext();
 
     useEffect(() => {
         let newSocket;
-        if (user && user.socketId) { // Check that user and user.socketId are not null
-            newSocket = io.connect('http://localhost:3001');
-            setSocket(newSocket);
+        if (user && user.socketId) { // If user is not null and has a socketId
+            newSocket = io.connect('http://localhost:3001'); // Connect to socket server
+            setSocket(newSocket); // Set socket state to newSocket
 
-            if (newSocket) {  // Check if newSocket is defined before attaching event listeners
-                newSocket.on("connect", () => {
-                    // console.log(`Connected with ID: ${newSocket.id}`);
-                    if (user) {
-                        sessionStorage.setItem("user", JSON.stringify(user));
-                        // If there's a user in context, emit an event to the server to associate this socket ID with the user.
-                        newSocket.emit("associate_socket_with_user", user.id);
+            if (newSocket) { // If newSocket is not null
+                newSocket.on("connect", () => { // When socket connects
+                    if (user) { // If user is not null
+                        user.socketID = newSocket.id; // Update user's socketID
+                        setUser({...user, socketId: newSocket.id }); // Update user state
+                        sessionStorage.setItem("user", JSON.stringify(user)); // Update sessionStorage
+                        newSocket.emit("associate_socket_with_user", user.id); // Associate socket with user
                     }
                 });
 
@@ -34,47 +35,36 @@ export const SocketProvider = ({ children }) => {
                     }
                 });
             }
-
-            return () => { // This returned function will run when the component unmounts
-                if (newSocket) {  // Check if newSocket is defined before disconnecting
+            return () => {
+                if (newSocket) {
                     newSocket.disconnect();
                 }
             };
         }
-    }, []); // Only run this hook once, after initial render
+    }, [user, setUser]);
 
     const connectSocket = () => {
-        if (!socket) { // Check that socket is null
-            const existingSocketId = user?.socketId; // Get the socket ID from session storage
-            const newSocket = io.connect('http://localhost:3001', { // Connect to the server with the socket ID
-                query: { socketId: existingSocketId } // Send the socket ID as a query parameter
+        if (!socket) {
+            const existingSocketId = user?.socketId;
+            const newSocket = io.connect('http://localhost:3001', {
+                query: { socketId: existingSocketId }
             });
-            setSocket(newSocket); // Set the socket state to the new socket
-
-            newSocket.on("connect", () => { // Add event listener for when the socket connects
-                // console.log(`Connected to the server with id: ${newSocket.id}`);
-                const user = JSON.parse(sessionStorage.getItem("user")); // Get the user from session storage
-                if (user) { // Check that user is not null
-                    user.socketId = newSocket.id; // Add the socket ID to the user object
-                    sessionStorage.setItem("user", JSON.stringify(user)); // Update the user in session storage
-                }
-            });
-
-            newSocket.on("connect_error", (err) => {
-                console.log(`Connection failed due to error: ${err.message}`);
-            });
+            setSocket(newSocket);
+            return newSocket;
         }
+        return socket;
     };
+    
 
     const disconnectSocket = () => {
-        if (socket) { // Check that socket is not null
-            socket.disconnect(); // Disconnect the socket
-            setSocket(null); // Set socket state to null
+        if (socket) {
+            socket.disconnect();
+            setSocket(null);
 
-            const user = JSON.parse(sessionStorage.getItem("user")); // Get the user from session storage
-            if (user) { // Check that user is not null
-                delete user.socketId; // Delete the socket ID from the user object
-                sessionStorage.setItem("user", JSON.stringify(user)); // Update the user in session storage
+            const user = JSON.parse(sessionStorage.getItem("user"));
+            if (user) {
+                delete user.socketId;
+                sessionStorage.setItem("user", JSON.stringify(user));
             }
         }
     };
@@ -86,7 +76,7 @@ export const SocketProvider = ({ children }) => {
     );
 };
 
-export const useSocketContext = () => { // Custom hook to use the socket context
+export const useSocketContext = () => {
     const context = useContext(SocketContext);
     if (!context) {
         throw new Error("useSocketContext must be used within a SocketProvider");

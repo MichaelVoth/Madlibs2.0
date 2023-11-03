@@ -77,6 +77,8 @@ async function serverStart() {
             voteEvents.playAgainVote(io, socket, roomManagerInstance);
 
             gameEvents.beginGame(io, socket, roomManagerInstance);
+            gameEvents.updateGameID(io, socket, roomManagerInstance);
+            gameEvents.proposeNewGame(io, socket, roomManagerInstance);
             gameEvents.joinGame(io, socket, roomManagerInstance);
             gameEvents.userFinished(io, socket, roomManagerInstance);
             gameEvents.inactivePlayer(io, socket, roomManagerInstance);

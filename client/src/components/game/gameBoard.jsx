@@ -22,18 +22,26 @@ const GameBoard = (props) => {
 
     useEffect(() => {
         socket.on("GAME_CREATED", (gameID) => {
+            console.log("GAME_CREATED", gameID);
             socket.emit("JOIN_GAME", { gameID, roomID, userID: user.id });
             setGameID(gameID);
             setGameState("Loading");
         })
 
         socket.on("GAMESTATE_CHANGE", (gameState) => {
+            console.log("GAMESTATE_CHANGE", gameState);
             setGameState(gameState);
+        })
+
+        socket.on("GAME_ID_UPDATED", (gameID) => {
+            console.log("GAME_ID_UPDATED", gameID);
+            setGameID(gameID);
         })
 
         return () => {
             socket.off("GAME_CREATED");
             socket.off("GAMESTATE_CHANGE");
+            socket.off("GAME_ID_UPDATED");
         }
     }
     , [gameState, socket]);

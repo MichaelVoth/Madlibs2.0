@@ -7,7 +7,7 @@ export const UserProvider = ({ children }) => {
     const storedUser = sessionStorage.getItem('user');
     const initialUser = storedUser ? JSON.parse(storedUser) : null;
 
-    const [user, setUser] = useState(initialUser); 
+    const [user, setUser] = useState(initialUser);
     const [isActive, setIsActive] = useState();
 
     // Whenever the user state changes, update sessionStorage
@@ -28,7 +28,7 @@ export const UserProvider = ({ children }) => {
     );
 };
 
-export const useUserContext = () => {
+export const useUserContext = () => { // Custom hook to use the UserContext
     const context = useContext(UserContext);
     if (!context) {
         throw new Error("useUserContext must be used within a UserProvider");
