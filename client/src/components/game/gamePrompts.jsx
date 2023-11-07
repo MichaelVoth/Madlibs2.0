@@ -99,7 +99,8 @@ const GamePrompts = (props) => {
     }, [gameState, timeExpired]);
 
     return (
-        <div>
+        <div
+        id="gameBoard">
             <h1>Game Prompts</h1>
             <div>Time Left: {timer} seconds</div>
             {assignedPrompts.length > 0 && (

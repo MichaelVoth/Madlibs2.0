@@ -11,16 +11,17 @@ const GameStart = (props) => {
     const { user } = useUserContext();
 
     const startGame = () => {
-        axios.post(`http://localhost:3001/api/game/create/${roomID}`,{},{ withCredentials: true })
+        axios.post(`http://localhost:3001/api/game/create/${roomID}`, {}, { withCredentials: true })
             .then(res => {
-                socket.emit("CREATE_GAME", { gameID: res.data.gameID, roomID: roomID, username: user.username }); 
+                socket.emit("CREATE_GAME", { gameID: res.data.gameID, roomID: roomID, username: user.username });
             })
             .catch(err => console.log(err));
     }
-    
-    
+
+
     return (
-        <div>
+        <div
+            id="gameBoard">
             <h1>Game Start</h1>
             <button onClick={startGame}>Start Game</button>
         </div>

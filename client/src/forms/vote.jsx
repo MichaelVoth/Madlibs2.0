@@ -15,7 +15,6 @@ const VoteModal = (props) => {
 
     const handleClose = () => setShow(false);
     const handleVote = (voteValue) => {
-        console.log("VOTE Value", voteValue);
         setVote(voteValue);
     };
     //Submit vote to server

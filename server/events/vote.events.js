@@ -6,6 +6,7 @@ const playAgainVotes = {};
 const playAgainVote = (io, socket, roomManagerInstance) => {
     socket.on("VOTE_SUBMIT playAgain", (data) => {
         try {
+            console.log("VOTE_SUBMIT HIT!")
             if (!playAgainVotes[data.roomID]) { // If room doesn't exist in votes object, create it
                 playAgainVotes[data.roomID] = { "yes": [], "no": [], "noResponse": [] };
             }

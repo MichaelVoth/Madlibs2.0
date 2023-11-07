@@ -30,14 +30,14 @@ const GameComplete = (props) => {
             setGameID(gameID);
             setShowVoteModal(true);
         };
-    
+
         socket.on('SHOW_VOTE_MODAL', handleShowVoteModal);
-    
+
         return () => {
             socket.off('SHOW_VOTE_MODAL', handleShowVoteModal);
         };
     }, [socket, setGameID]);
-    
+
 
     useEffect(() => {
         axios.get(`http://localhost:3001/api/game/complete/${gameID}/room/${roomID}`, { withCredentials: true })
@@ -51,7 +51,8 @@ const GameComplete = (props) => {
     }, [])
 
     return (
-        <div>
+        <div
+            id="gameBoard">
             <h1>Game Complete</h1>
             <h2>{title}</h2>
             <p>{completedMadlib}</p>

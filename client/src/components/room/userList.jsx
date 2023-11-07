@@ -15,7 +15,8 @@ const UserList = (props) => {
     }, [props.usersInRoom]);
 
     return (
-        <div>
+        <div
+        id="UserList">
             <h3>Users in room:</h3>
             <ul style={{ listStyleType: "none" }}>
                 {usersInRoom.map((user) => (

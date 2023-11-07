@@ -26,7 +26,8 @@ const GameWaiting = (props) => {
 
 
 return (
-    <div>
+    <div
+    id="gameBoard">
         <h1>Game Waiting</h1>
     </div>
 )

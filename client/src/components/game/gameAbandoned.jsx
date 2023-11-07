@@ -25,7 +25,9 @@ const GameAbandoned = () => {
         })
     }
     return (
-        <div>
+        <div
+        id="gameBoard"
+        className="d-flex align-items-center justify-content-center border rounded">
             <h1>Game Abandoned</h1>
             <button onClick={handlePlayAgain} >Play Again</button>
         </div>
