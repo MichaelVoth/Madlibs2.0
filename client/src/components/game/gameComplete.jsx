@@ -26,14 +26,18 @@ const GameComplete = (props) => {
             .catch(err => console.log(err));
     }
     useEffect(() => {
-        socket.on('SHOW_VOTE_MODAL', (gameID) => {
+        const handleShowVoteModal = (gameID) => {
             setGameID(gameID);
             setShowVoteModal(true);
-        });
-        return () => {
-            socket.off('SHOW_VOTE_MODAL');
         };
-    }, [socket]);
+    
+        socket.on('SHOW_VOTE_MODAL', handleShowVoteModal);
+    
+        return () => {
+            socket.off('SHOW_VOTE_MODAL', handleShowVoteModal);
+        };
+    }, [socket, setGameID]);
+    
 
     useEffect(() => {
         axios.get(`http://localhost:3001/api/game/complete/${gameID}/room/${roomID}`, { withCredentials: true })

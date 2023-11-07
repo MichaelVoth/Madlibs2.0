@@ -26,9 +26,11 @@ const updateGameID = (io, socket, roomManagerInstance) => {
 const joinGame = (io, socket, roomManagerInstance) => {
     socket.on("JOIN_GAME", ({ gameID, roomID, userID }) => {
         try {
+            console.log("Adding user:", userID);
             socket.join(gameID);
             const gameInstance = roomManagerInstance.getGame(roomID, gameID);
             gameInstance.addPlayer(userID);
+            console.log("game.events joinGame() gameInstance.players:", gameInstance.players);
             roomManagerInstance.playerJoinedGame(roomID);
             if (roomManagerInstance.playerCheck(roomID)) { //If all players have joined, start the game
                 gameInstance.startGame();
@@ -43,9 +45,9 @@ const joinGame = (io, socket, roomManagerInstance) => {
 }
 
 const proposeNewGame = (io, socket, roomManagerInstance) => {
-socket.on('PROPOSE_NEW_GAME', (roomID, gameID) => {
-    io.to(roomID).emit('SHOW_VOTE_MODAL', gameID);
-});
+    socket.on('PROPOSE_NEW_GAME', (roomID, gameID) => {
+        io.to(roomID).emit('SHOW_VOTE_MODAL', gameID);
+    });
 }
 
 const playAgainGame = (io, socket, roomManagerInstance) => {
@@ -60,7 +62,7 @@ const playAgainGame = (io, socket, roomManagerInstance) => {
             });
             io.to(gameID).emit("GAME_CREATED", gameID); //Send gameID to everyone in room so they can join the game socket room.
 
-    
+
         }
         catch (error) {
             console.log("game.events playAgainGame()", error);
@@ -123,6 +125,7 @@ const userFinished = (io, socket, roomManagerInstance) => {
                     roomID: roomID,
                     messageType: "system"
                 });
+                socket.leave(gameID); //Leave the game socket room
                 const gameState = "complete"
                 io.to(roomID).emit("GAMESTATE_CHANGE", gameState);
             }

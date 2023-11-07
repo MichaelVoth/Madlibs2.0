@@ -15,12 +15,13 @@ const VoteModal = (props) => {
 
     const handleClose = () => setShow(false);
     const handleVote = (voteValue) => {
+        console.log("VOTE Value", voteValue);
         setVote(voteValue);
-        setShow(false);
     };
-
+    //Submit vote to server
     useEffect(() => {
         if (vote !== null) {
+
             socket.emit(`VOTE_SUBMIT ${props.voteType}`, {
                 voteType: props.voteType,
                 topic: props.topic,
@@ -29,32 +30,39 @@ const VoteModal = (props) => {
                 roomID: roomID,
                 gameID: props.gameID
             });
+            props.setShow(false);
         }
     }, [vote]);
 
+    //Time out vote if no response
     useEffect(() => {
-        const countdown = setInterval(() => {
-            setTimer(prevTimer => {
-                if (prevTimer === 1 || !show) {
-                    clearInterval(countdown);
-                    if (vote === null && show) {
-                        socket.emit(`VOTE_SUBMIT ${props.voteType}`, {
-                            voteType: props.voteType,
-                            topic: props.topic,
-                            vote: "no response",
-                            user: user,
-                            roomID: roomID
-                        });
-                        setShow(false);
+        if (props.show) {
+            setTimer(45);
+            let countdown = setInterval(() => {
+                setTimer(prevTimer => {
+                    if (prevTimer === 1 || !show) {
+                        clearInterval(countdown);
+                        if (vote === null && show) {
+                            socket.emit(`VOTE_SUBMIT ${props.voteType}`, {
+                                voteType: props.voteType,
+                                topic: props.topic,
+                                vote: "no response",
+                                user: user,
+                                roomID: roomID,
+                                gameID: props.gameID
+                            });
+                            props.setShow(false);
+                        }
+                        return 0;
                     }
-                    return 0;
-                }
-                return prevTimer - 1;
-            });
-        }, 1000);
+                    return prevTimer - 1;
+                });
+            }, 1000);
 
-        return () => clearInterval(countdown);
+            return () => clearInterval(countdown);
+        }
     }, [show]);
+
 
     return (
         <Modal show={show} onHide={handleClose}>
