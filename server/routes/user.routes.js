@@ -19,6 +19,4 @@ userRouter.put("/:userId", authMiddleware, UserController.updateUserById);
 userRouter.delete("/:userId", authMiddleware, UserController.deleteUserById);
 userRouter.delete("/delete/all", authMiddleware, UserController.deleteAllUsers);
 
-
-
 export default userRouter;
