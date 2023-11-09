@@ -154,6 +154,13 @@ class RoomManager {
             throw new Error(`getUsersInRoom: Room with ID ${roomID} does not exist.`);
         }
     }
+    getGamesInRoom(roomID){
+        if(this.rooms[roomID]) {
+            return Object.values(this.rooms[roomID].games)
+        } else {
+            throw new Error(`getGamesInRoom: Room with ID ${roomID} does not exist`)
+        }
+    }
 
     addGameToRoom(roomID, game, gameID) {
         if (!this.rooms[roomID].games) { // If room does not have a games object

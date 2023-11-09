@@ -11,12 +11,12 @@ import GameAbandoned from './gameAbandoned.jsx';
 
 
 const GameBoard = (props) => {
-
+    const {gamesInProgress} = props
     const {roomID}  = useParams();
     const { user } = useUserContext();
     const { socket } = useSocketContext();
 
-    const [gameState, setGameState] = useState("notStarted");
+    const [gameState, setGameState] = useState(() => gamesInProgress.length > 0 ? "waiting" : "notStarted");
     const [gameID, setGameID] = useState(null);
 
 

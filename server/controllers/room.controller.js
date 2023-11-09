@@ -28,7 +28,8 @@ class RoomController {
     // Get users in a room
     static updateUsersInRoom(roomID, RoomManagerInstance) {
         const updatedUsers = RoomManagerInstance.getUsersInRoom(roomID);
-        return updatedUsers;
+        const gamesInRoom = RoomManagerInstance.getGamesInRoom(roomID);
+        return {updatedUsers, gamesInRoom};
     }
     // Get rooms
     static getRooms(RoomManagerInstance) {
