@@ -16,11 +16,14 @@ const GameBoard = (props) => {
     const { user } = useUserContext();
     const { socket } = useSocketContext();
 
-    const [gameState, setGameState] = useState(() => gamesInProgress.length > 0 ? "waiting" : "notStarted");
+    const [gameState, setGameState] = useState(() => {
+        return gamesInProgress.length > 0 ? "waiting" : "notStarted"
+    });
     const [gameID, setGameID] = useState(null);
 
 
     useEffect(() => {
+        console.log(gamesInProgress)
         socket.on("GAME_CREATED", (gameID) => {
             socket.emit("JOIN_GAME", { gameID, roomID, userID: user.id });
             setGameID(gameID);

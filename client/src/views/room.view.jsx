@@ -43,7 +43,7 @@ const RoomView = () => {
         axios.get(`http://localhost:3001/api/room/${roomID}`, { withCredentials: true })
             .then(res => {
                 setUsersInRoom(res.data.updatedUsers);
-                setGamesInRoom(res.data.gamesInRoom)
+                setGamesInRoom(res.data.gamesInRoom.filter(o => o.gameStatus == 'inProgress'))
                 setLoaded(true)
             })
             .catch(err =>
@@ -64,7 +64,7 @@ const RoomView = () => {
                 <h2>Room View: {roomID} </h2>
                 <p>Welcome {user && user.username}</p>
                 <Col>
-                    {loaded && <GameBoard gamesInProgress={gamesInRoom}/>}
+                    {loaded && <GameBoard gameID={(gamesInRoom.length > 0 && gamesInRoom[0].gameStatus == 'inProgress') ? gamesInRoom[0].gameID : null} gamesInProgress={gamesInRoom}/>}
                 </Col>
                 <Col>
                     <ChatBox />

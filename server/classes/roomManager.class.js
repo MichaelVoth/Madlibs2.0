@@ -156,6 +156,7 @@ class RoomManager {
     }
     getGamesInRoom(roomID){
         if(this.rooms[roomID]) {
+            console.log(Object.values(this.rooms[roomID].games))
             return Object.values(this.rooms[roomID].games)
         } else {
             throw new Error(`getGamesInRoom: Room with ID ${roomID} does not exist`)
