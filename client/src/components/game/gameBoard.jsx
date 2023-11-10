@@ -11,16 +11,19 @@ import GameAbandoned from './gameAbandoned.jsx';
 
 
 const GameBoard = (props) => {
-
+    const {gamesInProgress} = props
     const {roomID}  = useParams();
     const { user } = useUserContext();
     const { socket } = useSocketContext();
 
-    const [gameState, setGameState] = useState("notStarted");
+    const [gameState, setGameState] = useState(() => {
+        return gamesInProgress.length > 0 ? "waiting" : "notStarted"
+    });
     const [gameID, setGameID] = useState(null);
 
 
     useEffect(() => {
+        console.log(gamesInProgress)
         socket.on("GAME_CREATED", (gameID) => {
             socket.emit("JOIN_GAME", { gameID, roomID, userID: user.id });
             setGameID(gameID);
