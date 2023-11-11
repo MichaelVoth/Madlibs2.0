@@ -17,6 +17,18 @@ roomRouter.get('/:roomID', authMiddleware, (req, res) => {
     }
 });
 
+roomRouter.get('/inProgress/:roomID', authMiddleware, (req, res) => {
+    const { roomID } = req.params;
+    const roomManagerInstance = req.app.get('roomManagerInstance')
+    try {
+        const result = RoomController.checkGameStatus(roomID, roomManagerInstance);
+        res.json(result);
+    } catch (error) {
+        console.log("room.routes.inProgress", error);
+        res.status(500).send(error.message);
+    }
+});
+
 roomRouter.post('/create', authMiddleware, (req, res) => {
     const { userID, username, avatar, socketID } = req.body;
     const roomManagerInstance = req.app.get('roomManagerInstance')

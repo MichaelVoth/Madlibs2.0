@@ -8,6 +8,7 @@ import GamePrompts from './gamePrompts.jsx';
 import GameWaiting from './gameWaiting.jsx';
 import GameComplete from './gameComplete.jsx';
 import GameAbandoned from './gameAbandoned.jsx';
+import axios from 'axios';
 
 
 const GameBoard = (props) => {
@@ -42,6 +43,18 @@ const GameBoard = (props) => {
         }
     }
     , [gameState, socket]);
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/api/inProgress/${roomID}`, { withCredentials: true })
+            .then(res => {
+                if (res.data.newGameID) {
+                    setGameID(res.data.newGameID);
+                    setGameState("waiting");
+                }
+            })
+            .catch(err => console.log(err));
+    }, [])
+
 
     switch (gameState) {
         case "notStarted":

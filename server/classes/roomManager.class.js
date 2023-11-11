@@ -169,6 +169,27 @@ class RoomManager {
             throw new Error("roomManager getGame(): Game or Room does not exist.");
         }
     }
+
+    //Get all games in a room
+    getGamesInRoom(roomID) {
+        if (this.rooms[roomID]) {
+            return Object.values(this.rooms[roomID].games); // Return an array of game objects
+        } else {
+            throw new Error(`getGamesInRoom: Room with ID ${roomID} does not exist.`);
+        }
+    }
+
+    //Find Game Id of a game in a room
+    findGameIdOfInProgressGame(roomID) {
+        if (this.rooms[roomID]) {
+            for (const [gameID, game] of Object.entries(this.rooms[roomID].games)) { // For each game in room
+                if (game.gameStatus === "inProgress") { // If game is in progress
+                    return gameID; // Return gameID
+                }
+            }
+        }
+    }
+
     updateGame(roomID, gameID, game) {
         if (this.rooms[roomID] && this.rooms[roomID].games[gameID]) {
             this.rooms[roomID].games[gameID] = game;

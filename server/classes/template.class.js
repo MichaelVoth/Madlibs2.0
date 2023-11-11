@@ -23,7 +23,7 @@ class TemplateClass {
         while ((match = regex.exec(text)) !== null) {
             prompts.push(match[1].trim()); // Add the matched prompt (without curly brackets) to the prompts array
         }
-        this.prompts = prompts;
+        this.prompts = prompts; // Is this assigning it twice? I think it's assigning it twice.
         return prompts;
     }
 
