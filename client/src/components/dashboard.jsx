@@ -17,6 +17,7 @@ const Dashboard = () => {
 
     const { user } = useUserContext();
     const { socket } = useSocketContext();
+    console.log(socket)
     const [show, setShow] = useState(false);
     const navigate = useNavigate();
 
