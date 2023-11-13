@@ -84,13 +84,9 @@ const Dashboard = () => {
 
     return (
         <div>
-            <h2>Dashboard</h2>
-            <p>Welcome {user && user.username}</p>
-            <Link to="/loggedIn/madlib/create">Create Madlib</Link>
             <button onClick={createRoom}>Create Room</button>
             <button onClick={handleShow}>Join Room</button>
-            <ProfileCard />
-            <Logout />
+
             <Modal show={show} onHide={closeWithoutJoining} >
                 <Modal.Body>
                     <UniversalInputForm

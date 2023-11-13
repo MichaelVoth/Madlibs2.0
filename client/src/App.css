@@ -45,6 +45,16 @@ html, body {
   transform-origin: 50% 50%; /* Center the rotation */
 }
 
+.navbar {
+  background-color: #15b2d3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+.navbar-text {
+  margin: auto 0; /* Adjust margin as needed */
+  line-height: normal; /* Ensure line height is consistent */
+}
+
+
 .toggle-link span {
   color: #007bff;
   cursor: pointer;
@@ -72,10 +82,10 @@ html, body {
   cursor: pointer; /* Changes cursor to pointer on hover */
 }
 
-.form-group button:hover {
-  background-color: #0056b3; /* Darker background color on hover */
+.btn.login-btn {
+  background-color: #ff598f; 
+  color: white; 
 }
-
 
 
 .login-card {
@@ -146,7 +156,6 @@ html, body {
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 10px;
 }
 
 .avatar-image-large {

@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../contexts/UserContext';
 import { useSocketContext } from '../../contexts/SocketContext';
+import Button from 'react-bootstrap/esm/Button';
+
 
 const Logout = () => {
     const navigate = useNavigate();
@@ -26,7 +28,9 @@ const Logout = () => {
     };
 
     return (
-        <button onClick={handleLogout}>Logout</button>
+        <a onClick={handleLogout} >
+            Logout
+        </a>
     );
 };
 

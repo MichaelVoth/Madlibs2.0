@@ -91,7 +91,7 @@ const Login = () => {
                             <label htmlFor="password">Password: </label>
                             <input id="password" type="password" name="password" className="form-control" autoComplete='current-password' onChange={changeHandler} value={password} />
                         </div>
-                        <input type="submit" value="Login" className="btn btn-primary d-block mx-auto px-5" />
+                        <input type="submit" value="Login" className="btn login-btn d-block mx-auto px-5" />
                     </form>
                     {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 
