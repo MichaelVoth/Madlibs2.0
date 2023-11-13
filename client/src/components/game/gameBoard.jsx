@@ -47,17 +47,6 @@ const GameBoard = (props) => {
     }
     , [gameState, socket]);
 
-    useEffect(() => {
-        axios.get(`http://localhost:3001/api/inProgress/${roomID}`, { withCredentials: true })
-            .then(res => {
-                if (res.data.newGameID) {
-                    setGameID(res.data.newGameID);
-                    setGameState("waiting");
-                }
-            })
-            .catch(err => console.log(err));
-    }, [])
-
 
     switch (gameState) {
         case "notStarted":

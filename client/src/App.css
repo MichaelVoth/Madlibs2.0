@@ -3,23 +3,93 @@
   padding: 0;
 }
 
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0;
-  background-color: #ff598f;
+  background: linear-gradient(to bottom right, #ff598f, #ff88b0);
   background-size: cover;
   min-height: 100vh;
 }
 
-@keyframes flyIn {
-  0% {
-    transform: translate(-100vw, 100vh);
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+@keyframes wobble {
+  0%, 100% {
+    transform: rotate(-3deg);
   }
-  100% {
-    transform: translate(-50%, -50%);
+  50% {
+    transform: rotate(3deg);
   }
 }
+
+.madlib-logo {
+  animation: wobble 5s infinite; /* Apply the wobble animation */
+  display: block; /* Ensures the image is block level for proper animation */
+  margin: 0 auto; /* Centers the image */
+  max-width: 100%; /* Adjust the image size to fit the container */
+  height: auto; /* Maintain aspect ratio */
+  transform-origin: 50% 50%; /* Center the rotation */
+}
+
+.toggle-link span {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.form-group label,
+.form-group input,
+.form-group button {
+  display: block; /* Makes each element take the full width of its container */
+  width: 100%; /* Ensures inputs and buttons take full width */
+  margin-bottom: 10px; /* Adds space below each element */
+}
+
+.form-group input,
+.form-group button {
+  padding: 8px 10px; /* Adds padding inside inputs and buttons */
+  border-radius: 4px; /* Optional: Adds rounded corners */
+}
+
+.form-group button {
+  background-color: #007bff; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Removes border */
+  cursor: pointer; /* Changes cursor to pointer on hover */
+}
+
+.form-group button:hover {
+  background-color: #0056b3; /* Darker background color on hover */
+}
+
+
+
+.login-card {
+  width: 400px; 
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff; 
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 
 @keyframes rotateAvatars {
   0% {
@@ -48,6 +118,7 @@
   width: 300px;
   height: 300px;
   margin: 0 auto;
+  transition: transform 0.5s ease-in-out ;
   animation: rotateAvatars 60s infinite linear 1s;
 }
 
@@ -57,10 +128,11 @@
   border-radius: 50%;
   object-fit: cover;
   position: absolute;
+  transition: transform 0.5s ease-in-out;
   animation: 
-    flyIn 1s forwards,
     counterRotateAvatars 60s infinite linear 1s;
 }
+
 
 .avatar-image-choose:nth-child(1) { top: 5%; left: 50%; }
 .avatar-image-choose:nth-child(2) { top: 27%; left: 90%; }

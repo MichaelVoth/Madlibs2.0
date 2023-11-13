@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import isEmail from 'validator/lib/isEmail';
 import AvatarModal from "../../forms/avatarModal";
@@ -133,35 +132,28 @@ const Register = () => {
 
     return (
         <div className="container">
-            <div className="row">
-                <div className="col-6">
-                    <h1>Register</h1>
                     <form onSubmit={submitHandler}>
                         <div className="form-group">
                             <label htmlFor="username">Username: </label>
-                            <input type="text" name="username" className="form-control" onChange={changeHandler} />
+                            <input id="username" type="text" name="username" className="form-control" onChange={changeHandler} />
                         </div>
                         <div className="form-group">
                             <label htmlFor="email">Email: </label>
-                            <input type="text" name="email" className="form-control" onChange={changeHandler} />
+                            <input id="email" type="text" name="email" className="form-control" autoComplete="email" onChange={changeHandler} />
                             {emailError && <p className="text-danger">{emailError}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="password">Password: </label>
-                            <input type="password" name="password" className="form-control" onChange={changeHandler} />
+                            <input id="password" type="password" name="password" className="form-control" autoComplete="new-password" onChange={changeHandler} />
                         </div>
                         <div className="form-group">
                             <label htmlFor="confirmPassword">Confirm Password: </label>
-                            <input type="password" name="confirmPassword" className="form-control" onChange={changeHandler} />
+                            <input id="confirmPassword" type="password" name="confirmPassword" className="form-control" autoComplete="new-password" onChange={changeHandler} />
                             {passwordError && <p className="text-danger">{passwordError}</p>}
                         </div>
-                        <input type="submit" value="Register" className="btn btn-primary" />
+                        <input type="submit" value="Register" className="btn btn-primary d-block mx-auto px-5" />
                     </form>
-                    <p>Already have an account? <Link to="/login">Login</Link></p>
-                </div>
-            </div>
             {showAvatarModal && <AvatarModal show={showAvatarModal} />}
-
         </div>
     )
 }

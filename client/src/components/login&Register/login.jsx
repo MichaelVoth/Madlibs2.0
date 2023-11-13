@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useUserContext } from '../../contexts/UserContext.jsx';
 import { useSocketContext } from '../../contexts/SocketContext.jsx';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-import UserInfoDisplay from '../../developerTools/userInfoDisplay.jsx';
-import Logout from './logout.jsx';
 
 const Login = () => {
 
@@ -85,22 +82,19 @@ const Login = () => {
         <div className="container">
             <div className="row">
                 <div className="col">
-                    <h1>Login</h1>
                     <form onSubmit={submitHandler}>
                         <div className="form-group">
                             <label htmlFor="username">Username: </label>
-                            <input type="text" name="username" className="form-control" onChange={changeHandler} value={username} />
+                            <input id="username" type="text" name="username" className="form-control" autoComplete='username' onChange={changeHandler} value={username} />
                         </div>
                         <div className="form-group">
                             <label htmlFor="password">Password: </label>
-                            <input type="password" name="password" className="form-control" onChange={changeHandler} value={password} />
+                            <input id="password" type="password" name="password" className="form-control" autoComplete='current-password' onChange={changeHandler} value={password} />
                         </div>
-                        <input type="submit" value="Login" className="btn btn-primary" />
+                        <input type="submit" value="Login" className="btn btn-primary d-block mx-auto px-5" />
                     </form>
                     {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
-                    <p>Don't have an account? <Link to="/register">Register</Link></p>
-                    <UserInfoDisplay />
-                    <Logout />
+
                 </div>
             </div>
         </div>

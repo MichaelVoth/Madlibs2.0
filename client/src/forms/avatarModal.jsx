@@ -63,7 +63,6 @@ const AvatarModal = ({ show }) => {
           })}
         </div>
       </Modal.Body>
-
     </Modal>
   );
 };

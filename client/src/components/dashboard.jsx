@@ -17,7 +17,6 @@ const Dashboard = () => {
 
     const { user } = useUserContext();
     const { socket } = useSocketContext();
-    console.log(socket)
     const [show, setShow] = useState(false);
     const navigate = useNavigate();
 
@@ -90,10 +89,8 @@ const Dashboard = () => {
             <Link to="/loggedIn/madlib/create">Create Madlib</Link>
             <button onClick={createRoom}>Create Room</button>
             <button onClick={handleShow}>Join Room</button>
-
             <ProfileCard />
             <Logout />
-            <UserInfoDisplay />
             <Modal show={show} onHide={closeWithoutJoining} >
                 <Modal.Body>
                     <UniversalInputForm
